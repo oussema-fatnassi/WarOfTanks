@@ -3,7 +3,7 @@ package models
 import (
 	"time"
 
-	"go.mongodb.org/mongo-driver/v2/bson/primitive"
+	"go.mongodb.org/mongo-driver/v2/bson"
 )
 
 // Player represents a registered user in the game.

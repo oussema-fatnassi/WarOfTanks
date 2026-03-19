@@ -1,6 +1,6 @@
 package models
 
-import "go.mongodb.org/mongo-driver/v2/bson/primitive"
+import "go.mongodb.org/mongo-driver/v2/bson"
 
 // Stats holds the aggregated performance data for a player.
 type Stats struct {
