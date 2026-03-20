@@ -8,7 +8,7 @@ import (
 
 // AI represents the artificial intelligence opponent entity.
 type AI struct {
-	ID        primitive.ObjectID `bson:"_id,omitempty" json:"id"`
+	ID        bson.ObjectID `bson:"_id,omitempty" json:"id"`
 	Name      string             `bson:"name" json:"name"`
 	Wins      int                `bson:"wins" json:"wins"`
 	Losses    int                `bson:"losses" json:"losses"`
