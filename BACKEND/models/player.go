@@ -8,7 +8,7 @@ import (
 
 // Player represents a registered user in the game.
 type Player struct {
-	ID           primitive.ObjectID `bson:"_id,omitempty" json:"id"`
+	ID           bson.ObjectID `bson:"_id,omitempty" json:"id"`
 	Username     string             `bson:"username" json:"username"`
 	Email        string             `bson:"email" json:"email"`
 	PasswordHash string             `bson:"passwordHash" json:"-"`
