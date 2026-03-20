@@ -55,6 +55,7 @@ npm run dev
 - ✅ [#1](https://github.com/oussema-fatnassi/WarOfTanks/issues/1) UML Class Diagrams — all layers documented (Unity, Backend, AI)
 - ✅ [#3](https://github.com/oussema-fatnassi/WarOfTanks/issues/3) State Machine Diagrams — Zone Capture FSM + Game State FSM committed to `docs/state-machines/`
 - ✅ [#4](https://github.com/oussema-fatnassi/WarOfTanks/issues/4) Unity Project Base Setup — scenes, input system, packages configured
+- ✅ [#6](https://github.com/oussema-fatnassi/WarOfTanks/issues/6) | GitHub Actions - Code Quality | Oussema | High |
 
 ## In Progress / Remaining
 
@@ -64,7 +65,6 @@ npm run dev
 |---|---|---|---|
 | [#2](https://github.com/oussema-fatnassi/WarOfTanks/issues/2) | ERD - MongoDB Schema Design | Kamelia | Critical |
 | [#5](https://github.com/oussema-fatnassi/WarOfTanks/issues/5) | GitHub Actions - Backend CI | Kamelia | Critical |
-| [#6](https://github.com/oussema-fatnassi/WarOfTanks/issues/6) | GitHub Actions - Code Quality | Kamelia | High |
 | [#35](https://github.com/oussema-fatnassi/WarOfTanks/issues/35) | Technical Note - UML, ERD, Tech Justification | All | Critical |
 
 ### Sprint 2 — Core Gameplay (due March 31)
