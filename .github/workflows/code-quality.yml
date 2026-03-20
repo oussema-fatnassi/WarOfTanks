@@ -28,10 +28,6 @@ jobs:
           fi
         working-directory: BACKEND
 
-      - name: Tidy Go modules
-        run: go mod tidy
-        working-directory: BACKEND
-
       - name: Install Go Linters and Run
         if: steps.go-check.outputs.found == 'true'
         uses: golangci/golangci-lint-action@v6
