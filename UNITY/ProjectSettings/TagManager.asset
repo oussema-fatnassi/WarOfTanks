@@ -3,7 +3,10 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - Tank
+  - Bullet
+  - Control
   layers:
   - Default
   - TransparentFX
@@ -11,13 +14,13 @@ TagManager:
   - 
   - Water
   - UI
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
+  - Walkable
+  - Unwalkable
+  - Hazard
+  - Cover
+  - Obstacle
+  - Tank
+  - Bullet
   - 
   - 
   - 
@@ -40,4 +43,22 @@ TagManager:
   m_SortingLayers:
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: Background
+    uniqueID: 3012487021
+    locked: 0
+  - name: Terrain
+    uniqueID: 1405212323
+    locked: 0
+  - name: Objects
+    uniqueID: 3106351505
+    locked: 0
+  - name: Units
+    uniqueID: 3395120789
+    locked: 0
+  - name: Projectiles
+    uniqueID: 3437138737
+    locked: 0
+  - name: UI
+    uniqueID: 583413593
     locked: 0
