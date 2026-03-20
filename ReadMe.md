@@ -51,7 +51,10 @@ npm run dev
 
 ## Features Completed
 
-No features completed yet — project is in Sprint 1 (Setup & Architecture).
+### Sprint 1 — Setup & Architecture
+- ✅ [#1](https://github.com/oussema-fatnassi/WarOfTanks/issues/1) UML Class Diagrams — all layers documented (Unity, Backend, AI)
+- ✅ [#3](https://github.com/oussema-fatnassi/WarOfTanks/issues/3) State Machine Diagrams — Zone Capture FSM + Game State FSM committed to `docs/state-machines/`
+- ✅ [#4](https://github.com/oussema-fatnassi/WarOfTanks/issues/4) Unity Project Base Setup — scenes, input system, packages configured
 
 ## In Progress / Remaining
 
@@ -59,10 +62,7 @@ No features completed yet — project is in Sprint 1 (Setup & Architecture).
 
 | # | Title | Owner | Priority |
 |---|---|---|---|
-| [#1](https://github.com/oussema-fatnassi/WarOfTanks/issues/1) | UML Class Diagrams | All | Critical |
 | [#2](https://github.com/oussema-fatnassi/WarOfTanks/issues/2) | ERD - MongoDB Schema Design | Kamelia | Critical |
-| [#3](https://github.com/oussema-fatnassi/WarOfTanks/issues/3) | State Machine Diagrams | Oussema | Critical |
-| [#4](https://github.com/oussema-fatnassi/WarOfTanks/issues/4) | Unity Project Base Setup | Oroitz | Critical |
 | [#5](https://github.com/oussema-fatnassi/WarOfTanks/issues/5) | GitHub Actions - Backend CI | Kamelia | Critical |
 | [#6](https://github.com/oussema-fatnassi/WarOfTanks/issues/6) | GitHub Actions - Code Quality | Kamelia | High |
 | [#35](https://github.com/oussema-fatnassi/WarOfTanks/issues/35) | Technical Note - UML, ERD, Tech Justification | All | Critical |
@@ -128,4 +128,7 @@ The project is split into three independently deployable layers:
 - **Backend (Go + Gin)** — REST API handling player registration/login (JWT auth, access token 1h / refresh token 7d), match result recording, and leaderboard queries. Data persisted in MongoDB.
 - **Frontend (React + TypeScript)** — Web interface with auth pages, leaderboard, match history, and an embedded WebGL build of the game.
 
-Architecture diagrams (UML, ERD, state machine) will be published to `docs/` once completed — tracked in [#1](https://github.com/oussema-fatnassi/WarOfTanks/issues/1), [#2](https://github.com/oussema-fatnassi/WarOfTanks/issues/2), [#3](https://github.com/oussema-fatnassi/WarOfTanks/issues/3).
+Architecture diagrams are live in `docs/`:
+- UML Class Diagrams — `docs/uml/` ([#1](https://github.com/oussema-fatnassi/WarOfTanks/issues/1) ✅)
+- State Machine Diagrams — `docs/state-machines/` ([#3](https://github.com/oussema-fatnassi/WarOfTanks/issues/3) ✅)
+- ERD (MongoDB Schema) — pending ([#2](https://github.com/oussema-fatnassi/WarOfTanks/issues/2))
