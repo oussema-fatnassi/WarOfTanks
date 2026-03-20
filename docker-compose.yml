@@ -1,0 +1,28 @@
+version: "3.8"
+
+services:
+  backend:
+    build: ./BACKEND
+    ports:
+      - "8080:8080"
+    env_file:
+      - ./BACKEND/.env
+    depends_on:
+      - mongo
+    networks:
+      - waroftanks-net
+
+  mongo:
+    image: mongo:7
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+    networks:
+      - waroftanks-net
+
+volumes:
+  mongo_data:
+
+networks:
+  waroftanks-net:
