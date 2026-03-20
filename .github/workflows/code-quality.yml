@@ -16,7 +16,7 @@ jobs:
       - name: Setup Go
         uses: actions/setup-go@v5
         with:
-          go-version: '1.24'
+          go-version: '1.25'
 
       - name: Check for Go files
         id: go-check
@@ -28,8 +28,13 @@ jobs:
           fi
         working-directory: BACKEND
 
+      - name: Tidy Go modules
+        run: go mod tidy
+        working-directory: BACKEND
+
       - name: Install Go Linters and Run
         if: steps.go-check.outputs.found == 'true'
         uses: golangci/golangci-lint-action@v6
         with:
+          version: latest
           working-directory: BACKEND
