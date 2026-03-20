@@ -18,7 +18,13 @@ jobs:
         with:
           go-version: '1.24'
 
+      - name: Check for Go files
+        id: go-check
+        run: echo "found=$(find . -name '*.go' | wc -l)" >> $GITHUB_OUTPUT
+        working-directory: BACKEND
+
       - name: Install Go Linters and Run
+        if: steps.go-check.outputs.found != '0'
         uses: golangci/golangci-lint-action@v6
         with:
           working-directory: BACKEND
