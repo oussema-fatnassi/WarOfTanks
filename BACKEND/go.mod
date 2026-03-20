@@ -1,9 +1,9 @@
 module github.com/oussema-fatnassi/WarOfTanks/backend
 
-go 1.24.0
+go 1.22.0
 
 require (
-	github.com/gin-gonic/gin v1.12.0
+	github.com/gin-gonic/gin v1.10.0
 	github.com/joho/godotenv v1.5.1
 	go.mongodb.org/mongo-driver/v2 v2.5.0
 )
