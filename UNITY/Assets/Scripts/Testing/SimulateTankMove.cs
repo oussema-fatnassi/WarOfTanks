@@ -15,6 +15,7 @@ public class SimulateTankMove : MonoBehaviour
     void Start()
     {   _timeToReachDestination = CalculateTimeToReachDestination();
         _tankController.Move(_moveTo);
+        _tankController.Rotate(25f);
         _timer = Time.time;
 
     }
