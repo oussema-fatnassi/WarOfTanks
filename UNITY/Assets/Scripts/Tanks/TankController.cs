@@ -18,6 +18,7 @@ public class TankController : MonoBehaviour
     public float MoveSpeed => _moveSpeed;
     #endregion
 
+    #region Unity Methods
     private void Awake()
     {
         _rigidbody = GetComponent<Rigidbody2D>();
@@ -31,6 +32,9 @@ public class TankController : MonoBehaviour
         _rigidbody.MovePosition(_rigidbody.position + _desiredPosition * _moveSpeed * Time.fixedDeltaTime);
         _rigidbody.MoveRotation(_rigidbody.rotation + _desiredRotation * _rotationSpeed * Time.fixedDeltaTime);
     }
+    #endregion
+
+    #region Public Methods
     public void Move(Vector2 direction)
     {
         _desiredPosition = direction.normalized;
@@ -46,4 +50,5 @@ public class TankController : MonoBehaviour
         _desiredPosition = Vector2.zero;
         _desiredRotation = 0;
     }
+    #endregion
 }

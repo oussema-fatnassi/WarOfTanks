@@ -345,6 +345,30 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _moveSpeed: 5
   _rotationSpeed: 180
+--- !u!114 &2132301940
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2132301938}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4dbc43a10701ae24cb30e14aac8b1036, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &2132301941
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2132301938}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 06b1ecfa28b0ffd46ba3de65bcb76648, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &773176152568117543
 PrefabInstance:
   m_ObjectHideFlags: 0
