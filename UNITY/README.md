@@ -50,6 +50,7 @@ UNITY/
 
 ## Architecture Notes
 
-- State machine diagrams tracked in [#3](https://github.com/oussema-fatnassi/WarOfTanks/issues/3) — will be added to `docs/` once completed.
+- State machine diagrams committed to `docs/state-machines/` — Zone Capture FSM and Game State FSM ([#3](https://github.com/oussema-fatnassi/WarOfTanks/issues/3) ✅)
+- UML class diagrams in `docs/uml/` — Unity, Backend, and AI layers ([#1](https://github.com/oussema-fatnassi/WarOfTanks/issues/1) ✅)
 - The AI + tank system must remain a self-contained modular prefab (championship requirement).
 - Naming conventions: see `docs/naming-conventions.md` in the root repo.
