@@ -29,7 +29,7 @@ public class TankController : MonoBehaviour
     void FixedUpdate()
     {
         _rigidbody.MovePosition(_rigidbody.position + _desiredPosition * _moveSpeed * Time.fixedDeltaTime);
-        _rigidbody.MoveRotation(_desiredRotation * _rotationSpeed * Time.fixedDeltaTime);
+        _rigidbody.MoveRotation(_rigidbody.rotation + _desiredRotation * _rotationSpeed * Time.fixedDeltaTime);
     }
     public void Move(Vector2 direction)
     {

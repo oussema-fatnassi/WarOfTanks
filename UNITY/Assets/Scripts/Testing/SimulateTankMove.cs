@@ -9,13 +9,14 @@ public class SimulateTankMove : MonoBehaviour
     private Vector2 _moveTo = new Vector2(10f, 0f);
     private float _timeToReachDestination;
     private float _timer;
+    private int _moveAttempts = 0;
 
     private bool _status = true;
     // Start is called before the first frame update
     void Start()
     {   _timeToReachDestination = CalculateTimeToReachDestination();
         _tankController.Move(_moveTo);
-        _tankController.Rotate(25f);
+        _tankController.Rotate(1f);
         _timer = Time.time;
 
     }
@@ -23,6 +24,16 @@ public class SimulateTankMove : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (_moveAttempts > 11)
+        {
+            return;
+        }
+        _moveAttempts++;
+        if (_moveAttempts > 10)
+        {
+            Debug.LogWarning("Too many move attempts, stopping the test.");
+            _tankController.Rotate(0f);
+        }
         if (!_status) { return; }
 
         if (Vector2.Distance(_tankController.transform.position, _moveTo) < 0.1f)
