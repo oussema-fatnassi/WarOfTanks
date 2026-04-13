@@ -49,3 +49,7 @@ jobs:
       - name: Run ESLint
         run: npm run lint
         working-directory: FRONTEND
+
+      - name: Run Prettier
+        run: npm run format:check
+        working-directory: FRONTEND
