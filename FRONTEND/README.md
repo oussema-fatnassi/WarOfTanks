@@ -54,24 +54,24 @@ FRONTEND/
 
 ## Pages
 
-| Page | Route | Description |
-|---|---|---|
-| Login | `/login` | Authenticate and receive JWT tokens |
-| Register | `/register` | Create a new account |
-| Game | `/play` | Embedded Unity WebGL build |
-| Leaderboard | `/leaderboard` | Top players by wins/score |
-| Match History | `/matches` | Past match results for the logged-in player |
-| Stats | `/stats` | Player statistics |
+| Page          | Route          | Description                                 |
+| ------------- | -------------- | ------------------------------------------- |
+| Login         | `/login`       | Authenticate and receive JWT tokens         |
+| Register      | `/register`    | Create a new account                        |
+| Game          | `/play`        | Embedded Unity WebGL build                  |
+| Leaderboard   | `/leaderboard` | Top players by wins/score                   |
+| Match History | `/matches`     | Past match results for the logged-in player |
+| Stats         | `/stats`       | Player statistics                           |
 
 ## Key Issues
 
-| # | Title | Status |
-|---|---|---|
+| #                                                               | Title                                              | Status      |
+| --------------------------------------------------------------- | -------------------------------------------------- | ----------- |
 | [#29](https://github.com/oussema-fatnassi/WarOfTanks/issues/29) | Frontend Project Setup (Vite + React + TypeScript) | In progress |
-| [#30](https://github.com/oussema-fatnassi/WarOfTanks/issues/30) | Auth Pages (Register + Login) | Not started |
-| [#31](https://github.com/oussema-fatnassi/WarOfTanks/issues/31) | Leaderboard, Stats & Match History Pages | Not started |
-| [#32](https://github.com/oussema-fatnassi/WarOfTanks/issues/32) | WebGL Game Embed | Not started |
-| [#6](https://github.com/oussema-fatnassi/WarOfTanks/issues/6) | GitHub Actions - Code Quality (ESLint + Prettier) | ✅ Done |
+| [#30](https://github.com/oussema-fatnassi/WarOfTanks/issues/30) | Auth Pages (Register + Login)                      | Not started |
+| [#31](https://github.com/oussema-fatnassi/WarOfTanks/issues/31) | Leaderboard, Stats & Match History Pages           | Not started |
+| [#32](https://github.com/oussema-fatnassi/WarOfTanks/issues/32) | WebGL Game Embed                                   | Not started |
+| [#6](https://github.com/oussema-fatnassi/WarOfTanks/issues/6)   | GitHub Actions - Code Quality (ESLint + Prettier)  | ✅ Done     |
 
 ## Architecture Notes
 
