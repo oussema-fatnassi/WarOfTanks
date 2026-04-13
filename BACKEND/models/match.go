@@ -13,13 +13,13 @@ type PlayerSnapshot struct {
 
 // Match represents a completed game between a player and the AI.
 type Match struct {
-	ID             bson.ObjectID    `bson:"_id,omitempty" json:"id"`
-	PlayerID       bson.ObjectID    `bson:"playerId" json:"playerId"`
-	PlayerSnapshot PlayerSnapshot   `bson:"playerSnapshot" json:"playerSnapshot"`
-	WinnerTeam     int              `bson:"winnerTeam" json:"winnerTeam"` // 1 = player team, 2 = AI team
-	PlayerScore    int              `bson:"playerScore" json:"playerScore"`
-	AIScore        int              `bson:"aiScore" json:"aiScore"`
-	Duration       float64          `bson:"duration" json:"duration"`
-	AIConfigID     *bson.ObjectID   `bson:"aiConfigId,omitempty" json:"aiConfigId,omitempty"`
-	CreatedAt      time.Time        `bson:"createdAt" json:"createdAt"`
+	ID             bson.ObjectID  `bson:"_id,omitempty" json:"id"`
+	PlayerID       bson.ObjectID  `bson:"playerId" json:"playerId"`
+	PlayerSnapshot PlayerSnapshot `bson:"playerSnapshot" json:"playerSnapshot"`
+	WinnerTeam     int            `bson:"winnerTeam" json:"winnerTeam"` // 1 = player team, 2 = AI team
+	PlayerScore    int            `bson:"playerScore" json:"playerScore"`
+	AIScore        int            `bson:"aiScore" json:"aiScore"`
+	Duration       float64        `bson:"duration" json:"duration"`
+	AIConfigID     *bson.ObjectID `bson:"aiConfigId,omitempty" json:"aiConfigId,omitempty"`
+	CreatedAt      time.Time      `bson:"createdAt" json:"createdAt"`
 }
