@@ -16,7 +16,7 @@ type Match struct {
 	ID             bson.ObjectID    `bson:"_id,omitempty" json:"id"`
 	PlayerID       bson.ObjectID    `bson:"playerId" json:"playerId"`
 	PlayerSnapshot PlayerSnapshot   `bson:"playerSnapshot" json:"playerSnapshot"`
-	WinnerTeam     int              `bson:"winnerTeam" json:"winnerTeam"`
+	WinnerTeam     int              `bson:"winnerTeam" json:"winnerTeam"` // 1 = player team, 2 = AI team
 	PlayerScore    int              `bson:"playerScore" json:"playerScore"`
 	AIScore        int              `bson:"aiScore" json:"aiScore"`
 	Duration       float64          `bson:"duration" json:"duration"`
