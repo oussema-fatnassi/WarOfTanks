@@ -71,7 +71,7 @@ npm run dev
 | [#5](https://github.com/oussema-fatnassi/WarOfTanks/issues/5) | GitHub Actions - Backend CI | Kamelia | Critical | Not started |
 | [#35](https://github.com/oussema-fatnassi/WarOfTanks/issues/35) | Technical Note — Figma mockups remaining (see #47) | All | Critical | In progress |
 
-### Sprint 2 — Core Gameplay (due March 31)
+### Sprint 2 — Core Gameplay (Apr 13 – Apr 19)
 
 | # | Title | Owner | Priority | Status |
 |---|---|---|---|---|
@@ -81,7 +81,7 @@ npm run dev
 | [#12](https://github.com/oussema-fatnassi/WarOfTanks/issues/12) | Generic State Machine System | Oussema | Critical | Not started |
 | [#29](https://github.com/oussema-fatnassi/WarOfTanks/issues/29) | Frontend Project Setup (Vite + React + TypeScript) | Oussema | Critical | In progress |
 
-### Sprint 3 — Navigation & Backend Foundation (due April 7)
+### Sprint 3 — Navigation & Backend Foundation (Apr 20 – Apr 26)
 
 | # | Title | Owner | Priority | Status |
 |---|---|---|---|---|
@@ -93,7 +93,7 @@ npm run dev
 | [#25](https://github.com/oussema-fatnassi/WarOfTanks/issues/25) | Player Model & Auth Routes (Register + Login) | Kamelia | Critical | Not started |
 | [#26](https://github.com/oussema-fatnassi/WarOfTanks/issues/26) | JWT Auth Middleware & Refresh Token Route | Kamelia | Critical | Not started |
 
-### Sprint 4 — AI Systems & Backend Routes (due April 14)
+### Sprint 4 — AI Systems & Backend Routes (Apr 27 – May 3)
 
 | # | Title | Owner | Priority | Status |
 |---|---|---|---|---|
@@ -106,7 +106,7 @@ npm run dev
 | [#28](https://github.com/oussema-fatnassi/WarOfTanks/issues/28) | Backend Unit Tests & CI Integration | Kamelia | High | Not started |
 | [#30](https://github.com/oussema-fatnassi/WarOfTanks/issues/30) | Auth Pages (Register + Login) | Oussema | High | Not started |
 
-### Sprint 5 — Integration & Delivery (due April 30)
+### Sprint 5 — Integration & Delivery (May 4 – May 10)
 
 | # | Title | Owner | Priority | Status |
 |---|---|---|---|---|
