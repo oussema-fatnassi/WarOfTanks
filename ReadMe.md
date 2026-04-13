@@ -53,9 +53,16 @@ npm run dev
 
 ### Sprint 1 — Setup & Architecture
 - ✅ [#1](https://github.com/oussema-fatnassi/WarOfTanks/issues/1) UML Class Diagrams — all layers documented (Unity, Backend, AI)
+- ✅ [#2](https://github.com/oussema-fatnassi/WarOfTanks/issues/2) ERD - MongoDB Schema Design — 3 collections modeled, embed/reference decisions documented, committed to `docs/erd/`
 - ✅ [#3](https://github.com/oussema-fatnassi/WarOfTanks/issues/3) State Machine Diagrams — Zone Capture FSM + Game State FSM committed to `docs/state-machines/`
 - ✅ [#4](https://github.com/oussema-fatnassi/WarOfTanks/issues/4) Unity Project Base Setup — scenes, input system, packages configured
-- ✅ [#6](https://github.com/oussema-fatnassi/WarOfTanks/issues/6) | GitHub Actions - Code Quality | Oussema | High |
+- ✅ [#6](https://github.com/oussema-fatnassi/WarOfTanks/issues/6) GitHub Actions - Code Quality — linters running on all PRs
+
+### Sprint 2 — Core Gameplay
+- ✅ [#9](https://github.com/oussema-fatnassi/WarOfTanks/issues/9) Environment - Tilemaps Setup — tile assets, palettes, and Physics2D layers configured
+
+### Sprint 3 — Navigation & Backend Foundation
+- ✅ [#24](https://github.com/oussema-fatnassi/WarOfTanks/issues/24) Backend Project Setup — Go + Gin + MongoDB + Docker, health endpoint live at `/api/v1/health`
 
 ## In Progress / Remaining
 
@@ -63,7 +70,6 @@ npm run dev
 
 | # | Title | Owner | Priority |
 |---|---|---|---|
-| [#2](https://github.com/oussema-fatnassi/WarOfTanks/issues/2) | ERD - MongoDB Schema Design | Kamelia | Critical |
 | [#5](https://github.com/oussema-fatnassi/WarOfTanks/issues/5) | GitHub Actions - Backend CI | Kamelia | Critical |
 | [#35](https://github.com/oussema-fatnassi/WarOfTanks/issues/35) | Technical Note - UML, ERD, Tech Justification | All | Critical |
 
@@ -72,7 +78,6 @@ npm run dev
 | # | Title | Owner | Priority |
 |---|---|---|---|
 | [#8](https://github.com/oussema-fatnassi/WarOfTanks/issues/8) | Tank Prefab - Movement, Cannon, HP, Respawn | Oroitz | Critical |
-| [#9](https://github.com/oussema-fatnassi/WarOfTanks/issues/9) | Environment - Tilemaps Setup | Oussema | Critical |
 | [#10](https://github.com/oussema-fatnassi/WarOfTanks/issues/10) | Player Controls - Selection & Commands | Oussema | Critical |
 | [#11](https://github.com/oussema-fatnassi/WarOfTanks/issues/11) | RTS Camera | Oussema | High |
 | [#12](https://github.com/oussema-fatnassi/WarOfTanks/issues/12) | Generic State Machine System | Oussema | Critical |
@@ -86,7 +91,6 @@ npm run dev
 | [#16](https://github.com/oussema-fatnassi/WarOfTanks/issues/16) | Local Obstacle Avoidance | Oroitz | High |
 | [#17](https://github.com/oussema-fatnassi/WarOfTanks/issues/17) | Control Zone - State Machine | Oussema | Critical |
 | [#18](https://github.com/oussema-fatnassi/WarOfTanks/issues/18) | Gameplay & Win Conditions - Teams, Score, Timer, Menu | Oroitz | High |
-| [#24](https://github.com/oussema-fatnassi/WarOfTanks/issues/24) | Backend Project Setup (Go + Gin + MongoDB + Docker) | Kamelia | Critical |
 | [#25](https://github.com/oussema-fatnassi/WarOfTanks/issues/25) | Player Model & Auth Routes (Register + Login) | Kamelia | Critical |
 | [#26](https://github.com/oussema-fatnassi/WarOfTanks/issues/26) | JWT Auth Middleware & Refresh Token Route | Kamelia | Critical |
 
@@ -131,4 +135,4 @@ The project is split into three independently deployable layers:
 Architecture diagrams are live in `docs/`:
 - UML Class Diagrams — `docs/uml/` ([#1](https://github.com/oussema-fatnassi/WarOfTanks/issues/1) ✅)
 - State Machine Diagrams — `docs/state-machines/` ([#3](https://github.com/oussema-fatnassi/WarOfTanks/issues/3) ✅)
-- ERD (MongoDB Schema) — pending ([#2](https://github.com/oussema-fatnassi/WarOfTanks/issues/2))
+- ERD (MongoDB Schema) — `docs/erd/` ([#2](https://github.com/oussema-fatnassi/WarOfTanks/issues/2) ✅)
