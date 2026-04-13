@@ -49,7 +49,8 @@ Create a `.env` file in `BACKEND/` with these values before running.
 
 | # | Title | Status |
 |---|---|---|
-| [#24](https://github.com/oussema-fatnassi/WarOfTanks/issues/24) | Backend Project Setup (Go + Gin + MongoDB + Docker) | Not started |
+| [#2](https://github.com/oussema-fatnassi/WarOfTanks/issues/2) | ERD - MongoDB Schema Design | ✅ Done |
+| [#24](https://github.com/oussema-fatnassi/WarOfTanks/issues/24) | Backend Project Setup (Go + Gin + MongoDB + Docker) | ✅ Done |
 | [#25](https://github.com/oussema-fatnassi/WarOfTanks/issues/25) | Player Model & Auth Routes (Register + Login) | Not started |
 | [#26](https://github.com/oussema-fatnassi/WarOfTanks/issues/26) | JWT Auth Middleware & Refresh Token Route | Not started |
 | [#27](https://github.com/oussema-fatnassi/WarOfTanks/issues/27) | Player & Match Routes | Not started |
@@ -58,5 +59,5 @@ Create a `.env` file in `BACKEND/` with these values before running.
 
 ## Architecture Notes
 
-- MongoDB schema (ERD) tracked in [#2](https://github.com/oussema-fatnassi/WarOfTanks/issues/2) — will be added to `docs/` once completed.
+- MongoDB schema (ERD) committed to `docs/erd/` ([#2](https://github.com/oussema-fatnassi/WarOfTanks/issues/2) ✅)
 - Naming conventions: see `docs/naming-conventions.md` in the root repo.

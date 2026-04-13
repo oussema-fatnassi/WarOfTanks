@@ -20,9 +20,13 @@
 ```
 UNITY/
 └── Assets/
-    ├── Scenes/         # Game scenes
+    ├── Scenes/         # Game scenes (FinalScene, Tilemaps)
     ├── Scripts/        # C# game scripts
-    └── Prefabs/        # Tank and environment prefabs
+    ├── Prefabs/        # Tank and environment prefabs
+    ├── Sprites/        # Sprite assets (Square, Circle)
+    └── Tilemaps/       # Tile assets and palettes
+        ├── Palettes/   # Tile palette prefabs
+        └── Tiles/      # Flat-color placeholder tile assets
 ```
 
 ## Key Systems
@@ -30,10 +34,10 @@ UNITY/
 | System | Issue | Status |
 |---|---|---|
 | Unity Project Base Setup | [#4](https://github.com/oussema-fatnassi/WarOfTanks/issues/4) | ✅ Done |
-| Tank Prefab - Movement, Cannon, HP, Respawn | [#8](https://github.com/oussema-fatnassi/WarOfTanks/issues/8) | Not started |
-| Environment - Tilemaps Setup | [#9](https://github.com/oussema-fatnassi/WarOfTanks/issues/9) | Not started |
+| Tank Prefab - Movement, Cannon, HP, Respawn | [#8](https://github.com/oussema-fatnassi/WarOfTanks/issues/8) | In progress |
+| Environment - Tilemaps Setup | [#9](https://github.com/oussema-fatnassi/WarOfTanks/issues/9) | ✅ Done |
 | Player Controls - Selection & Commands | [#10](https://github.com/oussema-fatnassi/WarOfTanks/issues/10) | Not started |
-| RTS Camera | [#11](https://github.com/oussema-fatnassi/WarOfTanks/issues/11) | Not started |
+| RTS Camera | [#11](https://github.com/oussema-fatnassi/WarOfTanks/issues/11) | In progress |
 | Generic State Machine System | [#12](https://github.com/oussema-fatnassi/WarOfTanks/issues/12) | Not started |
 | Navigation - A* Pathfinding | [#13](https://github.com/oussema-fatnassi/WarOfTanks/issues/13) | Not started |
 | Navigation - Dijkstra | [#14](https://github.com/oussema-fatnassi/WarOfTanks/issues/14) | Not started |
@@ -50,7 +54,9 @@ UNITY/
 
 ## Architecture Notes
 
+- UML class diagrams committed to `docs/uml/` — Unity, Backend, and AI layers ([#1](https://github.com/oussema-fatnassi/WarOfTanks/issues/1) ✅)
+- ERD (MongoDB schema) committed to `docs/erd/` ([#2](https://github.com/oussema-fatnassi/WarOfTanks/issues/2) ✅)
 - State machine diagrams committed to `docs/state-machines/` — Zone Capture FSM and Game State FSM ([#3](https://github.com/oussema-fatnassi/WarOfTanks/issues/3) ✅)
-- UML class diagrams in `docs/uml/` — Unity, Backend, and AI layers ([#1](https://github.com/oussema-fatnassi/WarOfTanks/issues/1) ✅)
+- Technology justification committed to `docs/technical-note/` ([#35](https://github.com/oussema-fatnassi/WarOfTanks/issues/35) — Figma mockups remaining)
 - The AI + tank system must remain a self-contained modular prefab (championship requirement).
 - Naming conventions: see `docs/naming-conventions.md` in the root repo.
