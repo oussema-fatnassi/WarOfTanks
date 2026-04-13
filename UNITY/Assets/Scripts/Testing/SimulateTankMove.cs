@@ -6,7 +6,7 @@ public class SimulateTankMove : MonoBehaviour
 {
     [SerializeField] private TankController _tankController;
 
-    private Vector2 _moveTo = new Vector2(10f, 0f);
+    private Vector2 _moveTo = new Vector2(5f, 0f);
     private float _timeToReachDestination;
     private float _timer;
     private int _moveAttempts = 0;
@@ -24,30 +24,25 @@ public class SimulateTankMove : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (_moveAttempts > 11)
+        if (_moveAttempts > 301)
         {
             return;
         }
         _moveAttempts++;
-        if (_moveAttempts > 10)
+        if (_moveAttempts > 300)
         {
             Debug.LogWarning("Too many move attempts, stopping the test.");
-            _tankController.Rotate(0f);
+            _tankController.Stop();
+            //_tankController.Rotate(50f);
         }
         if (!_status) { return; }
 
-        if (Vector2.Distance(_tankController.transform.position, _moveTo) < 0.1f)
-        {
-            _tankController.Stop();
-            Debug.Log("Tank reached the destination.");
-            _status = false;
-        }
-        if (Time.time - _timer > _timeToReachDestination + 1f)
-        {
-            Debug.LogWarning("Tank did not reach the destination within the expected time.");
-            _tankController.Stop();
-            _status = false;
-        }
+        //if (Time.time - _timer > _timeToReachDestination + 1f)
+        //{
+        //    Debug.LogWarning("Tank did not reach the destination within the expected time.");
+        //    _tankController.Stop();
+        //    _status = false;
+        //}
     }
 
     private float CalculateTimeToReachDestination()
