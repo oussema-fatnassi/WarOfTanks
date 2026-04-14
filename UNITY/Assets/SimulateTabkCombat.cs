@@ -6,15 +6,23 @@ public class SimulateTabkCombat : MonoBehaviour
 {
     [SerializeField] private TurretController _playerTurretController;
     [SerializeField] private TurretController _enemyTurretController;
+
+    private Vector3 _positionRegistered;
     // Start is called before the first frame update
     void Start()
     {
+        _positionRegistered = _enemyTurretController.transform.position;
         _playerTurretController.RotateTo(_enemyTurretController.transform.position);
     }
 
     // Update is called once per frame
     void Update()
     {
+        if (_positionRegistered != _enemyTurretController.transform.position)
+        {
+            _positionRegistered = _enemyTurretController.transform.position;
+            _playerTurretController.RotateTo(_enemyTurretController.transform.position);
+        }
         _playerTurretController.Fire(true);
     }
 }

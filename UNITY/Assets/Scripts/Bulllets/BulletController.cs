@@ -8,7 +8,7 @@ public class BulletController : MonoBehaviour
     [Header("Bullet Settings")]
     [SerializeField] private float _damage = 10f;
     [SerializeField] private float _speed = 10f;
-    [SerializeField] private float _falloffDistance = 10f;
+    [SerializeField] private float _falloffDistance = 80f;
 
     private float _lifetime;
     private Rigidbody2D _rigidbody;
@@ -29,13 +29,15 @@ public class BulletController : MonoBehaviour
     void Start()
     {
         _lifetime = _falloffDistance / _speed;
+        Debug.Log($"Bullet initialized with damage {_damage}, speed {_speed}, falloff distance {_falloffDistance}, and calculated lifetime {_lifetime}");
     }
     #endregion
 
     public void Launch(Vector2 direction)
     {
         _rigidbody.velocity = direction.normalized * _speed;
-        //Destroy(gameObject, _lifetime);
+        Debug.Log($"Bullet launched with speed {_speed} and lifetime {_lifetime}");
+        Destroy(gameObject,_lifetime);
     }
 
     private void OnTriggerEnter2D(Collider2D collision)

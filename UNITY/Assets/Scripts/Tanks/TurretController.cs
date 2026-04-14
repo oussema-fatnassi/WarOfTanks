@@ -33,7 +33,8 @@ public class TurretController : MonoBehaviour
     {
         Vector2 direction = targetPosition - (Vector2)_turretTransform.position;
         float targetAngle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
-        _turretTransform.rotation = Quaternion.RotateTowards(_turretTransform.rotation, Quaternion.Euler(0, 0, targetAngle), _rotationSpeed * Time.deltaTime);
+        //TODO : Add a rotation speed to the turret rotation to make it more realistic. For now, we will set the rotation directly to the target angle.
+        _turretTransform.rotation = Quaternion.RotateTowards(_turretTransform.rotation, Quaternion.Euler(0, 0, targetAngle),300);
     }
 
     public BulletController Fire(bool force = false)
@@ -42,15 +43,12 @@ public class TurretController : MonoBehaviour
         _lastFireTime = Time.time;
 
         GameObject bulletObject = Instantiate(_bulletPrefab, _cannonTipTransform.position, _cannonTipTransform.rotation, _bulletPool);
-        Debug.Log($"Fired a bullet from {_cannonTipTransform.position} towards {_cannonTipTransform.up}");
-        Debug.DrawRay(_cannonTipTransform.position, _cannonTipTransform.up * 5, Color.red, 2f);
-        Debug.Log($"Bullet Object: {bulletObject.name}");
         BulletController bulletController = bulletObject.GetComponent<BulletController>();
         Physics2D.IgnoreCollision(bulletObject.GetComponent<Collider2D>(), GetComponentInParent<Collider2D>());
 
         // TODO : Maybe call initialize with damage, speed , etc. if needed in the future.
         // TODO : Add the ETankTeam parameter to the bullet controller to set the team of the bullet for collision purposes.
-        bulletController.Launch(_cannonTipTransform.transform.up);
+        bulletController.Launch(_cannonTipTransform.transform.right);
         return bulletController;
     }
     #endregion
