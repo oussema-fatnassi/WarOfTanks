@@ -8,12 +8,7 @@ public class MonoStateTest : MonoBehaviour
 
     private void Awake()
     {
-        _sm = new StateMachine<MonoStateTest>(this);
-    }
-
-    private void Start()
-    {
-        _sm.SetState(new StateA());
+        _sm = new StateMachine<MonoStateTest>(this, new StateA());
     }
 
     private void Update()
@@ -21,8 +16,7 @@ public class MonoStateTest : MonoBehaviour
         _sm.Update();
         if (Keyboard.current.spaceKey.wasPressedThisFrame)
         {
-            _sm.SetState(new StateB());
+            _sm.ChangeState(new StateB());
         }
     }
 }
-        

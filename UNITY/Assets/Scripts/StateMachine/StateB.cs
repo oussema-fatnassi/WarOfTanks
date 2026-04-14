@@ -1,19 +1,20 @@
+// Smoke test state — remove once real states are implemented
 using UnityEngine;
 using WarOfTanks.StateMachine;
 
-public class StateB : IState
+public class StateB : IState<MonoStateTest>
 {
-    public void Enter()
+    public void Enter(MonoStateTest context)
     {
         Debug.Log("State B Entered");
     }
 
-    public void Update()
+    public void Execute(MonoStateTest context)
     {
-        Debug.Log("State B Updated");
+        Debug.Log("State B Executing");
     }
 
-    public void Exit()
+    public void Exit(MonoStateTest context)
     {
         Debug.Log("State B Exited");
     }

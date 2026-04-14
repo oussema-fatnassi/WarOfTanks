@@ -1,22 +1,22 @@
 using WarOfTanks.StateMachine;
-    
-class MockState : IState
+
+class MockState : IState<DummyOwner>
 {
     public int enterCount;
-    public int updateCount;
+    public int executeCount;
     public int exitCount;
 
-    public void Enter()
+    public void Enter(DummyOwner context)
     {
         enterCount++;
     }
 
-    public void Update()
+    public void Execute(DummyOwner context)
     {
-        updateCount++;
+        executeCount++;
     }
 
-    public void Exit()
+    public void Exit(DummyOwner context)
     {
         exitCount++;
     }

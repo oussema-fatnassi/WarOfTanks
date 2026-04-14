@@ -4,56 +4,42 @@ using WarOfTanks.StateMachine;
 public class StateMachineTests
 {
     [Test]
-    public void GetCurrentState_ReturnsNull_WhenNoStateHasBeenSet()
+    public void Constructor_SetsInitialState_AndCallsEnter()
     {
         var owner = new DummyOwner();
-        var stateMachine = new StateMachine<DummyOwner>(owner);
+        var initialState = new MockState();
 
-        var currentState = stateMachine.GetCurrentState();
+        var stateMachine = new StateMachine<DummyOwner>(owner, initialState);
 
-        Assert.IsNull(currentState);
+        Assert.AreSame(initialState, stateMachine.GetCurrentState());
+        Assert.AreEqual(1, initialState.enterCount);
+        Assert.AreEqual(0, initialState.exitCount);
+        Assert.AreEqual(0, initialState.executeCount);
     }
 
     [Test]
-    public void SetState_SetsCurrentState_AndCallsEnterOnNewState()
+    public void Update_CallsExecuteOnCurrentState()
     {
         var owner = new DummyOwner();
-        var stateMachine = new StateMachine<DummyOwner>(owner);
-        var newState = new MockState();
-
-        stateMachine.SetState(newState);
-
-        Assert.AreSame(newState, stateMachine.GetCurrentState());
-        Assert.AreEqual(1, newState.enterCount);
-        Assert.AreEqual(0, newState.exitCount);
-        Assert.AreEqual(0, newState.updateCount);
-    }
-
-    [Test]
-    public void Update_CallsUpdateOnCurrentState()
-    {
-        var owner = new DummyOwner();
-        var stateMachine = new StateMachine<DummyOwner>(owner);
         var currentState = new MockState();
-        stateMachine.SetState(currentState);
+        var stateMachine = new StateMachine<DummyOwner>(owner, currentState);
 
         stateMachine.Update();
 
-        Assert.AreEqual(1, currentState.updateCount);
+        Assert.AreEqual(1, currentState.executeCount);
         Assert.AreEqual(1, currentState.enterCount);
         Assert.AreEqual(0, currentState.exitCount);
     }
 
     [Test]
-    public void SetState_ExitsPreviousState_AndEntersNewState()
+    public void ChangeState_ExitsPreviousState_AndEntersNewState()
     {
         var owner = new DummyOwner();
-        var stateMachine = new StateMachine<DummyOwner>(owner);
         var previousState = new MockState();
         var nextState = new MockState();
-        stateMachine.SetState(previousState);
+        var stateMachine = new StateMachine<DummyOwner>(owner, previousState);
 
-        stateMachine.SetState(nextState);
+        stateMachine.ChangeState(nextState);
 
         Assert.AreSame(nextState, stateMachine.GetCurrentState());
         Assert.AreEqual(1, previousState.enterCount);
@@ -63,13 +49,16 @@ public class StateMachineTests
     }
 
     [Test]
-    public void Update_DoesNotThrow_WhenNoCurrentStateExists()
+    public void Update_CallsExecuteWithCorrectContext()
     {
         var owner = new DummyOwner();
-        var stateMachine = new StateMachine<DummyOwner>(owner);
+        var state = new MockState();
+        var stateMachine = new StateMachine<DummyOwner>(owner, state);
 
-        TestDelegate updateWithoutState = () => stateMachine.Update();
+        stateMachine.Update();
+        stateMachine.Update();
+        stateMachine.Update();
 
-        Assert.DoesNotThrow(updateWithoutState);
+        Assert.AreEqual(3, state.executeCount);
     }
 }
