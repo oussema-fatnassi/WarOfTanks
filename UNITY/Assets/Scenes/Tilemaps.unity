@@ -18501,7 +18501,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fd1c86ae2ce139f4596d3c8ec497aab1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _panSpeed: 10
+  _panSpeed: 5
   _edgeThreshold: 20
   _mapBounds:
     m_Center: {x: 0, y: 0, z: 0}
