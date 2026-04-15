@@ -1,6 +1,6 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
+using System;
 using UnityEngine;
 
 public class HealthSystem : MonoBehaviour
@@ -31,6 +31,7 @@ public class HealthSystem : MonoBehaviour
     }
     #endregion
 
+    #region Health Management Methods
     public void TakeDamage(float damage)
     {
         if (IsDead) return;
@@ -56,7 +57,5 @@ public class HealthSystem : MonoBehaviour
         _currentHealth = _maxHealth;
         OnHealthChanged?.Invoke();
     }
-
-
-
+    #endregion
 }

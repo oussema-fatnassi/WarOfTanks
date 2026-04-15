@@ -9,10 +9,17 @@ public class HealthBarUI : MonoBehaviour
     [SerializeField] private Image _healthFillImage;
 
     private HealthSystem _healthSystem;
-    // Start is called before the first frame update
-    public void Awake()
+    private void Awake()
     {
         _healthSystem = GetComponentInParent<HealthSystem>();
+    }
+
+    private void OnDestroy()
+    {
+        if (_healthSystem != null)
+        {
+            _healthSystem.OnHealthChanged -= UpdateHealthFillImage;
+        }
     }
     void Start()
     {

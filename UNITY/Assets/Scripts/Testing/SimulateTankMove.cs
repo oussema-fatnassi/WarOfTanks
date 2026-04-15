@@ -12,7 +12,6 @@ public class SimulateTankMove : MonoBehaviour
     private int _moveAttempts = 0;
 
     private bool _status = true;
-    // Start is called before the first frame update
     void Start()
     {   _timeToReachDestination = CalculateTimeToReachDestination();
         _tankController.Move(_moveTo);

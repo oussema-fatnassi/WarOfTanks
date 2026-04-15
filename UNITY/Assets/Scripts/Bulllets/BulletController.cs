@@ -22,7 +22,6 @@ public class BulletController : MonoBehaviour
     private void Awake()
     {
         _rigidbody = GetComponent<Rigidbody2D>();
-        //For testingPurposes, we will set the owner team to Player for now. We will change this later when we implement the tank controller and turret controller.
     }
     #endregion
 

@@ -37,7 +37,6 @@ public class TurretController : MonoBehaviour
     {
         Vector2 direction = targetPosition - (Vector2)_turretTransform.position;
         float targetAngle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
-        //TODO : Add a rotation speed to the turret rotation to make it more realistic. For now, we will set the rotation directly to the target angle.
         _turretTransform.rotation = Quaternion.RotateTowards(_turretTransform.rotation, Quaternion.Euler(0, 0, targetAngle),_rotationSpeed * Time.deltaTime);
     }
 
