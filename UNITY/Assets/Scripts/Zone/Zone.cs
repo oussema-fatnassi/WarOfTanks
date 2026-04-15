@@ -107,6 +107,7 @@ namespace WarOfTanks.Zone
         #region Physics Callbacks
         public void OnTriggerEnter2D(Collider2D other)
         {
+            Debug.Log($"OnTriggerEnter2D: {other.gameObject.name}");
             var tank = other.GetComponent<Tank>();
             if (tank == null) return;
 
@@ -124,6 +125,7 @@ namespace WarOfTanks.Zone
 
         public void OnTriggerExit2D(Collider2D other)
         {
+            Debug.Log($"OnTriggerExit2D: {other.gameObject.name}");
             var tank = other.GetComponent<Tank>();
             if (tank == null) return;
 
