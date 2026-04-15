@@ -37,8 +37,8 @@ UNITY/
 | Tank Prefab - Movement, Cannon, HP, Respawn | [#8](https://github.com/oussema-fatnassi/WarOfTanks/issues/8) | In progress |
 | Environment - Tilemaps Setup | [#9](https://github.com/oussema-fatnassi/WarOfTanks/issues/9) | ✅ Done |
 | Player Controls - Selection & Commands | [#10](https://github.com/oussema-fatnassi/WarOfTanks/issues/10) | Not started |
-| RTS Camera | [#11](https://github.com/oussema-fatnassi/WarOfTanks/issues/11) | done| ✅ 
-| Generic State Machine System | [#12](https://github.com/oussema-fatnassi/WarOfTanks/issues/12) | Not started |
+| RTS Camera | [#11](https://github.com/oussema-fatnassi/WarOfTanks/issues/11) | ✅ Done |
+| Generic State Machine System | [#12](https://github.com/oussema-fatnassi/WarOfTanks/issues/12) | ✅ Done |
 | Navigation - A* Pathfinding | [#13](https://github.com/oussema-fatnassi/WarOfTanks/issues/13) | Not started |
 | Navigation - Dijkstra | [#14](https://github.com/oussema-fatnassi/WarOfTanks/issues/14) | Not started |
 | Navigation - Flow Field | [#15](https://github.com/oussema-fatnassi/WarOfTanks/issues/15) | Not started |

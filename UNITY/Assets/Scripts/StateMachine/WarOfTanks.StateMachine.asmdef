@@ -1,0 +1,6 @@
+{
+    "name": "WarOfTanks.StateMachine",
+    "references": [
+        "Unity.InputSystem"
+    ]
+}

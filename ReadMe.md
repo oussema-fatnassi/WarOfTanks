@@ -63,6 +63,9 @@ npm run dev
 
 ### Sprint 2 — Core Gameplay
 - ✅ [#9](https://github.com/oussema-fatnassi/WarOfTanks/issues/9) Environment - Tilemaps Setup — 6 layers, collision matrix, symmetric map painted
+- ✅ [#35](https://github.com/oussema-fatnassi/WarOfTanks/issues/35) Technical Note — Figma mockups remaining (see #47)
+- ✅ [#11](https://github.com/oussema-fatnassi/WarOfTanks/issues/11) RTS Camera
+- ✅ [#12](https://github.com/oussema-fatnassi/WarOfTanks/issues/12) Generic State Machine System
 
 ## In Progress / Remaining
 
@@ -71,16 +74,13 @@ npm run dev
 | # | Title | Owner | Priority | Status |
 |---|---|---|---|---|
 | [#5](https://github.com/oussema-fatnassi/WarOfTanks/issues/5) | GitHub Actions - Backend CI | Kamelia | Critical | Not started |
-| [#35](https://github.com/oussema-fatnassi/WarOfTanks/issues/35) | Technical Note — Figma mockups remaining (see #47) | All | Critical | In progress |
 
 ### Sprint 2 — Core Gameplay (Apr 13 – Apr 19)
 
 | # | Title | Owner | Priority | Status |
 |---|---|---|---|---|
 | [#8](https://github.com/oussema-fatnassi/WarOfTanks/issues/8) | Tank Prefab - Movement, Cannon, HP, Respawn | Oroitz | Critical | In progress |
-| [#10](https://github.com/oussema-fatnassi/WarOfTanks/issues/10) | Player Controls - Selection & Commands | Oussema | Critical | Not started |
-| [#11](https://github.com/oussema-fatnassi/WarOfTanks/issues/11) | RTS Camera | Oussema | High | In progress |
-| [#12](https://github.com/oussema-fatnassi/WarOfTanks/issues/12) | Generic State Machine System | Oussema | Critical | Not started |
+| [#10](https://github.com/oussema-fatnassi/WarOfTanks/issues/10) | Player Controls - Selection & Commands | Oroitz | Critical | Not started |
 | [#29](https://github.com/oussema-fatnassi/WarOfTanks/issues/29) | Frontend Project Setup (Vite + React + TypeScript) | Oussema | Critical | In progress |
 
 ### Sprint 3 — Navigation & Backend Foundation (Apr 20 – Apr 26)
