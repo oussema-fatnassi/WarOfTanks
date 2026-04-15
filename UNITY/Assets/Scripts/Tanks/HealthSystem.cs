@@ -25,7 +25,7 @@ public class HealthSystem : MonoBehaviour
     #endregion
 
     #region Unity Methods
-    public void Awake()
+    private void Awake()
     {
         _currentHealth = _maxHealth;
     }

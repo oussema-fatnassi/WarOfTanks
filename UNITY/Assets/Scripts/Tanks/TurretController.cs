@@ -14,7 +14,7 @@ public class TurretController : MonoBehaviour
     [SerializeField] private Transform _bulletPool;
 
     [Header("Turret Settings")]
-    [SerializeField] private float _rotationSpeed = 360f;
+    [SerializeField] private float _turretRotationSpeed = 360f;
     [SerializeField] private float _fireRate = 1f;
 
     private float _lastFireTime = 0;
@@ -37,7 +37,7 @@ public class TurretController : MonoBehaviour
     {
         Vector2 direction = targetPosition - (Vector2)_turretTransform.position;
         float targetAngle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
-        _turretTransform.rotation = Quaternion.RotateTowards(_turretTransform.rotation, Quaternion.Euler(0, 0, targetAngle),_rotationSpeed * Time.deltaTime);
+        _turretTransform.rotation = Quaternion.RotateTowards(_turretTransform.rotation, Quaternion.Euler(0, 0, targetAngle), _turretRotationSpeed * Time.deltaTime);
     }
 
     public BulletController Fire(bool force = false)

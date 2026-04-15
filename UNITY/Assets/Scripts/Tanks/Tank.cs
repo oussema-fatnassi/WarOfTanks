@@ -49,6 +49,7 @@ public class Tank : MonoBehaviour
 
     public void Die()
     {
+        if (!_isAlive) return;
         _isAlive = false;
         _tankBody.SetActive(false);
         _collider.enabled = false;
