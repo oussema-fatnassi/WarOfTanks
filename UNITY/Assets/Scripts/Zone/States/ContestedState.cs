@@ -16,12 +16,7 @@ public class ContestedState : State<Zone>
     protected override void Enter()
     {
         Debug.Log("Entered Contested State");
-    }
-
-    /// <summary>Restores the zone visual to the pre-conflict state.</summary>
-    protected override void Exit()
-    {
-        Debug.Log("Exited Contested State");
+        Context.UI.SetContested();
     }
 
     /// <summary>
@@ -32,5 +27,26 @@ public class ContestedState : State<Zone>
     protected override void Execute()
     {
         Debug.Log("Executing Contested State");
+        if (Context.PlayerTankCount == 0 && Context.AITankCount == 0)
+        {
+            Machine.ChangeState(new NeutralState(Machine));
+        }
+        else if (Context.PlayerTankCount > 0 && Context.AITankCount == 0)
+        {
+            Context.controllingTeam = 0;
+            Machine.ChangeState(new CapturingState(Machine));
+        }
+        else if (Context.AITankCount > 0 && Context.PlayerTankCount == 0)
+        {
+            Context.controllingTeam = 1;
+            Machine.ChangeState(new CapturingState(Machine));
+        }
     }
+    
+    /// <summary>Restores the zone visual to the pre-conflict state.</summary>
+    protected override void Exit()
+    {
+        Debug.Log("Exited Contested State");
+    }
+
 }
