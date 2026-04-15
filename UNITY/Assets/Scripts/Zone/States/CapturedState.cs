@@ -11,16 +11,17 @@ public class CapturedState : State<Zone>
 {
     public CapturedState(StateMachine<Zone> machine) : base(machine) {}
 
+    private float _scoringTimer;
+    private float _timeoutTimer;
+
     /// <summary>Sets the controlling team, starts the scoring timer, and updates the zone color.</summary>
     protected override void Enter()
     {
         Debug.Log("Entered Captured State");
-    }
-
-    /// <summary>Stops the scoring timer and resets any timeout countdown.</summary>
-    protected override void Exit()
-    {
-        Debug.Log("Exited Captured State");
+        Context.UI.SetCaptured(Context.controllingTeam == 0);
+        _scoringTimer = 0f;
+        _timeoutTimer = 0f;
+        _timeoutStarted = false;
     }
 
     /// <summary>
@@ -31,5 +32,42 @@ public class CapturedState : State<Zone>
     protected override void Execute()
     {
         Debug.Log("Executing Captured State");
+        if (Context.IsContested())
+        {
+            Machine.ChangeState(new ContestedState(Machine));
+        }
+        else if (Context.controllingTeam == 0 ? Context.PlayerTankCount > 0 : Context.AITankCount > 0)
+        {
+            _timeoutTimer = 0f;
+            _scoringTimer += Time.deltaTime;
+            if (_scoringTimer >= Context.ScoringRate)
+            {
+                _scoringTimer = 0f;
+                // TODO: Add score to the controlling team
+                Debug.Log("Scoring for team " + Context.controllingTeam);
+                //Context.UI.AddScore(Context.controllingTeam);
+            }
+        }
+        else
+        {
+            _timeoutTimer += Time.deltaTime;
+            if (_timeoutTimer >= Context.CapturedTimeout)
+            {
+                Context.DecayGauge(Time.deltaTime);
+                if (Context.captureProgress < 100f)
+                {
+                    Machine.ChangeState(new CapturingState(Machine));
+                }
+            }
+        }
+    }
+
+    /// <summary>Stops the scoring timer and resets any timeout countdown.</summary>
+    protected override void Exit()
+    {
+        Debug.Log("Exited Captured State");
+        _scoringTimer = 0f;
+        _timeoutTimer = 0f;
+        _timeoutStarted = false;
     }
 }
