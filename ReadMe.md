@@ -1,5 +1,7 @@
 # War of Tanks
 
+[![Backend CI](https://github.com/oussema-fatnassi/WarOfTanks/actions/workflows/backend-ci.yml/badge.svg)](https://github.com/oussema-fatnassi/WarOfTanks/actions/workflows/backend-ci.yml)
+
 > 2D top-down RTS game — La Plateforme school project
 
 ## Project Description
