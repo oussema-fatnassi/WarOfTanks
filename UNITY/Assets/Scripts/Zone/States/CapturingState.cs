@@ -12,12 +12,12 @@ public class CapturingState : State<Zone>
     public CapturingState(StateMachine<Zone> machine) : base(machine) {}
 
     /// <summary>Records which team is capturing and updates the zone color to that team's color.</summary>
-    public override void Enter()
+    protected override void Enter()
     {
         Debug.Log("Entered Capturing State");
     }
 
-    public override void Exit()
+    protected override void Exit()
     {
         Debug.Log("Exited Capturing State");
     }
@@ -28,7 +28,7 @@ public class CapturingState : State<Zone>
     /// Checks for abandonment (all tanks leave) → decays gauge → NeutralState.
     /// Checks for full capture (progress == 100) → CapturedState.
     /// </summary>
-    public override void Execute()
+    protected override void Execute()
     {
         Debug.Log("Executing Capturing State");
     }

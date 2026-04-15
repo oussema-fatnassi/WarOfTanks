@@ -13,13 +13,13 @@ public class ContestedState : State<Zone>
     public ContestedState(StateMachine<Zone> machine) : base(machine) {}
 
     /// <summary>Freezes the capture gauge and shows the contested visual indicator.</summary>
-    public override void Enter()
+    protected override void Enter()
     {
         Debug.Log("Entered Contested State");
     }
 
     /// <summary>Restores the zone visual to the pre-conflict state.</summary>
-    public override void Exit()
+    protected override void Exit()
     {
         Debug.Log("Exited Contested State");
     }
@@ -29,7 +29,7 @@ public class ContestedState : State<Zone>
     /// One team leaves → CapturingState for the remaining team.
     /// All tanks leave → NeutralState.
     /// </summary>
-    public override void Execute()
+    protected override void Execute()
     {
         Debug.Log("Executing Contested State");
     }

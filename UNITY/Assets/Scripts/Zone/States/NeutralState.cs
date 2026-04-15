@@ -11,12 +11,12 @@ public class NeutralState : State<Zone>
     public NeutralState(StateMachine<Zone> machine) : base(machine) {}
 
     /// <summary>Resets the zone visual to neutral (gray) and clears capture progress.</summary>
-    public override void Enter()
+    protected override void Enter()
     {
         Debug.Log("Entered Neutral State");
     }
 
-    public override void Exit()
+    protected override void Exit()
     {
         Debug.Log("Exited Neutral State");
     }
@@ -25,7 +25,7 @@ public class NeutralState : State<Zone>
     /// Checks zone occupancy each frame.
     /// One team present → CapturingState. Both teams present → ContestedState.
     /// </summary>
-    public override void Execute()
+    protected override void Execute()
     {
         Debug.Log("Executing Neutral State");
     }
