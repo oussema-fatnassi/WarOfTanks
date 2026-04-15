@@ -7,7 +7,7 @@ public class BulletController : MonoBehaviour
     #region Fields
     [Header("Bullet Settings")]
     [SerializeField] private float _damage = 10f;
-    [SerializeField] private float _speed = 10f;
+    [SerializeField] private float _cannonRotationSpeed = 10f;
     [SerializeField] private float _falloffDistance = 80f;
 
     private Rigidbody2D _rigidbody;
@@ -29,8 +29,8 @@ public class BulletController : MonoBehaviour
     public void Launch(Vector2 direction)
     {
         _startPosition = transform.position;
-        _rigidbody.velocity = direction.normalized * _speed;
-        float lifetime = _falloffDistance / _speed;
+        _rigidbody.velocity = direction.normalized * _cannonRotationSpeed;
+        float lifetime = _falloffDistance / _cannonRotationSpeed;
         Destroy(gameObject,lifetime);
     }
 
@@ -41,16 +41,16 @@ public class BulletController : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        Debug.Log($"Bullet hit {collision.gameObject.name}");
-        Destroy(gameObject);
+        if (TryGetComponent<Tank>(out Tank tank) && tank.Team == _ownerTeam) { return; }
+        //TODO : Can projectiles collide ?
         float damageDealt = CalculateDamage();
 
-        //TODO: See how health system works
-            HealthSystem healthSystem = collision.GetComponent<HealthSystem>();
-            if (healthSystem != null)
-            {
-                healthSystem.TakeDamage(damageDealt);
-            }
+        HealthSystem healthSystem = collision.GetComponent<HealthSystem>();
+        if (healthSystem != null)
+        {
+            healthSystem.TakeDamage(damageDealt);
+        }
+        Destroy(gameObject);
     }
 
     private float CalculateDamage()

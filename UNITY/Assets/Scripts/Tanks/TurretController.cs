@@ -1,6 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using UnityEditor;
 using UnityEngine;
 
 public class TurretController : MonoBehaviour
@@ -15,10 +14,11 @@ public class TurretController : MonoBehaviour
     [SerializeField] private Transform _bulletPool;
 
     [Header("Turret Settings")]
-    [SerializeField] private float _rotationSpeed = 5f;
+    [SerializeField] private float _rotationSpeed = 360f;
     [SerializeField] private float _fireRate = 1f;
 
     private float _lastFireTime = 0;
+    private Tank _currentTank;
     #endregion
 
     #region Getters
@@ -26,6 +26,10 @@ public class TurretController : MonoBehaviour
     #endregion
 
     #region Unity Methods
+    private void Awake()
+    {
+        _currentTank = GetComponentInParent<Tank>();
+    }
     #endregion
 
     #region Public Methods
@@ -34,7 +38,7 @@ public class TurretController : MonoBehaviour
         Vector2 direction = targetPosition - (Vector2)_turretTransform.position;
         float targetAngle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
         //TODO : Add a rotation speed to the turret rotation to make it more realistic. For now, we will set the rotation directly to the target angle.
-        _turretTransform.rotation = Quaternion.RotateTowards(_turretTransform.rotation, Quaternion.Euler(0, 0, targetAngle),300);
+        _turretTransform.rotation = Quaternion.RotateTowards(_turretTransform.rotation, Quaternion.Euler(0, 0, targetAngle),_rotationSpeed * Time.deltaTime);
     }
 
     public BulletController Fire(bool force = false)
@@ -47,9 +51,7 @@ public class TurretController : MonoBehaviour
         Physics2D.IgnoreCollision(bulletObject.GetComponent<Collider2D>(), GetComponentInParent<Collider2D>());
 
         // TODO : Maybe call initialize with damage, speed , etc. if needed in the future.
-        // TODO: Change this to the actual team of the tank that fired the bullet.
-        //bulletController.SetTeam(GetComponentInParent<TankController>().Team);
-        bulletController.SetTeam(ETankTeam.PLAYER);
+        bulletController.SetTeam(_currentTank.Team);
         bulletController.Launch(_cannonTipTransform.transform.right);
         return bulletController;
     }

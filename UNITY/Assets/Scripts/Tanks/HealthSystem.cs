@@ -48,11 +48,13 @@ public class HealthSystem : MonoBehaviour
     {
         _currentHealth += amount;
         _currentHealth = Mathf.Clamp(_currentHealth, 0, _maxHealth);
+        OnHealthChanged?.Invoke();
     }
 
     public void RestoreHealth()
     {
         _currentHealth = _maxHealth;
+        OnHealthChanged?.Invoke();
     }
 
 

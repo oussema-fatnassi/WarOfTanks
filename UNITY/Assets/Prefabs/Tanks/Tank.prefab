@@ -411,8 +411,8 @@ MonoBehaviour:
   _cannonTipTransform: {fileID: 773176153474690015}
   _bulletPrefab: {fileID: 4008680038055977904, guid: 4719e687b4e2ae846a42e94a65179fc9, type: 3}
   _bulletPool: {fileID: 0}
-  _rotationSpeed: 5
-  _fireRate: 13.6
+  _rotationSpeed: 360
+  _fireRate: 1
 --- !u!1 &773176153051293553
 GameObject:
   m_ObjectHideFlags: 0
