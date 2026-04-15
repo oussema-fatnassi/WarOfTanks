@@ -23,6 +23,6 @@ public class SimulateTabkCombat : MonoBehaviour
             _positionRegistered = _enemyTurretController.transform.position;
             _playerTurretController.RotateTo(_enemyTurretController.transform.position);
         }
-        _playerTurretController.Fire(true);
+        _playerTurretController.Fire();
     }
 }

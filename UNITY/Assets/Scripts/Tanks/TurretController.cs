@@ -47,7 +47,9 @@ public class TurretController : MonoBehaviour
         Physics2D.IgnoreCollision(bulletObject.GetComponent<Collider2D>(), GetComponentInParent<Collider2D>());
 
         // TODO : Maybe call initialize with damage, speed , etc. if needed in the future.
-        // TODO : Add the ETankTeam parameter to the bullet controller to set the team of the bullet for collision purposes.
+        // TODO: Change this to the actual team of the tank that fired the bullet.
+        //bulletController.SetTeam(GetComponentInParent<TankController>().Team);
+        bulletController.SetTeam(ETankTeam.PLAYER);
         bulletController.Launch(_cannonTipTransform.transform.right);
         return bulletController;
     }

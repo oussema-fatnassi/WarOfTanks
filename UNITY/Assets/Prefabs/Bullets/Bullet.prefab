@@ -136,4 +136,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _damage: 10
   _speed: 10
-  _falloffDistance: 80
+  _falloffDistance: 20
