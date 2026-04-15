@@ -15,11 +15,7 @@ public class CapturingState : State<Zone>
     protected override void Enter()
     {
         Debug.Log("Entered Capturing State");
-    }
-
-    protected override void Exit()
-    {
-        Debug.Log("Exited Capturing State");
+        Context.UI.SetCapturing(Context.controllingTeam == 0);
     }
 
     /// <summary>
@@ -31,5 +27,30 @@ public class CapturingState : State<Zone>
     protected override void Execute()
     {
         Debug.Log("Executing Capturing State");
+        if(Context.IsContested())
+        {
+            Machine.ChangeState(new ContestedState(Machine));
+        }
+        else if(Context.PlayerTankCount == 0 && Context.AITankCount == 0)
+        {
+            Context.DecayGauge(Time.deltaTime);
+            if(Context.captureProgress <= 0f)
+            {
+                Machine.ChangeState(new NeutralState(Machine));
+            }
+        }
+        else if(Context.captureProgress >= 100f)
+        {
+            Machine.ChangeState(new CapturedState(Machine));
+        }
+        else
+        {
+            Context.IncrementProgress(Time.deltaTime);
+        }
+    }
+
+    protected override void Exit()
+    {
+        Debug.Log("Exited Capturing State");
     }
 }
