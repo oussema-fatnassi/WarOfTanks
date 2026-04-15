@@ -59,5 +59,5 @@ Create a `.env` file in `BACKEND/` with these values before running.
 
 ## Architecture Notes
 
-- MongoDB schema (ERD) committed to `docs/erd/` — 3 collections: `players`, `matches`, `aiConfigs` ([#2](https://github.com/oussema-fatnassi/WarOfTanks/issues/2) ✅)
+- MongoDB schema (ERD) committed to `docs/erd/` ([#2](https://github.com/oussema-fatnassi/WarOfTanks/issues/2) ✅)
 - Naming conventions: see `docs/naming-conventions.md` in the root repo.
