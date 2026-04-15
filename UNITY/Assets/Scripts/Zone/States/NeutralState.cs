@@ -14,11 +14,8 @@ public class NeutralState : State<Zone>
     protected override void Enter()
     {
         Debug.Log("Entered Neutral State");
-    }
-
-    protected override void Exit()
-    {
-        Debug.Log("Exited Neutral State");
+        Context.UI.SetNeutral();
+        Context.controllingTeam = -1;
     }
 
     /// <summary>
@@ -28,5 +25,24 @@ public class NeutralState : State<Zone>
     protected override void Execute()
     {
         Debug.Log("Executing Neutral State");
+        if(Context.IsContested())
+        {
+            Machine.ChangeState(new ContestedState(Machine));
+        }
+        else if(Context.PlayerTankCount > 0 && Context.AITankCount == 0)
+        {
+            Context.controllingTeam = 0;
+            Machine.ChangeState(new CapturingState(Machine));
+        }
+        else if(Context.AITankCount > 0 && Context.PlayerTankCount == 0)
+        {
+            Context.controllingTeam = 1;
+            Machine.ChangeState(new CapturingState(Machine));
+        }
+    }
+
+    protected override void Exit()
+    {
+        Debug.Log("Exited Neutral State");
     }
 }
