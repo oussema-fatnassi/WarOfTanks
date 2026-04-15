@@ -53,7 +53,7 @@ public class Tank : MonoBehaviour
         _tankBody.SetActive(false);
         _collider.enabled = false;
         OnTankDied?.Invoke();
-        StartCoroutine(RespawnCoroutine);
+        StartCoroutine(RespawnCoroutine());
     }
 
     private IEnumerator RespawnCoroutine()
