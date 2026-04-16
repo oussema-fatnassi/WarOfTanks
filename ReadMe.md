@@ -58,15 +58,23 @@ npm run dev
 - ✅ [#2](https://github.com/oussema-fatnassi/WarOfTanks/issues/2) ERD - MongoDB Schema Design — committed to `docs/erd/`
 - ✅ [#3](https://github.com/oussema-fatnassi/WarOfTanks/issues/3) State Machine Diagrams — Zone Capture FSM + Game State FSM committed to `docs/state-machines/`
 - ✅ [#4](https://github.com/oussema-fatnassi/WarOfTanks/issues/4) Unity Project Base Setup — scenes, input system, packages configured
+<<<<<<< Updated upstream
 - ✅ [#5](https://github.com/oussema-fatnassi/WarOfTanks/issues/5) GitHub Actions - Backend CI — Go tests, race detector, coverage report, MongoDB service container
+=======
+- ✅ [#5](https://github.com/oussema-fatnassi/WarOfTanks/issues/5) GitHub Actions - Backend CI — Go build + test pipeline on push/PR
+>>>>>>> Stashed changes
 - ✅ [#6](https://github.com/oussema-fatnassi/WarOfTanks/issues/6) GitHub Actions - Code Quality — ESLint + Prettier for frontend, golangci-lint for backend
 - ✅ [#24](https://github.com/oussema-fatnassi/WarOfTanks/issues/24) Backend Project Setup — Go + Gin + MongoDB + Docker running
 
 ### Sprint 2 — Core Gameplay
 - ✅ [#9](https://github.com/oussema-fatnassi/WarOfTanks/issues/9) Environment - Tilemaps Setup — 6 layers, collision matrix, symmetric map painted
-- ✅ [#35](https://github.com/oussema-fatnassi/WarOfTanks/issues/35) Technical Note — Figma mockups remaining (see #47)
 - ✅ [#11](https://github.com/oussema-fatnassi/WarOfTanks/issues/11) RTS Camera
 - ✅ [#12](https://github.com/oussema-fatnassi/WarOfTanks/issues/12) Generic State Machine System
+- ✅ [#29](https://github.com/oussema-fatnassi/WarOfTanks/issues/29) Frontend Project Setup — Vite + React + TypeScript scaffolded
+- ✅ [#35](https://github.com/oussema-fatnassi/WarOfTanks/issues/35) Technical Note — Figma mockups remaining (see #47)
+
+### Sprint 3 — Navigation & Backend Foundation
+- ✅ [#17](https://github.com/oussema-fatnassi/WarOfTanks/issues/17) Control Zone - State Machine — 4-state FSM (Neutral/Capturing/Captured/Contested), circular gauge UI, team color feedback
 
 ## In Progress / Remaining
 
@@ -76,7 +84,7 @@ npm run dev
 |---|---|---|---|---|
 | [#8](https://github.com/oussema-fatnassi/WarOfTanks/issues/8) | Tank Prefab - Movement, Cannon, HP, Respawn | Oroitz | Critical | In progress |
 | [#10](https://github.com/oussema-fatnassi/WarOfTanks/issues/10) | Player Controls - Selection & Commands | Oroitz | Critical | Not started |
-| [#29](https://github.com/oussema-fatnassi/WarOfTanks/issues/29) | Frontend Project Setup (Vite + React + TypeScript) | Oussema | Critical | In progress |
+| [#51](https://github.com/oussema-fatnassi/WarOfTanks/issues/51) | Frontend App Structure — Routing, Axios Client, Types, Pages | Oussema | Critical | Not started |
 
 ### Sprint 3 — Navigation & Backend Foundation (Apr 20 – Apr 26)
 
@@ -85,7 +93,6 @@ npm run dev
 | [#13](https://github.com/oussema-fatnassi/WarOfTanks/issues/13) | Navigation - A* Pathfinding | Oussema | Critical | Not started |
 | [#14](https://github.com/oussema-fatnassi/WarOfTanks/issues/14) | Navigation - Dijkstra | Oroitz | Medium | Not started |
 | [#16](https://github.com/oussema-fatnassi/WarOfTanks/issues/16) | Local Obstacle Avoidance | Oroitz | High | Not started |
-| [#17](https://github.com/oussema-fatnassi/WarOfTanks/issues/17) | Control Zone - State Machine | Oussema | Critical | Not started |
 | [#18](https://github.com/oussema-fatnassi/WarOfTanks/issues/18) | Gameplay & Win Conditions - Teams, Score, Timer, Menu | Oroitz | High | Not started |
 | [#25](https://github.com/oussema-fatnassi/WarOfTanks/issues/25) | Player Model & Auth Routes (Register + Login) | Kamelia | Critical | Not started |
 | [#26](https://github.com/oussema-fatnassi/WarOfTanks/issues/26) | JWT Auth Middleware & Refresh Token Route | Kamelia | Critical | Not started |
