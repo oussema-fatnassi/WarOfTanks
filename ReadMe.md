@@ -77,6 +77,7 @@ npm run dev
 | [#8](https://github.com/oussema-fatnassi/WarOfTanks/issues/8) | Tank Prefab - Movement, Cannon, HP, Respawn | Oroitz | Critical | In progress |
 | [#10](https://github.com/oussema-fatnassi/WarOfTanks/issues/10) | Player Controls - Selection & Commands | Oroitz | Critical | Not started |
 | [#29](https://github.com/oussema-fatnassi/WarOfTanks/issues/29) | Frontend Project Setup (Vite + React + TypeScript) | Oussema | Critical | In progress |
+| [#54](https://github.com/oussema-fatnassi/WarOfTanks/issues/54) | MongoDB Database Initialization — Collections, Indexes & Seed Data | Kamelia | Critical | Not started |
 
 ### Sprint 3 — Navigation & Backend Foundation (Apr 20 – Apr 26)
 
