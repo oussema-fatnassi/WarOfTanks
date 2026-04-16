@@ -1,0 +1,53 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class TankController : MonoBehaviour
+{
+    #region Fields
+    [SerializeField] private float _moveSpeed = 3f;
+    [SerializeField] private float _rotationSpeed = 180f;
+
+    [SerializeField] private Transform _tankBody;
+
+    private Rigidbody2D _rigidbody;
+    private Vector2 _desiredPosition;
+    private float _desiredRotation;
+    #endregion
+
+
+    #region Testing Getters
+    public float MoveSpeed => _moveSpeed;
+    #endregion
+
+    #region Unity Methods
+    private void Awake()
+    {
+        _rigidbody = GetComponent<Rigidbody2D>();
+    }
+
+    void FixedUpdate()
+    {
+        _rigidbody.MovePosition(_rigidbody.position + _desiredPosition * _moveSpeed * Time.fixedDeltaTime);
+        _tankBody.Rotate(0f, 0f, _desiredRotation * _rotationSpeed * Time.fixedDeltaTime);
+    }
+    #endregion
+
+    #region Public Methods
+    public void Move(Vector2 direction)
+    {
+        _desiredPosition = direction.normalized;
+    }
+
+    public void Rotate(float angle)
+    {
+        _desiredRotation = angle;
+    }
+
+    public void Stop()
+    {
+        _desiredPosition = Vector2.zero;
+        _desiredRotation = 0;
+    }
+    #endregion
+}
