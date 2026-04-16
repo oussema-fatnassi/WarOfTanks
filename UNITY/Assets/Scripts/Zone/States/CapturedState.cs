@@ -13,7 +13,6 @@ public class CapturedState : State<Zone>
 
     private float _scoringTimer;
     private float _timeoutTimer;
-    private bool _timeoutStarted;
 
     /// <summary>Sets the controlling team, starts the scoring timer, and updates the zone color.</summary>
     protected override void Enter()

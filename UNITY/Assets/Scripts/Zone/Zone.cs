@@ -34,13 +34,13 @@ namespace WarOfTanks.Zone
         // --- UML fields ---
 
         /// <summary>Team ID of the team currently controlling the zone. -1 means neutral.</summary>
-        public int controllingTeam = -1;
+        public int ControllingTeam = -1;
 
         /// <summary>Current capture progress as a percentage (0–100).</summary>
-        public float captureProgress;
+        public float CaptureProgress;
 
         /// <summary>Team IDs currently present in the zone. Two entries means contested.</summary>
-        public List<int> contestedBy = new List<int>();
+        public List<int> ContestedBy = new List<int>();
 
         // --- Read-only accessors for states ---
         public int PlayerTankCount => _teamPlayerTanksInZone.Count;
