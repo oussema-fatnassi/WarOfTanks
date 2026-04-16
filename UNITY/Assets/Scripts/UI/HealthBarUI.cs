@@ -17,6 +17,14 @@ public class HealthBarUI : MonoBehaviour
         _healthSystem = GetComponentInParent<HealthSystem>();
         _canvas = GetComponentInParent<Canvas>();
     }
+    void Start()
+    {
+        _healthSystem.OnHealthChanged += UpdateHealthFillImage;
+        _healthFillImage.fillAmount = _healthSystem.HealthPercentage;
+
+        _tank.OnTankDied += DisableCanvas;
+        _tank.OnTankRespawned += EnableCanvas;
+    }
 
     private void OnDestroy()
     {
@@ -26,21 +34,23 @@ public class HealthBarUI : MonoBehaviour
         }
        if (_tank != null)
        {
-            _tank.OnTankDied -= () => _canvas.enabled = false;
-            _tank.OnTankRespawned -= () => _canvas.enabled = true;
+            _tank.OnTankDied -= DisableCanvas;
+            _tank.OnTankRespawned -= EnableCanvas;
         }
-    }
-    void Start()
-    {
-        _healthSystem.OnHealthChanged += UpdateHealthFillImage;
-        _healthFillImage.fillAmount = _healthSystem.HealthPercentage;
-
-        _tank.OnTankDied += () => _canvas.enabled = false;
-        _tank.OnTankRespawned += () => _canvas.enabled = true;
     }
 
     private void UpdateHealthFillImage()
     {
         _healthFillImage.fillAmount = _healthSystem.HealthPercentage;
+    }
+
+    private void DisableCanvas()
+    {
+        _canvas.enabled = false;
+    }
+
+    private void EnableCanvas()
+    {
+        _canvas.enabled = true;
     }
 }
