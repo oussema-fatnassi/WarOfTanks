@@ -117,10 +117,10 @@ namespace WarOfTanks.Zone
         public void OnTriggerEnter2D(Collider2D other)
         {
             Debug.Log($"OnTriggerEnter2D: {other.gameObject.name}");
-            var tank = other.GetComponent<Tank>();
+            var tank = other.GetComponentInParent<Tank>();
             if (tank == null) return;
 
-            if (tank.teamId == 0)
+            if (tank.TeamId == 0)
             {
                 _teamPlayerTanksInZone.Add(other.gameObject);
                 if (!contestedBy.Contains(0)) contestedBy.Add(0);
@@ -135,10 +135,10 @@ namespace WarOfTanks.Zone
         public void OnTriggerExit2D(Collider2D other)
         {
             Debug.Log($"OnTriggerExit2D: {other.gameObject.name}");
-            var tank = other.GetComponent<Tank>();
+            var tank = other.GetComponentInParent<Tank>();
             if (tank == null) return;
 
-            if (tank.teamId == 0)
+            if (tank.TeamId == 0)
             {
                 _teamPlayerTanksInZone.Remove(other.gameObject);
                 if (_teamPlayerTanksInZone.Count == 0) contestedBy.Remove(0);
