@@ -7,11 +7,12 @@ public class Tank : MonoBehaviour
 {
     #region Fields
     [Header("Tank Settings")]
-    [SerializeField] private ETankTeam _team;
+    [SerializeField] private ETankTeam _teamId;
     [SerializeField] private float _respawnDelay = 5f;
 
     [Header("References")]
     [SerializeField] private GameObject _tankBody;
+    [SerializeField] private GameObject _canon;
     [SerializeField] private Transform _spawnPoint;
 
     private bool _isAlive = true;
@@ -26,7 +27,7 @@ public class Tank : MonoBehaviour
     #endregion
 
     #region Properties
-    public ETankTeam Team => _team;
+    public ETankTeam TeamId => _teamId;
     public bool IsAlive => _isAlive;
     #endregion
 
@@ -34,7 +35,7 @@ public class Tank : MonoBehaviour
     private void Awake()
     {
         _healthSystem = GetComponent<HealthSystem>();
-        _collider = GetComponent<Collider2D>();
+        _collider = _tankBody.GetComponent<Collider2D>();
     }
     private void Start()
     {
@@ -52,6 +53,7 @@ public class Tank : MonoBehaviour
         if (!_isAlive) return;
         _isAlive = false;
         _tankBody.SetActive(false);
+        _canon.SetActive(false);
         _collider.enabled = false;
         OnTankDied?.Invoke();
         StartCoroutine(RespawnCoroutine());
@@ -69,6 +71,7 @@ public class Tank : MonoBehaviour
         transform.rotation = _spawnPoint.rotation;
         _healthSystem.RestoreHealth();
         _tankBody.SetActive(true);
+        _canon.SetActive(true);
         _collider.enabled = true;
         _isAlive = true;
         OnTankRespawned?.Invoke();

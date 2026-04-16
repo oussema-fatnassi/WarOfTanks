@@ -9,9 +9,13 @@ public class HealthBarUI : MonoBehaviour
     [SerializeField] private Image _healthFillImage;
 
     private HealthSystem _healthSystem;
+    private Canvas _canvas;
+    private Tank _tank;
     private void Awake()
     {
+        _tank = GetComponentInParent<Tank>();
         _healthSystem = GetComponentInParent<HealthSystem>();
+        _canvas = GetComponentInParent<Canvas>();
     }
 
     private void OnDestroy()
@@ -25,6 +29,9 @@ public class HealthBarUI : MonoBehaviour
     {
         _healthSystem.OnHealthChanged += UpdateHealthFillImage;
         _healthFillImage.fillAmount = _healthSystem.HealthPercentage;
+
+        _tank.OnTankDied += () => _canvas.enabled = false;
+        _tank.OnTankRespawned += () => _canvas.enabled = true;
     }
 
     private void UpdateHealthFillImage()

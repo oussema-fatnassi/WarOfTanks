@@ -8,6 +8,8 @@ public class TankController : MonoBehaviour
     [SerializeField] private float _moveSpeed = 3f;
     [SerializeField] private float _rotationSpeed = 180f;
 
+    [SerializeField] private Transform _tankBody;
+
     private Rigidbody2D _rigidbody;
     private Vector2 _desiredPosition;
     private float _desiredRotation;
@@ -30,7 +32,10 @@ public class TankController : MonoBehaviour
     void FixedUpdate()
     {
         _rigidbody.MovePosition(_rigidbody.position + _desiredPosition * _moveSpeed * Time.fixedDeltaTime);
+        // TODO : Delete this bellow
         _rigidbody.MoveRotation(_rigidbody.rotation + _desiredRotation * _rotationSpeed * Time.fixedDeltaTime);
+        
+        _tankBody.Rotate(0f, 0f, _desiredRotation * _rotationSpeed * Time.fixedDeltaTime);
     }
     #endregion
 

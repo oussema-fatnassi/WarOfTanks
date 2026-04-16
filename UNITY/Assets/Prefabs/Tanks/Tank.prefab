@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 134015202}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: HealthContainer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -48,7 +48,7 @@ GameObject:
   - component: {fileID: 373785314}
   - component: {fileID: 373785316}
   - component: {fileID: 373785315}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Background
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -123,7 +123,7 @@ GameObject:
   - component: {fileID: 973002349}
   - component: {fileID: 973002351}
   - component: {fileID: 973002350}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: CurrentHealth
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -197,9 +197,10 @@ GameObject:
   m_Component:
   - component: {fileID: 773176152178201846}
   - component: {fileID: 773176152178201845}
-  m_Layer: 0
+  - component: {fileID: 6372091174808378579}
+  m_Layer: 11
   m_Name: TankBody
-  m_TagString: Untagged
+  m_TagString: Tank
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -269,6 +270,32 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!61 &6372091174808378579
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 773176152178201847}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0.5, y: 0.5}
+    oldSize: {x: 1, y: 1}
+    newSize: {x: 1, y: 1}
+    adaptiveTilingThreshold: 0.5
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  serializedVersion: 2
+  m_Size: {x: 1, y: 1}
+  m_EdgeRadius: 0
 --- !u!1 &773176152485814613
 GameObject:
   m_ObjectHideFlags: 0
@@ -279,7 +306,6 @@ GameObject:
   m_Component:
   - component: {fileID: 773176152485814612}
   - component: {fileID: 773176152485814611}
-  - component: {fileID: 2132301939}
   - component: {fileID: 8066777654821941431}
   - component: {fileID: 6346765806128570278}
   - component: {fileID: 2132301940}
@@ -328,33 +354,7 @@ Rigidbody2D:
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 1
-  m_Constraints: 0
---- !u!61 &2132301939
-BoxCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 773176152485814613}
-  m_Enabled: 1
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_UsedByEffector: 0
-  m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0, y: 0}
-    oldSize: {x: 0, y: 0}
-    newSize: {x: 0, y: 0}
-    adaptiveTilingThreshold: 0
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
-  serializedVersion: 2
-  m_Size: {x: 1, y: 1}
-  m_EdgeRadius: 0
+  m_Constraints: 4
 --- !u!114 &8066777654821941431
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -367,7 +367,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a354719cc7697e944b6120631cff6e99, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _team: 0
+  _teamId: 0
+  _respawnDelay: 5
+  _tankBody: {fileID: 773176152178201847}
+  _canon: {fileID: 773176153475619783}
+  _spawnPoint: {fileID: 0}
 --- !u!114 &6346765806128570278
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -382,6 +386,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _moveSpeed: 5
   _rotationSpeed: 180
+  _tankBody: {fileID: 773176152178201846}
 --- !u!114 &2132301940
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -411,7 +416,7 @@ MonoBehaviour:
   _cannonTipTransform: {fileID: 773176153474690015}
   _bulletPrefab: {fileID: 4008680038055977904, guid: 4719e687b4e2ae846a42e94a65179fc9, type: 3}
   _bulletPool: {fileID: 0}
-  _rotationSpeed: 360
+  _turretRotationSpeed: 3000
   _fireRate: 1
 --- !u!1 &773176153051293553
 GameObject:
@@ -426,9 +431,9 @@ GameObject:
   - component: {fileID: 773176153051293566}
   - component: {fileID: 773176153051293567}
   - component: {fileID: 4900474305000222885}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: HealthBarCanvas
-  m_TagString: Untagged
+  m_TagString: Tank
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -450,7 +455,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0.7}
+  m_AnchoredPosition: {x: 0, y: 0.85}
   m_SizeDelta: {x: 1, y: 0.1}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!223 &773176153051293565
@@ -536,7 +541,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 773176153474690015}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: CannonTip
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -567,9 +572,9 @@ GameObject:
   m_Component:
   - component: {fileID: 773176153475619782}
   - component: {fileID: 773176153475619781}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Cannon
-  m_TagString: Untagged
+  m_TagString: Tank
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

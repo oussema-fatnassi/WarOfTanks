@@ -47,10 +47,11 @@ public class TurretController : MonoBehaviour
 
         GameObject bulletObject = Instantiate(_bulletPrefab, _cannonTipTransform.position, _cannonTipTransform.rotation, _bulletPool);
         BulletController bulletController = bulletObject.GetComponent<BulletController>();
-        Physics2D.IgnoreCollision(bulletObject.GetComponent<Collider2D>(), GetComponentInParent<Collider2D>());
+        Physics2D.IgnoreCollision(bulletObject.GetComponent<Collider2D>(), GetComponentInChildren<Collider2D>());
+
 
         // TODO : Maybe call initialize with damage, speed , etc. if needed in the future.
-        bulletController.SetTeam(_currentTank.Team);
+        bulletController.SetTeam(_currentTank.TeamId);
         bulletController.Launch(_cannonTipTransform.transform.right);
         return bulletController;
     }

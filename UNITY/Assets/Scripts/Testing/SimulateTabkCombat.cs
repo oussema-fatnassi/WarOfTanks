@@ -18,11 +18,8 @@ public class SimulateTabkCombat : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (_positionRegistered != _enemyTurretController.transform.position)
-        {
-            _positionRegistered = _enemyTurretController.transform.position;
-            _playerTurretController.RotateTo(_enemyTurretController.transform.position);
-        }
+        _positionRegistered = _enemyTurretController.transform.position;
+        _playerTurretController.RotateTo(_enemyTurretController.transform.position);
         _playerTurretController.Fire();
     }
 }
