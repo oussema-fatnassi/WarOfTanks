@@ -1,0 +1,63 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class BulletController : MonoBehaviour
+{
+    #region Fields
+    [Header("Bullet Settings")]
+    [SerializeField] private float _damage = 10f;
+    [SerializeField] private float _bulletSpeed = 10f;
+    [SerializeField] private float _falloffDistance = 80f;
+
+    private Rigidbody2D _rigidbody;
+    private Vector3 _startPosition;
+    private ETankTeam _ownerTeam;
+    #endregion
+
+    #region Properties
+    #endregion
+
+    #region Unity Methods
+    private void Awake()
+    {
+        _rigidbody = GetComponent<Rigidbody2D>();
+    }
+    #endregion
+
+    public void Launch(Vector2 direction)
+    {
+        _startPosition = transform.position;
+        _rigidbody.velocity = direction.normalized * _bulletSpeed;
+        float lifetime = _falloffDistance / _bulletSpeed;
+        Destroy(gameObject,lifetime);
+    }
+
+    public void SetTeam(ETankTeam team)
+    {
+        _ownerTeam = team;
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        Tank tank = collision.GetComponentInParent<Tank>();
+        if (tank != null && tank.TeamId == _ownerTeam) { return; }
+        if (tank == null) { Destroy(gameObject); return; }
+
+        float damageDealt = CalculateDamage();
+
+        HealthSystem healthSystem = collision.GetComponentInParent<HealthSystem>();
+        if (healthSystem != null)
+        {
+            healthSystem.TakeDamage(damageDealt);
+        }
+        Destroy(gameObject);
+    }
+
+    private float CalculateDamage()
+    {
+        float distanceTraveled = Vector3.Distance(_startPosition, transform.position);
+        float damageMultiplier = Mathf.Clamp01(1 - (distanceTraveled / _falloffDistance));
+        return _damage * damageMultiplier;
+    }
+}
