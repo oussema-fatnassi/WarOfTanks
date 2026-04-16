@@ -26,15 +26,9 @@ public class TankController : MonoBehaviour
         _rigidbody = GetComponent<Rigidbody2D>();
     }
 
-    void Start() { }
-    private void Update() { }
-
     void FixedUpdate()
     {
         _rigidbody.MovePosition(_rigidbody.position + _desiredPosition * _moveSpeed * Time.fixedDeltaTime);
-        // TODO : Delete this bellow
-        _rigidbody.MoveRotation(_rigidbody.rotation + _desiredRotation * _rotationSpeed * Time.fixedDeltaTime);
-        
         _tankBody.Rotate(0f, 0f, _desiredRotation * _rotationSpeed * Time.fixedDeltaTime);
     }
     #endregion

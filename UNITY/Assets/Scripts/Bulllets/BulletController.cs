@@ -40,8 +40,10 @@ public class BulletController : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.transform.parent.TryGetComponent<Tank>(out Tank tank) && tank.TeamId == _ownerTeam) { return; }
-        //TODO : Can projectiles collide ?
+        Tank tank = collision.GetComponentInParent<Tank>();
+        if (tank != null && tank.TeamId == _ownerTeam) { return; }
+        if (tank == null) { Destroy(gameObject); return; }
+
         float damageDealt = CalculateDamage();
 
         HealthSystem healthSystem = collision.GetComponentInParent<HealthSystem>();
