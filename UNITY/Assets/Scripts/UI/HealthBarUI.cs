@@ -24,6 +24,11 @@ public class HealthBarUI : MonoBehaviour
         {
             _healthSystem.OnHealthChanged -= UpdateHealthFillImage;
         }
+       if (_tank != null)
+       {
+            _tank.OnTankDied -= () => _canvas.enabled = false;
+            _tank.OnTankRespawned -= () => _canvas.enabled = true;
+        }
     }
     void Start()
     {

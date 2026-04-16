@@ -12,7 +12,7 @@ public class Tank : MonoBehaviour
 
     [Header("References")]
     [SerializeField] private GameObject _tankBody;
-    [SerializeField] private GameObject _canon;
+    [SerializeField] private GameObject _cannon;
     [SerializeField] private Transform _spawnPoint;
 
     private bool _isAlive = true;
