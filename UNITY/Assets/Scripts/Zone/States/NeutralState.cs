@@ -14,8 +14,9 @@ public class NeutralState : State<Zone>
     protected override void Enter()
     {
         Debug.Log("Entered Neutral State");
-        Context.UI.SetNeutral();
         Context.controllingTeam = -1;
+        Context.ResetProgress();
+        Context.UI.SetNeutral();
     }
 
     /// <summary>

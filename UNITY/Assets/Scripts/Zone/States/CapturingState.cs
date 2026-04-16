@@ -39,6 +39,14 @@ public class CapturingState : State<Zone>
                 Machine.ChangeState(new NeutralState(Machine));
             }
         }
+        else if (Context.controllingTeam == 0 && Context.PlayerTankCount == 0 && Context.AITankCount > 0 ||
+           Context.controllingTeam == 1 && Context.AITankCount == 0 && Context.PlayerTankCount > 0)
+        {
+            int newTeam = Context.AITankCount > 0 ? 1 : 0;
+            Context.ResetProgress();
+            Context.controllingTeam = newTeam;
+            Context.UI.SetCapturing(newTeam == 0);
+        }
         else if(Context.captureProgress >= 100f)
         {
             Machine.ChangeState(new CapturedState(Machine));

@@ -33,11 +33,19 @@ public class ContestedState : State<Zone>
         }
         else if (Context.PlayerTankCount > 0 && Context.AITankCount == 0)
         {
+            if (Context.controllingTeam != 0) 
+            {
+                Context.ResetProgress();
+            }
             Context.controllingTeam = 0;
             Machine.ChangeState(new CapturingState(Machine));
         }
         else if (Context.AITankCount > 0 && Context.PlayerTankCount == 0)
         {
+            if (Context.controllingTeam != 1) 
+            {
+                Context.ResetProgress();
+            }
             Context.controllingTeam = 1;
             Machine.ChangeState(new CapturingState(Machine));
         }

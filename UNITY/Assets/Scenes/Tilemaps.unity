@@ -18791,7 +18791,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _captureBar: {fileID: 1022643012}
-  _zoneSprite: {fileID: 1659227502}
+  _zoneSprite: {fileID: 775103586}
 --- !u!1 &1881693557
 GameObject:
   m_ObjectHideFlags: 0

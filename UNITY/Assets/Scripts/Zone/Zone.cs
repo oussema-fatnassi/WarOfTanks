@@ -101,6 +101,15 @@ namespace WarOfTanks.Zone
             captureProgress = Mathf.Clamp(captureProgress - _decaySpeed * deltaTime, 0f, 100f);
             _zoneUIController.UpdateCaptureBar(captureProgress);
         }
+
+        /// <summary>
+        /// Resets the capture progress to 0%.
+        /// </summary>
+        public void ResetProgress()
+        {
+            captureProgress = 0f;
+            _zoneUIController.UpdateCaptureBar(0f);
+        }
         #endregion
 
         // --- Physics callbacks ---
