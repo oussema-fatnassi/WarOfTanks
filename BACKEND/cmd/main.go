@@ -23,7 +23,11 @@ func main() {
 	if err != nil {
 		log.Fatal("❌ Failed to connect to MongoDB:", err)
 	}
-	defer client.Disconnect(ctx)
+	defer func() {
+		if err := client.Disconnect(ctx); err != nil {
+			log.Printf("Error disconnecting MongoDB: %v", err)
+		}
+	}()
 
 	// Ping MongoDB to verify connection
 	if err := client.Ping(ctx, nil); err != nil {

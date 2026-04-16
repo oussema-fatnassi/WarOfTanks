@@ -18,7 +18,7 @@ type Config struct {
 
 // Load reads environment variables from .env file and returns a Config.
 func Load() *Config {
-	godotenv.Load()
+	_ = godotenv.Load()
 
 	cfg := &Config{
 		MongoURI:         os.Getenv("MONGODB_URI"),
