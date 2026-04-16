@@ -7,6 +7,8 @@ on:
     branches: [dev, main]
 
 env:
+  # Forward-compatibility flag: silences deprecation warnings on GitHub Actions
+  # runners that upgraded to Node 24. Remove once actions/* officially drop Node 20.
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
 jobs:

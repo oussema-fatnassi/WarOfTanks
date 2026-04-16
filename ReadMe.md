@@ -58,6 +58,7 @@ npm run dev
 - ✅ [#2](https://github.com/oussema-fatnassi/WarOfTanks/issues/2) ERD - MongoDB Schema Design — committed to `docs/erd/`
 - ✅ [#3](https://github.com/oussema-fatnassi/WarOfTanks/issues/3) State Machine Diagrams — Zone Capture FSM + Game State FSM committed to `docs/state-machines/`
 - ✅ [#4](https://github.com/oussema-fatnassi/WarOfTanks/issues/4) Unity Project Base Setup — scenes, input system, packages configured
+- ✅ [#5](https://github.com/oussema-fatnassi/WarOfTanks/issues/5) GitHub Actions - Backend CI — Go tests, race detector, coverage report, MongoDB service container
 - ✅ [#6](https://github.com/oussema-fatnassi/WarOfTanks/issues/6) GitHub Actions - Code Quality — ESLint + Prettier for frontend, golangci-lint for backend
 - ✅ [#24](https://github.com/oussema-fatnassi/WarOfTanks/issues/24) Backend Project Setup — Go + Gin + MongoDB + Docker running
 
@@ -68,12 +69,6 @@ npm run dev
 - ✅ [#12](https://github.com/oussema-fatnassi/WarOfTanks/issues/12) Generic State Machine System
 
 ## In Progress / Remaining
-
-### Sprint 1 — Setup & Architecture (due March 24)
-
-| # | Title | Owner | Priority | Status |
-|---|---|---|---|---|
-| [#5](https://github.com/oussema-fatnassi/WarOfTanks/issues/5) | GitHub Actions - Backend CI | Kamelia | Critical | Not started |
 
 ### Sprint 2 — Core Gameplay (Apr 13 – Apr 19)
 
