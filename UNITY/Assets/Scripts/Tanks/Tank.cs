@@ -69,7 +69,7 @@ public class Tank : MonoBehaviour
         transform.rotation = _spawnPoint.rotation;
         _healthSystem.RestoreHealth();
         _tankBody.SetActive(true);
-        _collider.enabled = true);
+        _collider.enabled = true;
         _isAlive = true;
         OnTankRespawned?.Invoke();
     }
