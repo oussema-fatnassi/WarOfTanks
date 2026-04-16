@@ -1,0 +1,73 @@
+name: Backend CI
+
+on:
+  push:
+    branches: ['**']
+  pull_request:
+    branches: [dev, main]
+
+env:
+  # Forward-compatibility flag: silences deprecation warnings on GitHub Actions
+  # runners that upgraded to Node 24. Remove once actions/* officially drop Node 20.
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
+jobs:
+  test:
+    name: Go Tests
+    runs-on: ubuntu-latest
+
+    services:
+      mongodb:
+        image: mongo:7
+        ports:
+          - 27017:27017
+        options: >-
+          --health-cmd "mongosh --eval 'db.runCommand({ ping: 1 })'"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    env:
+      MONGODB_URI: ${{ secrets.MONGODB_URI_TEST != '' && secrets.MONGODB_URI_TEST || 'mongodb://localhost:27017' }}
+      MONGODB_DB_NAME: war_of_tanks_test
+      JWT_SECRET: ci-test-secret
+      JWT_REFRESH_SECRET: ci-test-refresh-secret
+      PORT: 8080
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.25'
+
+      - name: Cache Go modules
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cache/go-build
+            ~/go/pkg/mod
+          key: ${{ runner.os }}-go-${{ hashFiles('BACKEND/go.sum') }}
+          restore-keys: |
+            ${{ runner.os }}-go-
+
+      - name: Install dependencies
+        run: go mod download
+        working-directory: BACKEND
+
+      - name: Run go vet
+        run: go vet ./...
+        working-directory: BACKEND
+
+      - name: Run tests
+        run: go test ./... -v -race -coverprofile=coverage.out
+        working-directory: BACKEND
+
+      - name: Upload coverage report
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report
+          path: BACKEND/coverage.out
+          if-no-files-found: ignore
