@@ -16,6 +16,12 @@ namespace WarOfTanks.StateMachine
         // Reference to the object this machine controls. Passed into every state method call.
         private T _context;
 
+        /// Creates a new state machine bound to the given context. The machine starts with no active state;
+        protected StateMachine(T context)
+        {
+            _context = context;
+        }
+
         /// <summary>
         /// Creates a new state machine bound to the given context and enters the initial state immediately.
         /// </summary>
