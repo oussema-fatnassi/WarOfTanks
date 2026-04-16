@@ -53,7 +53,7 @@ public class Tank : MonoBehaviour
         if (!_isAlive) return;
         _isAlive = false;
         _tankBody.SetActive(false);
-        _canon.SetActive(false);
+        _cannon.SetActive(false);
         _collider.enabled = false;
         OnTankDied?.Invoke();
         StartCoroutine(RespawnCoroutine());
@@ -71,7 +71,7 @@ public class Tank : MonoBehaviour
         transform.rotation = _spawnPoint.rotation;
         _healthSystem.RestoreHealth();
         _tankBody.SetActive(true);
-        _canon.SetActive(true);
+        _cannon.SetActive(true);
         _collider.enabled = true;
         _isAlive = true;
         OnTankRespawned?.Invoke();
