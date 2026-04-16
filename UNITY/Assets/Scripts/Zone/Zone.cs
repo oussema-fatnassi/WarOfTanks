@@ -34,13 +34,13 @@ namespace WarOfTanks.Zone
         // --- UML fields ---
 
         /// <summary>Team ID of the team currently controlling the zone. -1 means neutral.</summary>
-        public int ControllingTeam = -1;
+        public int controllingTeam = -1;
 
         /// <summary>Current capture progress as a percentage (0–100).</summary>
-        public float CaptureProgress;
+        public float captureProgress;
 
         /// <summary>Team IDs currently present in the zone. Two entries means contested.</summary>
-        public List<int> ContestedBy = new List<int>();
+        public List<int> contestedBy = new List<int>();
 
         // --- Read-only accessors for states ---
         public int PlayerTankCount => _teamPlayerTanksInZone.Count;
@@ -71,13 +71,13 @@ namespace WarOfTanks.Zone
         /// <summary>Returns true if tanks from both teams are present simultaneously.</summary>
         public bool IsContested()
         {
-            return ContestedBy.Count > 1;
+            return contestedBy.Count > 1;
         }
 
         /// <summary>Returns true if a team has fully captured the zone.</summary>
         public bool IsCaptured()
         {
-            return ControllingTeam != -1;
+            return controllingTeam != -1;
         }
 
         // --- Progress mutation — Zone is the sole owner ---
@@ -88,8 +88,8 @@ namespace WarOfTanks.Zone
         /// </summary>
         public void IncrementProgress(float deltaTime)
         {
-            CaptureProgress = Mathf.Clamp(CaptureProgress + _captureSpeed * deltaTime, 0f, 100f);
-            _zoneUIController.UpdateCaptureBar(CaptureProgress);
+            captureProgress = Mathf.Clamp(captureProgress + _captureSpeed * deltaTime, 0f, 100f);
+            _zoneUIController.UpdateCaptureBar(captureProgress);
         }
 
         /// <summary>
@@ -98,8 +98,8 @@ namespace WarOfTanks.Zone
         /// </summary>
         public void DecayGauge(float deltaTime)
         {
-            CaptureProgress = Mathf.Clamp(CaptureProgress - _decaySpeed * deltaTime, 0f, 100f);
-            _zoneUIController.UpdateCaptureBar(CaptureProgress);
+            captureProgress = Mathf.Clamp(captureProgress - _decaySpeed * deltaTime, 0f, 100f);
+            _zoneUIController.UpdateCaptureBar(captureProgress);
         }
 
         /// <summary>
@@ -107,7 +107,7 @@ namespace WarOfTanks.Zone
         /// </summary>
         public void ResetProgress()
         {
-            CaptureProgress = 0f;
+            captureProgress = 0f;
             _zoneUIController.UpdateCaptureBar(0f);
         }
         #endregion
@@ -123,12 +123,12 @@ namespace WarOfTanks.Zone
             if (tank.teamId == 0)
             {
                 _teamPlayerTanksInZone.Add(other.gameObject);
-                if (!ContestedBy.Contains(0)) ContestedBy.Add(0);
+                if (!contestedBy.Contains(0)) contestedBy.Add(0);
             }
             else
             {
                 _teamAITanksInZone.Add(other.gameObject);
-                if (!ContestedBy.Contains(1)) ContestedBy.Add(1);
+                if (!contestedBy.Contains(1)) contestedBy.Add(1);
             }
         }
 
@@ -141,12 +141,12 @@ namespace WarOfTanks.Zone
             if (tank.teamId == 0)
             {
                 _teamPlayerTanksInZone.Remove(other.gameObject);
-                if (_teamPlayerTanksInZone.Count == 0) ContestedBy.Remove(0);
+                if (_teamPlayerTanksInZone.Count == 0) contestedBy.Remove(0);
             }
             else
             {
                 _teamAITanksInZone.Remove(other.gameObject);
-                if (_teamAITanksInZone.Count == 0) ContestedBy.Remove(1);
+                if (_teamAITanksInZone.Count == 0) contestedBy.Remove(1);
             }
         }
         #endregion

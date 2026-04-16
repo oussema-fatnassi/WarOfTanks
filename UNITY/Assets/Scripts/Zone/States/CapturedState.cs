@@ -18,7 +18,7 @@ public class CapturedState : State<Zone>
     protected override void Enter()
     {
         Debug.Log("Entered Captured State");
-        Context.UI.SetCaptured(Context.ControllingTeam == 0);
+        Context.UI.SetCaptured(Context.controllingTeam == 0);
         _scoringTimer = 0f;
         _timeoutTimer = 0f;
     }
@@ -35,7 +35,7 @@ public class CapturedState : State<Zone>
         {
             Machine.ChangeState(new ContestedState(Machine));
         }
-        else if (Context.ControllingTeam == 0 ? Context.PlayerTankCount > 0 : Context.AITankCount > 0)
+        else if (Context.controllingTeam == 0 ? Context.PlayerTankCount > 0 : Context.AITankCount > 0)
         {
             _timeoutTimer = 0f;
             _scoringTimer += Time.deltaTime;
@@ -43,8 +43,8 @@ public class CapturedState : State<Zone>
             {
                 _scoringTimer = 0f;
                 // TODO: Add score to the controlling team
-                Debug.Log("Scoring for team " + Context.ControllingTeam);
-                //Context.UI.AddScore(Context.ControllingTeam);
+                Debug.Log("Scoring for team " + Context.controllingTeam);
+                //Context.UI.AddScore(Context.controllingTeam);
             }
         }
         else
@@ -53,7 +53,7 @@ public class CapturedState : State<Zone>
             if (_timeoutTimer >= Context.CapturedTimeout)
             {
                 Context.DecayGauge(Time.deltaTime);
-                if (Context.CaptureProgress < 100f)
+                if (Context.captureProgress < 100f)
                 {
                     Machine.ChangeState(new CapturingState(Machine));
                 }

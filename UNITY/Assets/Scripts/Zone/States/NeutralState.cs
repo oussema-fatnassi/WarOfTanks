@@ -14,7 +14,7 @@ public class NeutralState : State<Zone>
     protected override void Enter()
     {
         Debug.Log("Entered Neutral State");
-        Context.ControllingTeam = -1;
+        Context.controllingTeam = -1;
         Context.ResetProgress();
         Context.UI.SetNeutral();
     }
@@ -32,12 +32,12 @@ public class NeutralState : State<Zone>
         }
         else if(Context.PlayerTankCount > 0 && Context.AITankCount == 0)
         {
-            Context.ControllingTeam = 0;
+            Context.controllingTeam = 0;
             Machine.ChangeState(new CapturingState(Machine));
         }
         else if(Context.AITankCount > 0 && Context.PlayerTankCount == 0)
         {
-            Context.ControllingTeam = 1;
+            Context.controllingTeam = 1;
             Machine.ChangeState(new CapturingState(Machine));
         }
     }
