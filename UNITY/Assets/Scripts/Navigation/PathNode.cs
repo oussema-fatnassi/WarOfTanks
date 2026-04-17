@@ -16,12 +16,15 @@ namespace WarOfTanks.Navigation
         {
             this.gridPosition = gridPosition;
             this.isWalkable = isWalkable;
+            movementCost = 1f;
+            ResetCosts();
         }
 
         public void ResetCosts()
         {
-            gCost = 0;
-            hCost = 0;
+            gCost = float.PositiveInfinity;
+            hCost = 0f;
+            parentNode = null;
         }
     }
 }
