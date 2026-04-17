@@ -61,6 +61,7 @@ npm run dev
 - ✅ [#5](https://github.com/oussema-fatnassi/WarOfTanks/issues/5) GitHub Actions - Backend CI — Go tests, race detector, coverage report, MongoDB service container
 - ✅ [#6](https://github.com/oussema-fatnassi/WarOfTanks/issues/6) GitHub Actions - Code Quality — ESLint + Prettier for frontend, golangci-lint for backend
 - ✅ [#24](https://github.com/oussema-fatnassi/WarOfTanks/issues/24) Backend Project Setup — Go + Gin + MongoDB + Docker running
+- ✅ [#54](https://github.com/oussema-fatnassi/WarOfTanks/issues/54) MongoDB Database Initialization — collections created, indexes applied, AI configs seeded (idempotent)
 
 ### Sprint 2 — Core Gameplay
 - ✅ [#8](https://github.com/oussema-fatnassi/WarOfTanks/issues/8) Tank Prefab - Movement, Cannon, HP, Respawn — physics movement, independent turret, damage falloff, health bar, death/respawn cycle
@@ -81,6 +82,7 @@ npm run dev
 |---|---|---|---|---|
 | [#10](https://github.com/oussema-fatnassi/WarOfTanks/issues/10) | Player Controls - Selection & Commands | Oroitz | Critical | Not started |
 | [#51](https://github.com/oussema-fatnassi/WarOfTanks/issues/51) | Frontend App Structure — Routing, Axios Client, Types, Pages | Oussema | Critical | Not started |
+| [#54](https://github.com/oussama-fatnassi/WarOfTanks/issues/54) | MongoDB Database Initialization — Collections, Indexes & Seed Data | Kamelia | Critical | ✅ Done |
 
 ### Sprint 3 — Navigation & Backend Foundation (Apr 20 – Apr 26)
 
@@ -92,7 +94,6 @@ npm run dev
 | [#18](https://github.com/oussema-fatnassi/WarOfTanks/issues/18) | Gameplay & Win Conditions - Teams, Score, Timer, Menu | Oroitz | High | Not started |
 | [#25](https://github.com/oussema-fatnassi/WarOfTanks/issues/25) | Player Model & Auth Routes (Register + Login) | Kamelia | Critical | Not started |
 | [#26](https://github.com/oussema-fatnassi/WarOfTanks/issues/26) | JWT Auth Middleware & Refresh Token Route | Kamelia | Critical | Not started |
-| [#54](https://github.com/oussema-fatnassi/WarOfTanks/issues/54) | MongoDB Database Initialization — Collections, Indexes & Seed Data | Kamelia | Critical | Not started |
 
 ### Sprint 4 — AI Systems & Backend Routes (Apr 27 – May 3)
 
