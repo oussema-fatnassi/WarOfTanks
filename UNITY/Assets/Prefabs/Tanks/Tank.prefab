@@ -256,8 +256,8 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
+  m_SortingLayerID: -381540073
+  m_SortingLayer: 7
   m_SortingOrder: 0
   m_Sprite: {fileID: 7482667652216324306, guid: 48e93eef0688c4a259cb0eddcd8661f7, type: 3}
   m_Color: {r: 0, g: 0.108009815, b: 1, a: 1}
@@ -370,7 +370,7 @@ MonoBehaviour:
   _teamId: 0
   _respawnDelay: 5
   _tankBody: {fileID: 773176152178201847}
-  _canon: {fileID: 773176153475619783}
+  _cannon: {fileID: 0}
   _spawnPoint: {fileID: 0}
 --- !u!114 &6346765806128570278
 MonoBehaviour:
@@ -476,7 +476,7 @@ Canvas:
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
   m_AdditionalShaderChannelsFlag: 0
-  m_SortingLayerID: 0
+  m_SortingLayerID: -381540073
   m_SortingOrder: 0
   m_TargetDisplay: 0
 --- !u!114 &773176153051293566
@@ -631,8 +631,8 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
+  m_SortingLayerID: -381540073
+  m_SortingLayer: 7
   m_SortingOrder: 1
   m_Sprite: {fileID: 7482667652216324306, guid: 48e93eef0688c4a259cb0eddcd8661f7, type: 3}
   m_Color: {r: 1, g: 0, b: 0, a: 1}
