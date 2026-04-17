@@ -10,6 +10,7 @@ namespace WarOfTanks.Navigation
         [SerializeField] private float _cellSize;
         [SerializeField] private LayerMask _walkableLayer;
         [SerializeField] private LayerMask _unwalkableLayer;
+        [SerializeField] private LayerMask _hazardLayer;
         private PathNode[,] _nodes;
 
         private void Awake()
@@ -19,6 +20,11 @@ namespace WarOfTanks.Navigation
 
         public PathNode GetNode(int x, int y)
         {
+            if (!IsValidPosition(x, y))
+            {
+                return null;
+            }
+
             return _nodes[x, y];
         }
 
@@ -32,7 +38,10 @@ namespace WarOfTanks.Navigation
                 {
                     if (i == 0 && j == 0) continue;
 
-                    var neighborNode = GetNode(node.gridPosition.x + i, node.gridPosition.y + j);
+                    int neighborX = node.gridPosition.x + i;
+                    int neighborY = node.gridPosition.y + j;
+                    var neighborNode = GetNode(neighborX, neighborY);
+
                     if (neighborNode != null)
                     {
                         neighbors.Add(neighborNode);
@@ -45,8 +54,8 @@ namespace WarOfTanks.Navigation
         public Vector2Int WorldToGridPosition(Vector3 worldPosition)
         {
             Vector3 gridOrigin = transform.position - new Vector3(_width * _cellSize / 2f, _height * _cellSize / 2f, 0);
-            int x = Mathf.FloorToInt((worldPosition.x - gridOrigin.x) / _cellSize);
-            int y = Mathf.FloorToInt((worldPosition.y - gridOrigin.y) / _cellSize);
+            int x = Mathf.Clamp(Mathf.FloorToInt((worldPosition.x - gridOrigin.x) / _cellSize), 0, _width - 1);
+            int y = Mathf.Clamp(Mathf.FloorToInt((worldPosition.y - gridOrigin.y) / _cellSize), 0, _height - 1);
             return new Vector2Int(x, y);
         }
 
@@ -69,9 +78,18 @@ namespace WarOfTanks.Navigation
                     Vector3 worldPosition = GridToWorldPosition(new Vector2Int(x, y));
                     bool isWalkable = Physics2D.OverlapCircle(worldPosition, _cellSize * 0.1f, _walkableLayer)
                                    && !Physics2D.OverlapCircle(worldPosition, _cellSize * 0.1f, _unwalkableLayer);
-                    _nodes[x, y] = new PathNode(new Vector2Int(x, y), isWalkable);
+
+                    bool isHazard = Physics2D.OverlapCircle(worldPosition, _cellSize * 0.1f, _hazardLayer);
+                    var node = new PathNode(new Vector2Int(x, y), isWalkable);
+                    node.movementCost = isHazard ? 3f : 1f;
+                    _nodes[x, y] = node;
                 }
             }
+        }
+
+        public bool IsValidPosition(int x, int y)
+        {
+            return x >= 0 && x < _width && y >= 0 && y < _height;
         }
 
         private void OnDrawGizmos()

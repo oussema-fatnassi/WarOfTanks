@@ -9613,6 +9613,9 @@ MonoBehaviour:
   _unwalkableLayer:
     serializedVersion: 2
     m_Bits: 1664
+  _hazardLayer:
+    serializedVersion: 2
+    m_Bits: 256
 --- !u!1 &1374103583
 GameObject:
   m_ObjectHideFlags: 0
