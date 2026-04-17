@@ -33,7 +33,12 @@ func main() {
 	if err := client.Ping(ctx, nil); err != nil {
 		log.Fatal("MongoDB not responding:", err)
 	}
-	log.Println("Connected to MongoDB")
+	log.Println("✅ Connected to MongoDB")
+
+	// Initialize collections, indexes and seed data
+	if err := config.InitDatabase(client.Database(cfg.MongoDBName)); err != nil {
+		log.Fatal("❌ Failed to initialize database:", err)
+	}
 
 	// Initialize Gin router
 	r := gin.Default()
@@ -50,7 +55,7 @@ func main() {
 		api.Group("/matches")
 	}
 
-	log.Printf("Server running on port %s", cfg.Port)
+	log.Printf("🚀 Server running on port %s", cfg.Port)
 	if err := r.Run(":" + cfg.Port); err != nil {
 		log.Fatal("Server failed to start:", err)
 	}
