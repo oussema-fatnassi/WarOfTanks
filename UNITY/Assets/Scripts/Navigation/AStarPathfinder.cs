@@ -15,7 +15,7 @@ namespace WarOfTanks.Navigation
 
             PathNode startNode = grid.GetNode(startPos.x, startPos.y);
             PathNode targetNode = grid.GetNode(targetPos.x, targetPos.y);
-            if (startNode == null || targetNode == null || !startNode.isWalkable || !targetNode.isWalkable)
+            if (startNode == null || targetNode == null || !startNode.IsWalkable || !targetNode.IsWalkable)
             {
                 return null;
             }
@@ -24,12 +24,10 @@ namespace WarOfTanks.Navigation
             HashSet<PathNode> closedSet = new HashSet<PathNode>();
 
             foreach (var node in grid.GetAllNodes())
-            {
                 node.ResetCosts();
-            }
 
-            startNode.gCost = 0f;
-            startNode.hCost = CalculateHeuristic(startNode, targetNode);
+            startNode.GCost = 0f;
+            startNode.HCost = CalculateHeuristic(startNode, targetNode);
 
             openSet.Add(startNode);
 
@@ -38,8 +36,8 @@ namespace WarOfTanks.Navigation
                 PathNode currentNode = openSet[0];
                 for (int i = 1; i < openSet.Count; i++)
                 {
-                    if (openSet[i].fCost < currentNode.fCost || 
-                        (openSet[i].fCost == currentNode.fCost && openSet[i].hCost < currentNode.hCost))
+                    if (openSet[i].FCost < currentNode.FCost ||
+                        (openSet[i].FCost == currentNode.FCost && openSet[i].HCost < currentNode.HCost))
                     {
                         currentNode = openSet[i];
                     }
@@ -49,51 +47,43 @@ namespace WarOfTanks.Navigation
                 closedSet.Add(currentNode);
 
                 if (currentNode == targetNode)
-                {
                     return RetracePath(startNode, targetNode);
-                }
 
                 foreach (PathNode neighbor in grid.GetNeighbors(currentNode))
                 {
-                    if (!neighbor.isWalkable || closedSet.Contains(neighbor))
-                    {
+                    if (!neighbor.IsWalkable || closedSet.Contains(neighbor))
                         continue;
-                    }
 
-                    float newMovementCostToNeighbor = currentNode.gCost + CalculateStepCost(currentNode, neighbor) + neighbor.movementCost;
-                    if (newMovementCostToNeighbor < neighbor.gCost || !openSet.Contains(neighbor))
+                    float newG = currentNode.GCost + CalculateStepCost(currentNode, neighbor) + neighbor.MovementCost;
+                    if (newG < neighbor.GCost || !openSet.Contains(neighbor))
                     {
-                        neighbor.gCost = newMovementCostToNeighbor;
-                        neighbor.hCost = CalculateHeuristic(neighbor, targetNode);
-                        neighbor.parentNode = currentNode;
+                        neighbor.GCost = newG;
+                        neighbor.HCost = CalculateHeuristic(neighbor, targetNode);
+                        neighbor.ParentNode = currentNode;
 
                         if (!openSet.Contains(neighbor))
-                        {
                             openSet.Add(neighbor);
-                        }
                     }
                 }
             }
 
-            return null; // No path found
+            return null;
         }
 
-        private float CalculateStepCost(PathNode fromNode, PathNode toNode)
+        private float CalculateStepCost(PathNode from, PathNode to)
         {
-            int xDistance = Mathf.Abs(fromNode.gridPosition.x - toNode.gridPosition.x);
-            int yDistance = Mathf.Abs(fromNode.gridPosition.y - toNode.gridPosition.y);
-
-            return xDistance == 1 && yDistance == 1 ? 1.4f : 1f;
+            int dx = Mathf.Abs(from.GridPosition.x - to.GridPosition.x);
+            int dy = Mathf.Abs(from.GridPosition.y - to.GridPosition.y);
+            return dx == 1 && dy == 1 ? 1.4f : 1f;
         }
 
         private float CalculateHeuristic(PathNode a, PathNode b)
         {
-            int xDistance = Mathf.Abs(a.gridPosition.x - b.gridPosition.x);
-            int yDistance = Mathf.Abs(a.gridPosition.y - b.gridPosition.y);
-            int diagonalMoves = Mathf.Min(xDistance, yDistance);
-            int straightMoves = Mathf.Abs(xDistance - yDistance);
-
-            return diagonalMoves * 1.4f + straightMoves;
+            int dx = Mathf.Abs(a.GridPosition.x - b.GridPosition.x);
+            int dy = Mathf.Abs(a.GridPosition.y - b.GridPosition.y);
+            int diagonal = Mathf.Min(dx, dy);
+            int straight = Mathf.Abs(dx - dy);
+            return diagonal * 1.4f + straight;
         }
     }
 }

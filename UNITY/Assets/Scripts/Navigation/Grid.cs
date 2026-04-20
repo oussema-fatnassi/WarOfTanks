@@ -39,14 +39,11 @@ namespace WarOfTanks.Navigation
                 {
                     if (i == 0 && j == 0) continue;
 
-                    int neighborX = node.gridPosition.x + i;
-                    int neighborY = node.gridPosition.y + j;
+                    int neighborX = node.GridPosition.x + i;
+                    int neighborY = node.GridPosition.y + j;
                     var neighborNode = GetNode(neighborX, neighborY);
-
                     if (neighborNode != null)
-                    {
                         neighbors.Add(neighborNode);
-                    }
                 }
             }
             return neighbors;
@@ -82,8 +79,8 @@ namespace WarOfTanks.Navigation
 
                     bool isHazard = Physics2D.OverlapCircle(worldPosition, _cellSize * 0.1f, _hazardLayer);
                     var node = new PathNode(new Vector2Int(x, y), isWalkable);
-                    node.isHazard = isHazard;
-                    node.movementCost = isHazard ? 3f : 1f;
+                    node.IsHazard = isHazard;
+                    node.MovementCost = isHazard ? 3f : 1f;
                     _nodes[x, y] = node;
                 }
             }
@@ -111,8 +108,8 @@ namespace WarOfTanks.Navigation
                 for (int y = 0; y < _height; y++)
                 {
                     var node = _nodes[x, y];
-                    Gizmos.color = !node.isWalkable ? Color.red : node.isHazard ? Color.yellow : Color.green;
-                    Vector3 worldPosition = GridToWorldPosition(node.gridPosition);
+                    Gizmos.color = !node.IsWalkable ? Color.red : node.IsHazard ? Color.yellow : Color.green;
+                    Vector3 worldPosition = GridToWorldPosition(node.GridPosition);
                     Gizmos.DrawCube(worldPosition, Vector3.one * (_cellSize - 0.1f));
                 }
             }

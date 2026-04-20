@@ -41,7 +41,7 @@ public class AStarTest : MonoBehaviour
         Gizmos.color = Color.yellow;
         foreach (var node in _path)
         {
-            Vector3 worldPos = _pathfinder.GetGrid().GridToWorldPosition(node.gridPosition);
+            Vector3 worldPos = _pathfinder.GetGrid().GridToWorldPosition(node.GridPosition);
             Gizmos.DrawCube(worldPos, Vector3.one * 0.5f);
         }
     }
