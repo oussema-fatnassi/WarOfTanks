@@ -2,6 +2,14 @@ using System.Collections.Generic;
 using UnityEngine;
 using WarOfTanks.Navigation;
 
+/// <summary>
+/// Test script to visualize A* pathfinding in the Unity editor. Allows setting start and target
+/// positions via Transforms and draws the resulting path using Gizmos. The script retrieves the grid from the AStarPathfinder instance
+/// and converts world positions to grid coordinates for pathfinding. It also includes error handling to ensure that the path is only drawn when valid data is available.
+/// This script is intended for testing and debugging the A* pathfinding implementation by providing a visual
+/// representation of the calculated path in the Unity editor. It can be attached to any GameObject, and the start and target Transforms can be assigned via the inspector.
+/// The path will be drawn as yellow cubes at the center of each grid cell along the calculated path from the start to the target position.
+/// </summary>
 public class AStarTest : MonoBehaviour
 {
     [SerializeField] private Transform _start;
