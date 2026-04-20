@@ -73,6 +73,7 @@ npm run dev
 
 ### Sprint 3 — Navigation & Backend Foundation
 - ✅ [#17](https://github.com/oussema-fatnassi/WarOfTanks/issues/17) Control Zone - State Machine — 4-state FSM (Neutral/Capturing/Captured/Contested), circular gauge UI, team color feedback
+- ✅ [#13](https://github.com/oussema-fatnassi/WarOfTanks/issues/13) Navigation - A* Pathfinding — custom Physics2D grid, PathNode system, hazard cost, diagonal movement, INavigable interface
 
 ## In Progress / Remaining
 
@@ -88,7 +89,7 @@ npm run dev
 
 | # | Title | Owner | Priority | Status |
 |---|---|---|---|---|
-| [#13](https://github.com/oussema-fatnassi/WarOfTanks/issues/13) | Navigation - A* Pathfinding | Oussema | Critical | Not started |
+| [#13](https://github.com/oussema-fatnassi/WarOfTanks/issues/13) | Navigation - A* Pathfinding | Oussema | Critical | ✅ Done |
 | [#14](https://github.com/oussema-fatnassi/WarOfTanks/issues/14) | Navigation - Dijkstra | Oroitz | Medium | Not started |
 | [#16](https://github.com/oussema-fatnassi/WarOfTanks/issues/16) | Local Obstacle Avoidance | Oroitz | High | Not started |
 | [#18](https://github.com/oussema-fatnassi/WarOfTanks/issues/18) | Gameplay & Win Conditions - Teams, Score, Timer, Menu | Oroitz | High | Not started |
