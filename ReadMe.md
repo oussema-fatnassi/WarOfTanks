@@ -73,6 +73,8 @@ npm run dev
 
 ### Sprint 3 — Navigation & Backend Foundation
 - ✅ [#17](https://github.com/oussema-fatnassi/WarOfTanks/issues/17) Control Zone - State Machine — 4-state FSM (Neutral/Capturing/Captured/Contested), circular gauge UI, team color feedback
+- ✅ [#13](https://github.com/oussema-fatnassi/WarOfTanks/issues/13) Navigation - A* Pathfinding — custom Physics2D grid, PathNode system, hazard cost, diagonal movement, INavigable interface
+- ✅ [#54](https://github.com/oussama-fatnassi/WarOfTanks/issues/54) | MongoDB Database Initialization — Collections, Indexes & Seed Data
 
 ## In Progress / Remaining
 
@@ -80,17 +82,15 @@ npm run dev
 
 | # | Title | Owner | Priority | Status |
 |---|---|---|---|---|
-| [#10](https://github.com/oussema-fatnassi/WarOfTanks/issues/10) | Player Controls - Selection & Commands | Oroitz | Critical | Not started |
+| [#10](https://github.com/oussema-fatnassi/WarOfTanks/issues/10) | Player Controls - Selection & Commands | Oroitz | Critical | In Progress |
 | [#51](https://github.com/oussema-fatnassi/WarOfTanks/issues/51) | Frontend App Structure — Routing, Axios Client, Types, Pages | Oussema | Critical | Not started |
-| [#54](https://github.com/oussama-fatnassi/WarOfTanks/issues/54) | MongoDB Database Initialization — Collections, Indexes & Seed Data | Kamelia | Critical | ✅ Done |
 
 ### Sprint 3 — Navigation & Backend Foundation (Apr 20 – Apr 26)
 
 | # | Title | Owner | Priority | Status |
 |---|---|---|---|---|
-| [#13](https://github.com/oussema-fatnassi/WarOfTanks/issues/13) | Navigation - A* Pathfinding | Oussema | Critical | Not started |
 | [#14](https://github.com/oussema-fatnassi/WarOfTanks/issues/14) | Navigation - Dijkstra | Oroitz | Medium | Not started |
-| [#16](https://github.com/oussema-fatnassi/WarOfTanks/issues/16) | Local Obstacle Avoidance | Oroitz | High | Not started |
+| [#16](https://github.com/oussema-fatnassi/WarOfTanks/issues/16) | Local Obstacle Avoidance | Oussema | High | Not started |
 | [#18](https://github.com/oussema-fatnassi/WarOfTanks/issues/18) | Gameplay & Win Conditions - Teams, Score, Timer, Menu | Oroitz | High | Not started |
 | [#25](https://github.com/oussema-fatnassi/WarOfTanks/issues/25) | Player Model & Auth Routes (Register + Login) | Kamelia | Critical | Not started |
 | [#26](https://github.com/oussema-fatnassi/WarOfTanks/issues/26) | JWT Auth Middleware & Refresh Token Route | Kamelia | Critical | Not started |
