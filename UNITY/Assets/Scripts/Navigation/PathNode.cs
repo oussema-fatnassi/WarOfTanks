@@ -6,6 +6,7 @@ namespace WarOfTanks.Navigation
     {
         public Vector2Int gridPosition;
         public bool isWalkable;
+        public bool isHazard;
         public float movementCost;
         public float gCost;
         public float hCost;

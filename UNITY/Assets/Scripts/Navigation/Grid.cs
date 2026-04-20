@@ -11,6 +11,7 @@ namespace WarOfTanks.Navigation
         [SerializeField] private LayerMask _walkableLayer;
         [SerializeField] private LayerMask _unwalkableLayer;
         [SerializeField] private LayerMask _hazardLayer;
+        [SerializeField] private bool _showGizmos;
         private PathNode[,] _nodes;
 
         private void Awake()
@@ -81,6 +82,7 @@ namespace WarOfTanks.Navigation
 
                     bool isHazard = Physics2D.OverlapCircle(worldPosition, _cellSize * 0.1f, _hazardLayer);
                     var node = new PathNode(new Vector2Int(x, y), isWalkable);
+                    node.isHazard = isHazard;
                     node.movementCost = isHazard ? 3f : 1f;
                     _nodes[x, y] = node;
                 }
@@ -92,17 +94,24 @@ namespace WarOfTanks.Navigation
             return x >= 0 && x < _width && y >= 0 && y < _height;
         }
 
+        public IEnumerable<PathNode> GetAllNodes()
+        {
+            for (int x = 0; x < _width; x++)
+                for (int y = 0; y < _height; y++)
+                    yield return _nodes[x, y];
+        }
+
         private void OnDrawGizmos()
         {
         #if UNITY_EDITOR
-            if (_nodes == null) return;
+            if (_nodes == null || !_showGizmos) return;
 
             for (int x = 0; x < _width; x++)
             {
                 for (int y = 0; y < _height; y++)
                 {
                     var node = _nodes[x, y];
-                    Gizmos.color = node.isWalkable ? Color.green : Color.red;
+                    Gizmos.color = !node.isWalkable ? Color.red : node.isHazard ? Color.yellow : Color.green;
                     Vector3 worldPosition = GridToWorldPosition(node.gridPosition);
                     Gizmos.DrawCube(worldPosition, Vector3.one * (_cellSize - 0.1f));
                 }
