@@ -16,9 +16,9 @@ import (
 	"go.mongodb.org/mongo-driver/v2/mongo/options"
 	"golang.org/x/crypto/bcrypt"
 
-	"yourmodule/handlers"
-	"yourmodule/models"
-	"yourmodule/services"
+	"github.com/oussema-fatnassi/WarOfTanks/backend/handlers"
+  	"github.com/oussema-fatnassi/WarOfTanks/backend/models"
+ 	"github.com/oussema-fatnassi/WarOfTanks/backend/services"
 )
 
 // ── helpers ──────────────────────────────────────────────────────────────────

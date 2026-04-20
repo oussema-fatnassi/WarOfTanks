@@ -12,8 +12,8 @@ import (
 	"go.mongodb.org/mongo-driver/v2/mongo"
 	"golang.org/x/crypto/bcrypt"
 
-	"yourmodule/models"
-	"yourmodule/services"
+	"github.com/oussema-fatnassi/WarOfTanks/backend/models"
+    "github.com/oussema-fatnassi/WarOfTanks/backend/services"
 )
 
 var usernameRegex = regexp.MustCompile(`^[a-zA-Z0-9_]{3,20}$`)

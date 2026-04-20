@@ -6,7 +6,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 
-	"yourmodule/services"
+	"github.com/oussema-fatnassi/WarOfTanks/backend/services"
 )
 
 const PlayerIDKey = "playerID"
