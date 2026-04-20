@@ -36,7 +36,7 @@ UNITY/
 | Unity Project Base Setup | [#4](https://github.com/oussema-fatnassi/WarOfTanks/issues/4) | ✅ Done |
 | Tank Prefab - Movement, Cannon, HP, Respawn | [#8](https://github.com/oussema-fatnassi/WarOfTanks/issues/8) | ✅ Done |
 | Environment - Tilemaps Setup | [#9](https://github.com/oussema-fatnassi/WarOfTanks/issues/9) | ✅ Done |
-| Player Controls - Selection & Commands | [#10](https://github.com/oussema-fatnassi/WarOfTanks/issues/10) | Not started |
+| Player Controls - Selection & Commands | [#10](https://github.com/oussema-fatnassi/WarOfTanks/issues/10) | In Progress |
 | RTS Camera | [#11](https://github.com/oussema-fatnassi/WarOfTanks/issues/11) | ✅ Done |
 | Generic State Machine System | [#12](https://github.com/oussema-fatnassi/WarOfTanks/issues/12) | ✅ Done |
 | Navigation - A* Pathfinding | [#13](https://github.com/oussema-fatnassi/WarOfTanks/issues/13) | ✅ Done |
