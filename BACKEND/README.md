@@ -27,17 +27,17 @@ Create a `.env` file in `BACKEND/` with these values before running.
 
 ## API Endpoints
 
-> Routes are being implemented — see issues below.
+> Routes marked ✅ are live. Others are in progress — see issues below.
 
-| Method | Route | Description |
-|---|---|---|
-| POST | `/auth/register` | Register a new player |
-| POST | `/auth/login` | Login and receive JWT tokens |
-| POST | `/auth/refresh` | Refresh access token |
-| GET | `/players/:id` | Get player profile |
-| GET | `/matches` | Get match history |
-| POST | `/matches` | Record a match result |
-| GET | `/leaderboard` | Get leaderboard |
+| Method | Route | Description | Status |
+|---|---|---|---|
+| POST | `/api/v1/auth/register` | Register a new player | ✅ Live |
+| POST | `/api/v1/auth/login` | Login and receive JWT tokens | ✅ Live |
+| POST | `/api/v1/auth/refresh` | Refresh access token | 🔲 #26 |
+| GET | `/api/v1/players/:id` | Get player profile | 🔲 #27 |
+| GET | `/api/v1/matches` | Get match history | 🔲 #27 |
+| POST | `/api/v1/matches` | Record a match result | 🔲 #27 |
+| GET | `/api/v1/leaderboard` | Get leaderboard | 🔲 #27 |
 
 ## JWT Strategy
 
@@ -52,7 +52,7 @@ Create a `.env` file in `BACKEND/` with these values before running.
 | [#2](https://github.com/oussema-fatnassi/WarOfTanks/issues/2) | ERD - MongoDB Schema Design | ✅ Done |
 | [#24](https://github.com/oussema-fatnassi/WarOfTanks/issues/24) | Backend Project Setup (Go + Gin + MongoDB + Docker) | ✅ Done |
 | [#54](https://github.com/oussama-fatnassi/WarOfTanks/issues/54) | MongoDB Database Initialization — Collections, Indexes & Seed Data | ✅ Done |
-| [#25](https://github.com/oussema-fatnassi/WarOfTanks/issues/25) | Player Model & Auth Routes (Register + Login) | Not started |
+| [#25](https://github.com/oussema-fatnassi/WarOfTanks/issues/25) | Player Model & Auth Routes (Register + Login) | ✅ Done |
 | [#26](https://github.com/oussema-fatnassi/WarOfTanks/issues/26) | JWT Auth Middleware & Refresh Token Route | Not started |
 | [#27](https://github.com/oussema-fatnassi/WarOfTanks/issues/27) | Player & Match Routes | Not started |
 | [#28](https://github.com/oussema-fatnassi/WarOfTanks/issues/28) | Backend Unit Tests & CI Integration | Not started |
