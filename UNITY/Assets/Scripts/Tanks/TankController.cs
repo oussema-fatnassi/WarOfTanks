@@ -11,7 +11,7 @@ public class TankController : MonoBehaviour
     [SerializeField] private Transform _tankBody;
 
     private Rigidbody2D _rigidbody;
-    private Vector2 _desiredPosition;
+    private Vector2 _moveDirection;
     private float _desiredRotation;
     #endregion
 
@@ -28,7 +28,7 @@ public class TankController : MonoBehaviour
 
     void FixedUpdate()
     {
-        _rigidbody.MovePosition(_rigidbody.position + _desiredPosition * _moveSpeed * Time.fixedDeltaTime);
+        _rigidbody.MovePosition(_rigidbody.position + _moveDirection * _moveSpeed * Time.fixedDeltaTime);
         _tankBody.Rotate(0f, 0f, _desiredRotation * _rotationSpeed * Time.fixedDeltaTime);
     }
     #endregion
@@ -36,7 +36,7 @@ public class TankController : MonoBehaviour
     #region Public Methods
     public void Move(Vector2 direction)
     {
-        _desiredPosition = direction.normalized;
+        _moveDirection = direction.normalized;
     }
 
     public void Rotate(float angle)
@@ -46,7 +46,7 @@ public class TankController : MonoBehaviour
 
     public void Stop()
     {
-        _desiredPosition = Vector2.zero;
+        _moveDirection = Vector2.zero;
         _desiredRotation = 0;
     }
     #endregion

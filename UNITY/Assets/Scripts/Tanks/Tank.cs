@@ -55,7 +55,7 @@ public class Tank : MonoBehaviour, ISelectable, ICommandReceiver, ITankComponent
     private void Start()
     {
         _healthSystem.OnDeath += Die;
-        if (!IsEnemy()) SelectionManager.Instance.RegisterFriendly(this);
+        if (!IsEnemy()) SelectionManager.Instance?.RegisterFriendlyTank(this);
     }
 
     private void OnDestroy()
