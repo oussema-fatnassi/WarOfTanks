@@ -4,15 +4,17 @@ using UnityEngine;
 
 public class SelectionManager : SignletonBehaviour<SelectionManager>
 {
-    // Start is called before the first frame update
-    void Start()
+    private List<ISelectable> _selectedTanks; 
+    private List<ISelectable> _allFriendlyTanks;
+
+    private void Awake()
     {
-        
+        _selectedTanks = new List<ISelectable>();
+        _allFriendlyTanks = new List<ISelectable>();
     }
 
-    // Update is called once per frame
-    void Update()
+    public static void RegisterFriendlyTank(ISelectable tank)
     {
-        
+        Instance._allFriendlyTanks.Add(tank);
     }
 }
