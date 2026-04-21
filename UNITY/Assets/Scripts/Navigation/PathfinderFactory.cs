@@ -1,3 +1,4 @@
+using System;
 using WarOfTanks.Enums;
 
 namespace WarOfTanks.Navigation
@@ -13,6 +14,19 @@ namespace WarOfTanks.Navigation
     /// </summary>
     public static class PathfinderFactory
     {
-
+        public static INavigable Create (EPathfinderType type, NavigationGrid grid)
+        {
+            switch (type)
+            {
+                case EPathfinderType.ASTAR:
+                    return new AStarPathfinder(grid);
+                case EPathfinderType.DIJKSTRA:
+                    return new DijkstraPathfinder(grid);
+                case EPathfinderType.FLOWFIELD:
+                    return new FlowFieldPathfinder(grid);
+                default:
+                    throw new ArgumentException($"Unsupported pathfinder type: {type}");
+            }
+        }
     }
 }
