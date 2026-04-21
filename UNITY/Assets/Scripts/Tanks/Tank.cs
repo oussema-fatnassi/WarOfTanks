@@ -65,7 +65,7 @@ public class Tank : MonoBehaviour, ISelectable, ICommandReceiver, ITankComponent
 
     private void Update()
     {
-        _currentCommand.Tick();
+        _currentCommand?.Tick();
     }
     #endregion
 
