@@ -7,6 +7,8 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/oussema-fatnassi/WarOfTanks/backend/config"
+	"github.com/oussema-fatnassi/WarOfTanks/backend/handlers"
+	"github.com/oussema-fatnassi/WarOfTanks/backend/services"
 	"go.mongodb.org/mongo-driver/v2/mongo"
 	"go.mongodb.org/mongo-driver/v2/mongo/options"
 )
@@ -35,10 +37,18 @@ func main() {
 	}
 	log.Println("✅ Connected to MongoDB")
 
+	db := client.Database(cfg.MongoDBName)
+
 	// Initialize collections, indexes and seed data
-	if err := config.InitDatabase(client.Database(cfg.MongoDBName)); err != nil {
+	if err := config.InitDatabase(db); err != nil {
 		log.Fatal("❌ Failed to initialize database:", err)
 	}
+
+	// Initialize services
+	jwtSvc := services.NewJWTService(cfg.JWTSecret, cfg.JWTRefreshSecret)
+
+	// Initialize handlers
+	authHandler := handlers.NewAuthHandler(db, jwtSvc)
 
 	// Initialize Gin router
 	r := gin.Default()
@@ -50,9 +60,13 @@ func main() {
 			c.JSON(200, gin.H{"status": "ok"})
 		})
 
-		api.Group("/auth")
-		api.Group("/players")
-		api.Group("/matches")
+		// Public routes
+		auth := api.Group("/auth")
+		{
+			auth.POST("/register", authHandler.Register)
+			auth.POST("/login", authHandler.Login)
+		}
+
 	}
 
 	log.Printf("🚀 Server running on port %s", cfg.Port)

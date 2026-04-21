@@ -8,10 +8,10 @@ import (
 
 // PlayerStats holds aggregated performance data embedded inside Player.
 type PlayerStats struct {
-	Wins          int `bson:"wins" json:"wins"`
-	Losses        int `bson:"losses" json:"losses"`
-	MatchesPlayed int `bson:"matchesPlayed" json:"matchesPlayed"`
-	TotalScore    int `bson:"totalScore" json:"totalScore"`
+	Wins         int     `bson:"wins" json:"wins"`
+	Losses       int     `bson:"losses" json:"losses"`
+	TotalMatches int     `bson:"totalMatches" json:"totalMatches"`
+	TotalScore   float64 `bson:"totalScore" json:"totalScore"`
 }
 
 // Player represents a registered user in the game.

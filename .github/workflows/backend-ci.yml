@@ -42,16 +42,7 @@ jobs:
         uses: actions/setup-go@v5
         with:
           go-version: '1.25'
-
-      - name: Cache Go modules
-        uses: actions/cache@v4
-        with:
-          path: |
-            ~/.cache/go-build
-            ~/go/pkg/mod
-          key: ${{ runner.os }}-go-${{ hashFiles('BACKEND/go.sum') }}
-          restore-keys: |
-            ${{ runner.os }}-go-
+          cache-dependency-path: BACKEND/go.sum
 
       - name: Install dependencies
         run: go mod download
