@@ -7,17 +7,17 @@ namespace WarOfTanks.Navigation
     /// Abstract base class for all pathfinding algorithms. Handles grid resolution and path retracing.
     /// Subclasses implement the specific pathfinding logic in FindPath(). This design allows for easy swapping of algorithms without changing how the grid is accessed or how paths are retraced.
     /// </summary>
-    public abstract class BasePathfinder : MonoBehaviour, INavigable
+    public abstract class BasePathfinder : INavigable
     {
-        private Grid _grid;
+        private readonly NavigationGrid _grid;
 
-        protected virtual void Awake()
+        protected BasePathfinder(NavigationGrid grid)
         {
-            _grid = FindObjectOfType<Grid>();
+            _grid = grid;
         }
 
         /// <summary>Returns the navigation grid used by this pathfinder.</summary>
-        public Grid GetGrid()
+        public NavigationGrid GetGrid()
         {
             return _grid;
         }

@@ -9,6 +9,7 @@ namespace WarOfTanks.Navigation
     /// </summary>
     public class AStarPathfinder : BasePathfinder
     {
+        public AStarPathfinder(NavigationGrid grid) : base(grid) { }
         /// <summary>
         /// Finds the optimal path from start to target using the A* algorithm.
         /// The algorithm maintains an open set of nodes to explore and a closed set of nodes already evaluated.
@@ -21,7 +22,7 @@ namespace WarOfTanks.Navigation
         /// <returns>Ordered list of nodes forming the path, or null if no path exists.</returns>
         public override List<PathNode> FindPath(Vector2Int startPos, Vector2Int targetPos)
         {
-            Grid grid = GetGrid();
+            NavigationGrid grid = GetGrid();
             if (grid == null)
                 return null;
 

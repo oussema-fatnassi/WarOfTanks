@@ -18,6 +18,6 @@ namespace WarOfTanks.Navigation
         List<PathNode> FindPath(Vector2Int startPosition, Vector2Int targetPosition);
 
         /// <summary>Returns the navigation grid used by this pathfinder.</summary>
-        Grid GetGrid();
+        NavigationGrid GetGrid();
     }
 }

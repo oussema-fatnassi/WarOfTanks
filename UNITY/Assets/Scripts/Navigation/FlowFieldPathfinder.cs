@@ -5,6 +5,8 @@ namespace WarOfTanks.Navigation
 {
     public class FlowFieldPathfinder : BasePathfinder
     {
+        public FlowFieldPathfinder(NavigationGrid grid) : base(grid) { }
+
         public override List<PathNode> FindPath(Vector2Int startPos, Vector2Int targetPos)
         {
             // Implement flow field pathfinding logic here

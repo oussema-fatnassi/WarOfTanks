@@ -7,7 +7,7 @@ namespace WarOfTanks.Navigation
     /// Builds and owns the navigation grid. Samples Physics2D layers on Awake to determine
     /// walkability and hazard status for each cell.
     /// </summary>
-    public class Grid : MonoBehaviour
+    public class NavigationGrid : MonoBehaviour
     {
         [SerializeField] private int _width;
         [SerializeField] private int _height;
