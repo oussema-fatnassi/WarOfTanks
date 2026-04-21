@@ -64,10 +64,6 @@ func createIndexes(ctx context.Context, db *mongo.Database) error {
 			Options: options.Index().SetUnique(true).SetName("unique_username"),
 		},
 		{
-			Keys:    bson.D{{Key: "email", Value: 1}},
-			Options: options.Index().SetUnique(true).SetName("unique_email"),
-		},
-		{
 			Keys:    bson.D{{Key: "stats.totalScore", Value: -1}},
 			Options: options.Index().SetName("leaderboard_total_score"),
 		},

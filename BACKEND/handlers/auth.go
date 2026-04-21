@@ -153,18 +153,8 @@ func (h *AuthHandler) Login(c *gin.Context) {
 
 	secure := os.Getenv("APP_ENV") == "production"
 
-	c.SetCookie(
-		"refreshToken",
-		refreshToken,
-		int((7 * 24 * time.Hour).Seconds()),
-		"/",
-		"",
-		secure,
-		true, // HttpOnly
-	)
-
-	// SameSite=Strict must be set manually (Gin's SetCookie doesn't expose it)
-	c.Header("Set-Cookie", c.Writer.Header().Get("Set-Cookie")+"; SameSite=Strict")
+	c.SetSameSite(http.SameSiteStrictMode)
+	c.SetCookie("refreshToken", refreshToken, int((7*24*time.Hour).Seconds()), "/", "", secure, true)
 
 	c.JSON(http.StatusOK, gin.H{
 		"accessToken": accessToken,
