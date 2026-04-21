@@ -2,11 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SignletonBehaviour<T> : MonoBehaviour where T : SignletonBehaviour<T>
+public class SingletonBehaviour<T> : MonoBehaviour where T : SingletonBehaviour<T>
 {
-    private T _instance;
     public static T Instance { get; protected set; }
-    private void Awake()
+    protected virtual void Awake()
     {
         if (Instance != null && Instance != this)
         {
@@ -15,7 +14,7 @@ public class SignletonBehaviour<T> : MonoBehaviour where T : SignletonBehaviour<
         }
         else
         {
-            _instance = (T)this;
+            Instance = (T)this;
         }
     }
 }

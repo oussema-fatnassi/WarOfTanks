@@ -2,13 +2,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SelectionManager : SignletonBehaviour<SelectionManager>
+public class SelectionManager : SingletonBehaviour<SelectionManager>
 {
     private List<ISelectable> _selectedTanks; 
     private List<ISelectable> _allFriendlyTanks;
 
-    private void Awake()
+    protected override void Awake()
     {
+        base.Awake();
         _selectedTanks = new List<ISelectable>();
         _allFriendlyTanks = new List<ISelectable>();
     }
