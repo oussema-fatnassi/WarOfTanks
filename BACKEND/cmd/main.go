@@ -8,7 +8,6 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/oussema-fatnassi/WarOfTanks/backend/config"
 	"github.com/oussema-fatnassi/WarOfTanks/backend/handlers"
-	"github.com/oussema-fatnassi/WarOfTanks/backend/middleware"
 	"github.com/oussema-fatnassi/WarOfTanks/backend/services"
 	"go.mongodb.org/mongo-driver/v2/mongo"
 	"go.mongodb.org/mongo-driver/v2/mongo/options"
@@ -68,8 +67,6 @@ func main() {
 			auth.POST("/login", authHandler.Login)
 		}
 
-		// Protected routes (require valid JWT) — handlers added in follow-up issues
-		_ = middleware.AuthRequired(jwtSvc)
 	}
 
 	log.Printf("🚀 Server running on port %s", cfg.Port)
