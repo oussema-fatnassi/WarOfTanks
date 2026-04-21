@@ -13,14 +13,14 @@ import (
 	"golang.org/x/crypto/bcrypt"
 
 	"github.com/oussema-fatnassi/WarOfTanks/backend/models"
-    "github.com/oussema-fatnassi/WarOfTanks/backend/services"
+	"github.com/oussema-fatnassi/WarOfTanks/backend/services"
 )
 
 var usernameRegex = regexp.MustCompile(`^[a-zA-Z0-9_]{3,20}$`)
 
 type AuthHandler struct {
-	players  *mongo.Collection
-	jwtSvc   *services.JWTService
+	players *mongo.Collection
+	jwtSvc  *services.JWTService
 }
 
 func NewAuthHandler(db *mongo.Database, jwtSvc *services.JWTService) *AuthHandler {
@@ -154,7 +154,7 @@ func (h *AuthHandler) Login(c *gin.Context) {
 	secure := os.Getenv("APP_ENV") == "production"
 
 	c.SetSameSite(http.SameSiteStrictMode)
-	c.SetCookie("refreshToken", refreshToken, int((7*24*time.Hour).Seconds()), "/", "", secure, true)
+	c.SetCookie("refreshToken", refreshToken, int((7 * 24 * time.Hour).Seconds()), "/", "", secure, true)
 
 	c.JSON(http.StatusOK, gin.H{
 		"accessToken": accessToken,

@@ -95,4 +95,4 @@ func (s *JWTService) ValidateRefreshToken(tokenStr string) (*RefreshClaims, erro
 		return nil, errors.New("invalid token")
 	}
 	return claims, nil
-}	
+}

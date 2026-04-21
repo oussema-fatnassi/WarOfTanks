@@ -68,13 +68,8 @@ func main() {
 			auth.POST("/login", authHandler.Login)
 		}
 
-		// Protected routes (require valid JWT)
-		protected := api.Group("/")
-		protected.Use(middleware.AuthRequired(jwtSvc))
-		{
-			protected.GET("/players")  
-			protected.GET("/matches")  
-		}
+		// Protected routes (require valid JWT) — handlers added in follow-up issues
+		_ = middleware.AuthRequired(jwtSvc)
 	}
 
 	log.Printf("🚀 Server running on port %s", cfg.Port)
