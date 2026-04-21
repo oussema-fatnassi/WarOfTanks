@@ -22,7 +22,12 @@ public class MoveCommand : ICommand
     }
     public void Tick() 
     {
-        if (_waypointIndex >= _waypoints.Count) return;
+        if (_waypointIndex >= _waypoints.Count)
+        {
+            _tank.Controller.Stop();
+            return;
+        }
+
         Vector2 currentPosition = _tank.Controller.transform.position;
         Vector2 currentWaypoint = _waypoints[_waypointIndex];
         if (Vector2.Distance(currentPosition, currentWaypoint) < _arrivalThreshold)

@@ -7,7 +7,7 @@ public class StopCommand : ICommand
         _tank = tank;
     }
 
-    public void Start() { }
+    public void Start() { _tank.Controller.Stop(); }
     public void Tick() { }
     public void Cancel() { }
 }
