@@ -22,6 +22,8 @@ public class SelectionManager : SingletonBehaviour<SelectionManager>
     public void RegisterFriendlyTank(ISelectable tank)
     {
         _allFriendlyTanks.Add(tank);
+        Tank tankMono = tank as Tank;
+        if (tankMono != null) tankMono.OnTankDied += () => RemoveFromSelection(tank);
     }
     public void SelectSingle(ISelectable tank) {
         DeselectAll();
