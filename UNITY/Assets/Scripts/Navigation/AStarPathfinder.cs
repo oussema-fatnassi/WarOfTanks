@@ -20,7 +20,7 @@ namespace WarOfTanks.Navigation
         /// <param name="startPos">Grid coordinates of the start cell.</param>
         /// <param name="targetPos">Grid coordinates of the target cell.</param>
         /// <returns>Ordered list of nodes forming the path, or null if no path exists.</returns>
-        public override List<PathNode> FindPath(Vector2Int startPos, Vector2Int targetPos)
+        public override List<PathNode> FindPath(Vector2Int startPos, Vector2Int targetPos, HashSet<Vector2Int> blockedPositions = null)
         {
             NavigationGrid grid = GetGrid();
             if (grid == null)
@@ -62,6 +62,9 @@ namespace WarOfTanks.Navigation
                 foreach (PathNode neighbor in grid.GetNeighbors(currentNode))
                 {
                     if (!neighbor.IsWalkable || closedSet.Contains(neighbor))
+                        continue;
+
+                    if (blockedPositions != null && neighbor != targetNode && blockedPositions.Contains(neighbor.GridPosition))
                         continue;
 
                     float newG = currentNode.GCost + CalculateStepCost(currentNode, neighbor) + neighbor.MovementCost;
