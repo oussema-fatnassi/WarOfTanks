@@ -7,7 +7,8 @@ public class MoveCommand : ICommand
     private Vector3 _destination;
     private List<Vector2> _waypoints;
     private int _waypointIndex;
-    private const float _arrivalThreshold = 0.1f;
+
+    public Vector3 Destination => _destination;
 
     public MoveCommand(ITankComponents tank, Vector3 destination)
     {
@@ -24,13 +25,13 @@ public class MoveCommand : ICommand
     {
         if (_waypointIndex >= _waypoints.Count)
         {
-            _tank.Controller.Stop();
+            Cancel();
             return;
         }
 
         Vector2 currentPosition = _tank.Controller.transform.position;
         Vector2 currentWaypoint = _waypoints[_waypointIndex];
-        if (Vector2.Distance(currentPosition, currentWaypoint) < _arrivalThreshold)
+        if (Vector2.Distance(currentPosition, currentWaypoint) < TankConstants.WaypointArrivalThreshold)
         {
             _waypointIndex++;
             return;

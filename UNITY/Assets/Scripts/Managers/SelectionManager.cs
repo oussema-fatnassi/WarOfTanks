@@ -7,6 +7,7 @@ public class SelectionManager : SingletonBehaviour<SelectionManager>
     #region Fields
     private List<ISelectable> _selectedTanks; 
     private List<ISelectable> _allFriendlyTanks;
+    private Camera _mainCamera;
     #endregion
 
     #region Unity Methods
@@ -15,6 +16,7 @@ public class SelectionManager : SingletonBehaviour<SelectionManager>
         base.Awake();
         _selectedTanks = new List<ISelectable>();
         _allFriendlyTanks = new List<ISelectable>();
+        _mainCamera = Camera.main;
     }
     #endregion
 
@@ -78,8 +80,8 @@ public class SelectionManager : SingletonBehaviour<SelectionManager>
 
     private Collider2D[] GetHitsInRect(Rect screenRect) 
     {
-        Vector2 worldMin = Camera.main.ScreenToWorldPoint(screenRect.min);
-        Vector2 worldMax = Camera.main.ScreenToWorldPoint(screenRect.max);
+        Vector2 worldMin = _mainCamera.ScreenToWorldPoint(screenRect.min);
+        Vector2 worldMax = _mainCamera.ScreenToWorldPoint(screenRect.max);
         return Physics2D.OverlapAreaAll(worldMin, worldMax);
     }
 }
