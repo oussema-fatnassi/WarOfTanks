@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -7,7 +5,7 @@ public class SelectionBox : MonoBehaviour
 {
     #region Fields
     private RectTransform _rectTransform;
-    private UnityEngine.UI.Image _image;
+    private Image _image;
     private Vector2 _startPos;
     private Vector2 _currentPos;
     #endregion
