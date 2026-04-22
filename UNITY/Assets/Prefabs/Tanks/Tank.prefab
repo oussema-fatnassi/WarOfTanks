@@ -310,7 +310,12 @@ GameObject:
   - component: {fileID: 6346765806128570278}
   - component: {fileID: 2132301940}
   - component: {fileID: 2132301941}
-  - component: {fileID: 6331171126990741656}
+using UnityEngine;
+
+public class Tank : MonoBehaviour
+{
+  
+}  - component: {fileID: 6331171126990741656}
   m_Layer: 11
   m_Name: Tank
   m_TagString: Tank

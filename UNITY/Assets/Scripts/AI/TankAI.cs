@@ -6,6 +6,11 @@ using System.Collections;
 
 namespace WarOfTanks.AI
 {
+    //TODO
+    /// TankAI currently mixes AI orchestration, detection, and rerouting logic in a single class for simplicity, 
+    /// but as the AI system grows we may want to refactor into separate components
+
+
     /// <summary>
     /// Main AI controller for tank behavior. This class will manage the decision-making process for the tank, 
     /// including pathfinding, target selection, and movement. It will utilize the PathfinderFactory to obtain
@@ -114,6 +119,13 @@ namespace WarOfTanks.AI
         public float DetectionRange => _detectionRange;
         public float TankRadius => _tankRadius;
 
+        /// <summary>
+        /// Calculates a new path from the tank's current position to the given grid cell and begins following it.
+        /// If a valid path cannot be found, the tank will stop and wait until the next SetDestination call.
+        /// The targetGrid parameter should be in grid coordinates (not world coordinates). 
+        /// The method will convert the tank's current world position to grid coordinates before requesting the path from the navigator.
+        /// <param name="targetGrid">The destination grid cell coordinates.</param>
+        /// </summary>
         public void SetDestination(Vector2Int targetGrid)
         {
             if (_grid == null || _navigator == null)
@@ -126,6 +138,13 @@ namespace WarOfTanks.AI
             _currentPath = _navigator.FindPath(currentGrid, _targetGridPosition);
         }
 
+        /// <summary>
+        /// Returns true if another tank is detected ahead via CircleCastAll. Stores the blocker's world position in _lastBlockerPosition.
+        /// The method checks the next target node in the current path and casts a circle in that direction to detect any tanks within the detection range.
+        /// It ignores the tank's own colliders and only considers hits on objects tagged as "Tank". 
+        /// If a blocking tank is detected, it stores the blocker's position for use in dynamic path recalculation. 
+        /// The method returns true if a blocking tank is detected, and false otherwise.
+        /// </summary>
         private bool CheckForBlockingTank()
         {
             if (_currentPath == null || _currentPathIndex >= _currentPath.Count)
@@ -149,6 +168,12 @@ namespace WarOfTanks.AI
             return false;
         }
 
+        /// <summary>
+        /// Waits _blockTimeout seconds, then triggers recalculation or ForceWait depending on the rolling recalc count.
+        /// This coroutine is started when a blocking tank is detected. It waits for a short duration to see if the block clears on its own.
+        /// After the wait, it checks if the block is still present by calling CheckForBlockingTank again. 
+        /// If the block persists, it increments the recalc count and decides whether to request a new path or to force a wait based on the number of recent recalculations.
+        /// </summary>
         private IEnumerator HandleBlock()
         {
             yield return new WaitForSeconds(_blockTimeout);
@@ -164,6 +189,12 @@ namespace WarOfTanks.AI
             _isHandlingBlock = false;
         }
 
+        /// <summary>
+        /// Requests a new path that avoids the blocker's 3×3 grid zone. Replaces the current path on success; triggers ForceWait if no alternate route exists.
+        /// The method first builds a set of blocked grid positions around the last known blocker position, excluding the tank's current cell and the target cell. 
+        /// It then requests a new path from the navigator, passing the blocked positions to ensure they are avoided in the new path calculation. 
+        /// If a valid new path is found, it replaces the current path and resets the path index. If no valid path can be found, it triggers the ForceWait
+        /// </summary>
         private IEnumerator RequestRecalculation()
         {
             HashSet<Vector2Int> blockedPositions = GetDynamicBlockedPositions();
@@ -183,6 +214,13 @@ namespace WarOfTanks.AI
             }
         }
 
+        /// <summary>
+        /// Builds a set of grid positions to avoid during recalculation: the 3×3 zone around the blocker, excluding the tank's own cell and the destination.
+        /// The method calculates the grid coordinates of the last known blocker position and creates a set of positions that form a 3×3 area around it. 
+        /// It ensures that the tank's current grid cell and the target grid cell are not included in the blocked positions, 
+        /// as the tank needs to be able to move out of its current cell and reach the target cell. 
+        /// The resulting set of blocked positions is returned for use in the pathfinding recal
+        /// </summary>
         private HashSet<Vector2Int> GetDynamicBlockedPositions()
         {
             var blockedPositions = new HashSet<Vector2Int>();
@@ -205,6 +243,12 @@ namespace WarOfTanks.AI
             return blockedPositions;
         }
 
+        /// <summary>
+        /// Stops the tank for 1 second and resets the recalc counter. Triggered when recalculations exceed _maxRecalculations within the rolling window.
+        /// This coroutine is started when the number of recalculations exceeds the defined threshold. 
+        /// It logs a message indicating that a forced wait has been triggered, stops the tank's movement, and sets the _isWaiting flag to true.
+        /// It then waits for a fixed duration (1 second) before allowing the tank to move again. After the wait, it resets the recalc count and timer to allow for fresh recalcul
+        /// </summary>
         private IEnumerator ForceWait()
         {
             Debug.Log($"[TankAI] Force wait triggered on {name} — anti-oscillation lock");
@@ -216,6 +260,9 @@ namespace WarOfTanks.AI
             _recalcTimer = 0f;
         }
 
+        /// <summary>Clears the active path and stops the tank.</summary>
+        /// This method is called when the tank reaches its destination or when a path needs to be abandoned. 
+        /// It sets the current path to null, resets the path index, and commands the tank controller to stop movement.
         private void ClearPath()
         {
             _currentPath = null;
