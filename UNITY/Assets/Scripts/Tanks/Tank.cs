@@ -55,6 +55,11 @@ public class Tank : MonoBehaviour, ISelectable, ICommandReceiver, ITankComponent
     private void Start()
     {
         _healthSystem.OnDeath += Die;
+        if (SelectionManager.Instance == null)
+        { 
+            Debug.LogWarning("No SelectionManager found in the scene. Please add one to manage tank selection.");
+            return;
+        }
         if (!IsEnemy()) SelectionManager.Instance?.RegisterFriendlyTank(this);
     }
 
