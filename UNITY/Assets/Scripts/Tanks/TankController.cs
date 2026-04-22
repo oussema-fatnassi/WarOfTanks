@@ -49,5 +49,13 @@ public class TankController : MonoBehaviour
         _desiredPosition = Vector2.zero;
         _desiredRotation = 0;
     }
+
+    public void RotateToward(Vector2 targetDirection)
+    {
+        float targetAngle = -Vector2.SignedAngle(targetDirection, Vector2.up);
+        float currentAngle = _tankBody.eulerAngles.z;
+        float angleDiff = Mathf.DeltaAngle(currentAngle, targetAngle);
+        _desiredRotation = Mathf.Abs(angleDiff) > 3f ? Mathf.Clamp(angleDiff / 15f, -1f, 1f) : 0f;
+    }
     #endregion
 }
