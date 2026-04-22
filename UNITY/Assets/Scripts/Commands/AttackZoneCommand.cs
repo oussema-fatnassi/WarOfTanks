@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -54,7 +53,7 @@ public class AttackZoneCommand : ICommand
             Vector2 currentTankPosition = _tank.Controller.transform.position;
             if (Vector2.Distance(currentTankPosition, (Vector2)_targetPoint) <= _tank.FiringRange)
             {
-                Cancel();
+                _tank.Controller.Stop();
                 turret.RotateTo((Vector2)_targetPoint);
                 if (turret.CanFire) turret.Fire();
             }
@@ -72,12 +71,12 @@ public class AttackZoneCommand : ICommand
 
     private void MoveAlongPath(Vector2 currentTankPosition)
     {
-        Vector2 currentWaypoint = _path[_waypointIndex];
         if (_waypointIndex >= _path.Count)
         {
             Cancel();
             return;
         }
+        Vector2 currentWaypoint = _path[_waypointIndex];
         if (Vector2.Distance(currentTankPosition, currentWaypoint) < TankConstants.WaypointArrivalThreshold)
         {
             _waypointIndex++;

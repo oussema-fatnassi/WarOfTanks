@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
 using UnityEngine;
 
 public class AttackCommand : ICommand
@@ -57,12 +56,12 @@ public class AttackCommand : ICommand
         }
 
         // Move towards target if not in range
-        Vector2 currentWaypoint = _path[_waypointIndex];
         if (_waypointIndex >= _path.Count)
         {
             Cancel();
             return;
         }
+        Vector2 currentWaypoint = _path[_waypointIndex];
         if (Vector2.Distance(currentTankPosition, currentWaypoint) < TankConstants.WaypointArrivalThreshold)
         {
             _waypointIndex++;
