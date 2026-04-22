@@ -30,11 +30,11 @@ public class SelectionIndicator : MonoBehaviour
     private void InitializeLineRenderer()
     {
         _lineRenderer.useWorldSpace = false;
-        _lineRenderer.positionCount = 37;
+        _lineRenderer.positionCount = 40;
 
-        for (int i = 0; i <= 36; i++)
+        for (int i = 0; i <= 39; i++)
         {
-            float angle = (i / 36f) * 2f * Mathf.PI;
+            float angle = (i / 39f) * 2f * Mathf.PI;
             _lineRenderer.SetPosition(i, new Vector3(Mathf.Cos(angle) * 0.6f, Mathf.Sin(angle) * 0.6f, 0f));
         }
     }

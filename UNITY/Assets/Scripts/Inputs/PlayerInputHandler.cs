@@ -85,14 +85,11 @@ public class PlayerInputHandler : MonoBehaviour
 
         Vector3 worldClick = ScreenToWorld(_pendingClickPosition);
         Collider2D hit = Physics2D.OverlapPoint(worldClick);
-        if (hit != null && hit.TryGetComponent<ISelectable>(out ISelectable selectable) && !selectable.IsEnemy())
-        {
+        ISelectable selectable = hit != null ? hit.GetComponentInParent<ISelectable>() : null;
+        if (selectable != null && !selectable.IsEnemy())
             SelectionManager.Instance.SelectSingle(selectable);
-        }
         else
-        {
             SelectionManager.Instance.DeselectAll();
-        }
     }
 
     private void OnBoxSelectStarted(InputAction.CallbackContext context) 
@@ -105,10 +102,8 @@ public class PlayerInputHandler : MonoBehaviour
     {
         Vector3 worldClick = ScreenToWorld(Mouse.current.position.ReadValue());
         Collider2D hit = Physics2D.OverlapPoint(worldClick);
-        if (hit == null || !hit.TryGetComponent<ISelectable>(out ISelectable selectable) || selectable.IsEnemy())
-        {
-            return;
-        }
+        ISelectable selectable = hit != null ? hit.GetComponentInParent<ISelectable>() : null;
+        if (selectable == null || selectable.IsEnemy()) return;
         if (SelectionManager.Instance.IsSelected(selectable))
         {
             SelectionManager.Instance.RemoveFromSelection(selectable);
@@ -125,14 +120,11 @@ public class PlayerInputHandler : MonoBehaviour
         var selected = SelectionManager.Instance.GetSelectedTanks();
         if (selected.Count == 0) return;
         Collider2D hit = Physics2D.OverlapPoint(worldClick);
-        if (hit != null && hit.TryGetComponent<ISelectable>(out ISelectable selectable) && selectable.IsEnemy())
-        {
+        ISelectable selectable = hit != null ? hit.GetComponentInParent<ISelectable>() : null;
+        if (selectable != null && selectable.IsEnemy())
             _commandDispatcher.IssueAttackCommand(selected, selectable);
-        }
         else
-        {
             _commandDispatcher.IssueMoveCommand(selected, worldClick);
-        }
     }
 
     private void OnAttackZone(InputAction.CallbackContext context)
