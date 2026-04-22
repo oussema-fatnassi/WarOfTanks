@@ -75,6 +75,7 @@ npm run dev
 - ✅ [#17](https://github.com/oussema-fatnassi/WarOfTanks/issues/17) Control Zone - State Machine — 4-state FSM (Neutral/Capturing/Captured/Contested), circular gauge UI, team color feedback
 - ✅ [#13](https://github.com/oussema-fatnassi/WarOfTanks/issues/13) Navigation - A* Pathfinding — custom Physics2D grid, PathNode system, hazard cost, diagonal movement, INavigable interface
 - ✅ [#16](https://github.com/oussema-fatnassi/WarOfTanks/issues/16) Local Obstacle Avoidance — CircleCast block detection, dynamic HashSet-based path recalculation, anti-oscillation rolling window
+- ✅ [#25](https://github.com/oussema-fatnassi/WarOfTanks/issues/25) | Player Model & Auth Routes (Register + Login)
 - ✅ [#54](https://github.com/oussama-fatnassi/WarOfTanks/issues/54) | MongoDB Database Initialization — Collections, Indexes & Seed Data
 
 ## In Progress / Remaining
@@ -92,7 +93,6 @@ npm run dev
 |---|---|---|---|---|
 | [#14](https://github.com/oussema-fatnassi/WarOfTanks/issues/14) | Navigation - Dijkstra | Oroitz | Medium | Not started |
 | [#18](https://github.com/oussema-fatnassi/WarOfTanks/issues/18) | Gameplay & Win Conditions - Teams, Score, Timer, Menu | Oroitz | High | Not started |
-| [#25](https://github.com/oussema-fatnassi/WarOfTanks/issues/25) | Player Model & Auth Routes (Register + Login) | Kamelia | Critical | Not started |
 | [#26](https://github.com/oussema-fatnassi/WarOfTanks/issues/26) | JWT Auth Middleware & Refresh Token Route | Kamelia | Critical | Not started |
 
 ### Sprint 4 — AI Systems & Backend Routes (Apr 27 – May 3)
