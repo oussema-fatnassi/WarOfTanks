@@ -22,6 +22,7 @@ namespace WarOfTanks.AI
         private int _currentPathIndex;
         private Vector2Int _targetGridPosition;
         [SerializeField] private float _detectionRange = 1.5f;
+        [SerializeField] private float _tankRadius = 0.4f;
         [SerializeField] private LayerMask _tankLayerMask;
         [SerializeField] private float _blockTimeout = 0.2f;
         [SerializeField] private int _maxRecalculations = 3;
@@ -30,6 +31,7 @@ namespace WarOfTanks.AI
         private float _recalcTimer;
         private bool _isWaiting;
         private bool _isHandlingBlock;
+        private Vector2 _lastBlockerPosition;
         private INavigable _navigator;
         private NavigationGrid _grid;
         private TankController _tankController;
@@ -77,11 +79,12 @@ namespace WarOfTanks.AI
             Vector2 direction = ((Vector2)(targetWorldPos - transform.position)).normalized;
 
             _tankController.Move(direction);
-            _tankController.Rotate(-Vector2.SignedAngle(direction, Vector2.up));
+            _tankController.RotateToward(direction);
 
             if (!_isHandlingBlock && CheckForBlockingTank())
             {
                 _isHandlingBlock = true;
+                _tankController.Stop();
                 StartCoroutine(HandleBlock());
             }
 
@@ -106,6 +109,11 @@ namespace WarOfTanks.AI
             }
         }
 
+        public List<PathNode> CurrentPath => _currentPath;
+        public int CurrentPathIndex => _currentPathIndex;
+        public float DetectionRange => _detectionRange;
+        public float TankRadius => _tankRadius;
+
         public void SetDestination(Vector2Int targetGrid)
         {
             if (_grid == null || _navigator == null)
@@ -126,11 +134,19 @@ namespace WarOfTanks.AI
             Vector3 targetWorldPos = _grid.GridToWorldPosition(_currentPath[_currentPathIndex].GridPosition);
             Vector2 direction = ((Vector2)(targetWorldPos - transform.position)).normalized;
 
-            RaycastHit2D hit = Physics2D.Raycast(transform.position, direction, _detectionRange, _tankLayerMask);
+            RaycastHit2D[] hits = Physics2D.CircleCastAll(transform.position, _tankRadius, direction, _detectionRange, _tankLayerMask);
+            foreach (RaycastHit2D hit in hits)
+            {
+                if (hit.transform.root == transform)
+                    continue;
 
-            return hit.collider != null
-                && hit.transform != transform
-                && hit.transform.CompareTag("Tank");
+                if (hit.transform.root.CompareTag("Tank"))
+                {
+                    _lastBlockerPosition = hit.transform.root.position;
+                    return true;
+                }
+            }
+            return false;
         }
 
         private IEnumerator HandleBlock()
@@ -139,6 +155,7 @@ namespace WarOfTanks.AI
             if (CheckForBlockingTank())
             {
                 _recalcCount++;
+                Debug.Log($"[TankAI] Block detected on {name} — recalc #{_recalcCount}/{_maxRecalculations}");
                 if (_recalcCount >= _maxRecalculations)
                     yield return ForceWait();
                 else
@@ -149,19 +166,48 @@ namespace WarOfTanks.AI
 
         private IEnumerator RequestRecalculation()
         {
+            HashSet<Vector2Int> blockedPositions = GetDynamicBlockedPositions();
             Vector2Int currentGridPosition = _grid.WorldToGridPosition(transform.position);
-            List<PathNode> newPath = _navigator.FindPath(currentGridPosition, _targetGridPosition);
+            List<PathNode> newPath = _navigator.FindPath(currentGridPosition, _targetGridPosition, blockedPositions);
+
             if (newPath == null || newPath.Count == 0)
+            {
+                Debug.Log($"[TankAI] No alternate path found on {name} — forcing wait");
                 yield return ForceWait();
+            }
             else
             {
+                Debug.Log($"[TankAI] New path found on {name} — {newPath.Count} nodes");
                 _currentPath = newPath;
                 _currentPathIndex = 0;
             }
         }
 
+        private HashSet<Vector2Int> GetDynamicBlockedPositions()
+        {
+            var blockedPositions = new HashSet<Vector2Int>();
+            Vector2Int blockerGridPos = _grid.WorldToGridPosition(_lastBlockerPosition);
+            Vector2Int tankGridPos = _grid.WorldToGridPosition(transform.position);
+
+            for (int dx = -1; dx <= 1; dx++)
+            {
+                for (int dy = -1; dy <= 1; dy++)
+                {
+                    Vector2Int checkPos = new Vector2Int(blockerGridPos.x + dx, blockerGridPos.y + dy);
+                    if (checkPos == tankGridPos || checkPos == _targetGridPosition)
+                        continue;
+
+                    if (_grid.IsValidPosition(checkPos.x, checkPos.y))
+                        blockedPositions.Add(checkPos);
+                }
+            }
+
+            return blockedPositions;
+        }
+
         private IEnumerator ForceWait()
         {
+            Debug.Log($"[TankAI] Force wait triggered on {name} — anti-oscillation lock");
             _tankController.Stop();
             _isWaiting = true;
             yield return new WaitForSeconds(1.0f);
