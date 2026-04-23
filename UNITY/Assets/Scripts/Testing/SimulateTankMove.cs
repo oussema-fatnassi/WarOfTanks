@@ -30,7 +30,7 @@ public class SimulateTankMove : MonoBehaviour
         _moveAttempts++;
         if (_moveAttempts > 300)
         {
-            Debug.LogWarning("Too many move attempts, stopping the test.");
+            DebugLogger.LogWarning("Too many move attempts, stopping the test.", nameof(SimulateTankMove));
             _tankController.Stop();
             //_tankController.Rotate(50f);
         }

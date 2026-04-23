@@ -25,6 +25,9 @@ namespace WarOfTanks.Zone
         [Header("UI")]
         [SerializeField] private ZoneUIController _zoneUIController;
 
+        [Header("Debug")]
+        [SerializeField] private bool _showDebugLogs = false;
+
         // Internal tank tracking — private, states read counts via properties below
         private List<GameObject> _teamPlayerTanksInZone = new List<GameObject>();
         private List<GameObject> _teamAITanksInZone = new List<GameObject>();
@@ -45,6 +48,7 @@ namespace WarOfTanks.Zone
         // --- Read-only accessors for states ---
         public int PlayerTankCount => _teamPlayerTanksInZone.Count;
         public int AITankCount     => _teamAITanksInZone.Count;
+        public bool ShowDebugLogs => _showDebugLogs;
 
         // Config values exposed so states can read them without owning them
         public float CaptureSpeed    => _captureSpeed;
@@ -116,7 +120,7 @@ namespace WarOfTanks.Zone
         #region Physics Callbacks
         public void OnTriggerEnter2D(Collider2D other)
         {
-            Debug.Log($"OnTriggerEnter2D: {other.gameObject.name}");
+            DebugLogger.Log(_showDebugLogs, $"OnTriggerEnter2D: {other.gameObject.name}", nameof(Zone));
             var tank = other.GetComponentInParent<Tank>();
             if (tank == null) return;
 
@@ -134,7 +138,7 @@ namespace WarOfTanks.Zone
 
         public void OnTriggerExit2D(Collider2D other)
         {
-            Debug.Log($"OnTriggerExit2D: {other.gameObject.name}");
+            DebugLogger.Log(_showDebugLogs, $"OnTriggerExit2D: {other.gameObject.name}", nameof(Zone));
             var tank = other.GetComponentInParent<Tank>();
             if (tank == null) return;
 

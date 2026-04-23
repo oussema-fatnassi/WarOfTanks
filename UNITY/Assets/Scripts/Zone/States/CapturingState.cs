@@ -14,7 +14,7 @@ public class CapturingState : State<Zone>
     /// <summary>Records which team is capturing and updates the zone color to that team's color.</summary>
     protected override void Enter()
     {
-        Debug.Log("Entered Capturing State");
+        DebugLogger.Log(Context.ShowDebugLogs, "Entered Capturing State", nameof(CapturingState));
         Context.UI.SetCapturing(Context.controllingTeam == 0);
     }
 
@@ -26,7 +26,7 @@ public class CapturingState : State<Zone>
     /// </summary>
     protected override void Execute()
     {
-        Debug.Log("Executing Capturing State");
+        DebugLogger.Log(Context.ShowDebugLogs, "Executing Capturing State", nameof(CapturingState));
         if(Context.IsContested())
         {
             Machine.ChangeState(new ContestedState(Machine));
@@ -59,6 +59,6 @@ public class CapturingState : State<Zone>
 
     protected override void Exit()
     {
-        Debug.Log("Exited Capturing State");
+        DebugLogger.Log(Context.ShowDebugLogs, "Exited Capturing State", nameof(CapturingState));
     }
 }

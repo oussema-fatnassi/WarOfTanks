@@ -32,6 +32,9 @@ namespace WarOfTanks.AI
         [SerializeField] private float _blockTimeout = 0.2f;
         [SerializeField] private int _maxRecalculations = 3;
         [SerializeField] private float _recalcWindowDuration = 2f;
+
+        [Header("Debug")]
+        [SerializeField] private bool _showDebugLogs = false;
         private int _recalcCount;
         private float _recalcTimer;
         private bool _isWaiting;
@@ -48,21 +51,21 @@ namespace WarOfTanks.AI
 
             if (_grid == null)
             {
-                Debug.LogError($"{nameof(TankAI)} requires an active {nameof(NavigationGrid)} in the scene.", this);
+                DebugLogger.LogError($"{nameof(TankAI)} requires an active {nameof(NavigationGrid)} in the scene.", this);
                 enabled = false;
                 return;
             }
 
             if (_tankController == null)
             {
-                Debug.LogError($"{nameof(TankAI)} requires a {nameof(TankController)} on the same GameObject.", this);
+                DebugLogger.LogError($"{nameof(TankAI)} requires a {nameof(TankController)} on the same GameObject.", this);
                 enabled = false;
                 return;
             }
 
             if (_tankLayerMask == 0)
             {
-                Debug.LogWarning($"{nameof(TankAI)}: _tankLayerMask is not set. Block detection will not work.", this);
+                DebugLogger.LogWarning($"{nameof(TankAI)}: _tankLayerMask is not set. Block detection will not work.", this);
             }
 
             _navigator = PathfinderFactory.Create(EPathfinderType.ASTAR, _grid);
@@ -180,7 +183,7 @@ namespace WarOfTanks.AI
             if (CheckForBlockingTank())
             {
                 _recalcCount++;
-                Debug.Log($"[TankAI] Block detected on {name} — recalc #{_recalcCount}/{_maxRecalculations}");
+                DebugLogger.Log(_showDebugLogs, $"[TankAI] Block detected on {name} — recalc #{_recalcCount}/{_maxRecalculations}");
                 if (_recalcCount >= _maxRecalculations)
                     yield return ForceWait();
                 else
@@ -203,12 +206,12 @@ namespace WarOfTanks.AI
 
             if (newPath == null || newPath.Count == 0)
             {
-                Debug.Log($"[TankAI] No alternate path found on {name} — forcing wait");
+                DebugLogger.Log(_showDebugLogs, $"[TankAI] No alternate path found on {name} — forcing wait");
                 yield return ForceWait();
             }
             else
             {
-                Debug.Log($"[TankAI] New path found on {name} — {newPath.Count} nodes");
+                DebugLogger.Log(_showDebugLogs, $"[TankAI] New path found on {name} — {newPath.Count} nodes");
                 _currentPath = newPath;
                 _currentPathIndex = 0;
             }
@@ -251,7 +254,7 @@ namespace WarOfTanks.AI
         /// </summary>
         private IEnumerator ForceWait()
         {
-            Debug.Log($"[TankAI] Force wait triggered on {name} — anti-oscillation lock");
+            DebugLogger.Log(_showDebugLogs, $"[TankAI] Force wait triggered on {name} — anti-oscillation lock");
             _tankController.Stop();
             _isWaiting = true;
             yield return new WaitForSeconds(1.0f);
