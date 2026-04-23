@@ -4,7 +4,10 @@ using WarOfTanks.StateMachine;
 
 public class MonoStateTest : MonoBehaviour
 {
+    [SerializeField] private bool _showDebugLogs = false;
+
     StateMachine<MonoStateTest> _sm;
+    public bool ShowDebugLogs => _showDebugLogs;
 
     private void Awake()
     {

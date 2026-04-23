@@ -17,7 +17,7 @@ public class CapturedState : State<Zone>
     /// <summary>Sets the controlling team, starts the scoring timer, and updates the zone color.</summary>
     protected override void Enter()
     {
-        Debug.Log("Entered Captured State");
+        DebugLogger.Log(Context.ShowDebugLogs, "Entered Captured State", nameof(CapturedState));
         Context.UI.SetCaptured(Context.controllingTeam == 0);
         _scoringTimer = 0f;
         _timeoutTimer = 0f;
@@ -30,7 +30,7 @@ public class CapturedState : State<Zone>
     /// </summary>
     protected override void Execute()
     {
-        Debug.Log("Executing Captured State");
+        DebugLogger.Log(Context.ShowDebugLogs, "Executing Captured State", nameof(CapturedState));
         if (Context.IsContested())
         {
             Machine.ChangeState(new ContestedState(Machine));
@@ -43,7 +43,7 @@ public class CapturedState : State<Zone>
             {
                 _scoringTimer = 0f;
                 // TODO: Add score to the controlling team
-                Debug.Log("Scoring for team " + Context.controllingTeam);
+                DebugLogger.Log(Context.ShowDebugLogs, "Scoring for team " + Context.controllingTeam, nameof(CapturedState));
                 //Context.UI.AddScore(Context.controllingTeam);
             }
         }
@@ -64,7 +64,7 @@ public class CapturedState : State<Zone>
     /// <summary>Stops the scoring timer and resets any timeout countdown.</summary>
     protected override void Exit()
     {
-        Debug.Log("Exited Captured State");
+        DebugLogger.Log(Context.ShowDebugLogs, "Exited Captured State", nameof(CapturedState));
         _scoringTimer = 0f;
         _timeoutTimer = 0f;
     }

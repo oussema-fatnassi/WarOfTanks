@@ -14,16 +14,16 @@ public class AStarTest : MonoBehaviour
 {
     [SerializeField] private Transform _start;
     [SerializeField] private Transform _target;
-    [SerializeField] private AStarPathfinder _pathfinder;
+    [SerializeField] private NavigationGrid _grid;
 
+    private AStarPathfinder _pathfinder;
     private List<PathNode> _path;
 
     private void Awake()
     {
-        if (_pathfinder == null)
-        {
-            _pathfinder = FindObjectOfType<AStarPathfinder>();
-        }
+        if (_grid == null)
+            _grid = FindObjectOfType<NavigationGrid>();
+        _pathfinder = new AStarPathfinder(_grid);
     }
 
     private void Update()

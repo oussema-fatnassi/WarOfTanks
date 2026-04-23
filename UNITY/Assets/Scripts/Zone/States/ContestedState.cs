@@ -15,7 +15,7 @@ public class ContestedState : State<Zone>
     /// <summary>Freezes the capture gauge and shows the contested visual indicator.</summary>
     protected override void Enter()
     {
-        Debug.Log("Entered Contested State");
+        DebugLogger.Log(Context.ShowDebugLogs, "Entered Contested State", nameof(ContestedState));
         Context.UI.SetContested();
     }
 
@@ -26,7 +26,7 @@ public class ContestedState : State<Zone>
     /// </summary>
     protected override void Execute()
     {
-        Debug.Log("Executing Contested State");
+        DebugLogger.Log(Context.ShowDebugLogs, "Executing Contested State", nameof(ContestedState));
         if (Context.PlayerTankCount == 0 && Context.AITankCount == 0)
         {
             Machine.ChangeState(new NeutralState(Machine));
@@ -54,7 +54,7 @@ public class ContestedState : State<Zone>
     /// <summary>Restores the zone visual to the pre-conflict state.</summary>
     protected override void Exit()
     {
-        Debug.Log("Exited Contested State");
+        DebugLogger.Log(Context.ShowDebugLogs, "Exited Contested State", nameof(ContestedState));
     }
 
 }
