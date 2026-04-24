@@ -136,13 +136,12 @@ func (h *AuthHandler) Login(c *gin.Context) {
 		return
 	}
 
-	refreshToken, err := h.jwtSvc.GenerateRefreshToken(player.ID.Hex())
+	refreshToken, err := h.jwtSvc.GenerateRefreshToken(player.ID.Hex(), player.Username)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "could not generate token"})
 		return
 	}
 
-	// Persist refresh token hash in DB (optional: store raw for simplicity here)
 	_, _ = h.players.UpdateOne(ctx,
 		bson.D{{Key: "_id", Value: player.ID}},
 		bson.D{{Key: "$set", Value: bson.D{
@@ -151,13 +150,53 @@ func (h *AuthHandler) Login(c *gin.Context) {
 		}}},
 	)
 
-	secure := os.Getenv("APP_ENV") == "production"
-
-	c.SetSameSite(http.SameSiteStrictMode)
-	c.SetCookie("refreshToken", refreshToken, int((7 * 24 * time.Hour).Seconds()), "/", "", secure, true)
+	h.setRefreshCookie(c, refreshToken, int((7*24*time.Hour).Seconds()))
 
 	c.JSON(http.StatusOK, gin.H{
 		"accessToken": accessToken,
-		"player":      player, // passwordHash excluded by json:"-"
+		"player":      player,
 	})
+}
+
+// Refresh godoc
+// POST /api/v1/auth/refresh
+func (h *AuthHandler) Refresh(c *gin.Context) {
+	tokenStr, err := c.Cookie("refresh_token")
+	if err != nil {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "missing refresh token"})
+		return
+	}
+
+	claims, err := h.jwtSvc.ValidateRefreshToken(tokenStr)
+	if err != nil {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "invalid or expired refresh token"})
+		return
+	}
+
+	accessToken, err := h.jwtSvc.GenerateAccessToken(claims.PlayerID, claims.Username)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "could not generate token"})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"accessToken": accessToken})
+}
+
+// Logout godoc
+// POST /api/v1/auth/logout
+func (h *AuthHandler) Logout(c *gin.Context) {
+	h.setRefreshCookie(c, "", -1)
+	c.JSON(http.StatusOK, gin.H{"message": "logged out"})
+}
+
+// setRefreshCookie centralise la config du cookie refresh_token.
+// SameSite=None en production (Render cross-origin), Lax en dev.
+func (h *AuthHandler) setRefreshCookie(c *gin.Context, value string, maxAge int) {
+	secure := os.Getenv("APP_ENV") == "production"
+	if secure {
+		c.SetSameSite(http.SameSiteNoneMode)
+	} else {
+		c.SetSameSite(http.SameSiteLaxMode)
+	}
+	c.SetCookie("refresh_token", value, maxAge, "/", "", secure, true)
 }
