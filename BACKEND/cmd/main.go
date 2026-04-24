@@ -8,6 +8,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/oussema-fatnassi/WarOfTanks/backend/config"
 	"github.com/oussema-fatnassi/WarOfTanks/backend/handlers"
+	"github.com/oussema-fatnassi/WarOfTanks/backend/middleware"
 	"github.com/oussema-fatnassi/WarOfTanks/backend/services"
 	"go.mongodb.org/mongo-driver/v2/mongo"
 	"go.mongodb.org/mongo-driver/v2/mongo/options"
@@ -65,8 +66,15 @@ func main() {
 		{
 			auth.POST("/register", authHandler.Register)
 			auth.POST("/login", authHandler.Login)
+			auth.POST("/refresh", authHandler.Refresh)
 		}
 
+		// Protected routes
+		protected := api.Group("/")
+		protected.Use(middleware.AuthRequired(jwtSvc))
+		{
+			protected.POST("/auth/logout", authHandler.Logout)
+		}
 	}
 
 	log.Printf("🚀 Server running on port %s", cfg.Port)
