@@ -40,6 +40,13 @@ public class TurretController : MonoBehaviour
         _turretTransform.rotation = Quaternion.RotateTowards(_turretTransform.rotation, Quaternion.Euler(0, 0, targetAngle), _turretRotationSpeed * Time.deltaTime);
     }
 
+    public bool IsAimedAt(Vector2 targetPosition, float toleranceDegrees)
+    {
+        Vector2 toTarget = (targetPosition - (Vector2)_turretTransform.position).normalized;
+        float angle = Vector2.Angle(_turretTransform.right, toTarget);
+        return angle <= toleranceDegrees;
+    }
+
     public BulletController Fire(bool force = false)
     {
         if (!CanFire && !force) return null;

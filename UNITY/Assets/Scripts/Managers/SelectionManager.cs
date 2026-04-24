@@ -5,6 +5,8 @@ using UnityEngine;
 public class SelectionManager : SingletonBehaviour<SelectionManager>
 {
     #region Fields
+    [SerializeField] private LayerMask _tankLayer;
+
     private List<ISelectable> _selectedTanks; 
     private List<ISelectable> _allFriendlyTanks;
     private Camera _mainCamera;
@@ -70,10 +72,9 @@ public class SelectionManager : SingletonBehaviour<SelectionManager>
 
         foreach (Collider2D hit in hits) 
         {
-            if (hit.TryGetComponent<ISelectable>(out ISelectable selectable) && _allFriendlyTanks.Contains(selectable)) 
-            {
+            ISelectable selectable = hit.GetComponentInParent<ISelectable>();
+            if (selectable != null && _allFriendlyTanks.Contains(selectable))
                 AddToSelection(selectable);
-            }
         }
     }
     #endregion
@@ -82,6 +83,6 @@ public class SelectionManager : SingletonBehaviour<SelectionManager>
     {
         Vector2 worldMin = _mainCamera.ScreenToWorldPoint(screenRect.min);
         Vector2 worldMax = _mainCamera.ScreenToWorldPoint(screenRect.max);
-        return Physics2D.OverlapAreaAll(worldMin, worldMax);
+        return Physics2D.OverlapAreaAll(worldMin, worldMax, _tankLayer);
     }
 }

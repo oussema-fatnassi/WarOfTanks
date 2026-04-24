@@ -7,13 +7,15 @@ public class MoveCommand : ICommand
     private Vector3 _destination;
     private List<Vector2> _waypoints;
     private int _waypointIndex;
-
+    private bool _isComplete;
+    public bool IsComplete => _isComplete;
     public Vector3 Destination => _destination;
 
     public MoveCommand(ITankComponents tank, Vector3 destination)
     {
         _tank = tank;
         _destination = destination;
+        _isComplete = false;
     }
 
     public void Start() 
@@ -25,6 +27,7 @@ public class MoveCommand : ICommand
     {
         if (_waypointIndex >= _waypoints.Count)
         {
+            _isComplete = true;
             Cancel();
             return;
         }

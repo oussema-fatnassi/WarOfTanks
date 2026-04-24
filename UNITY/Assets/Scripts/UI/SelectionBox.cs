@@ -28,8 +28,14 @@ public class SelectionBox : MonoBehaviour
     public void UpdateDrag(Vector2 screenCurrentPosition)
     {
         _currentPos = screenCurrentPosition;
-        _rectTransform.anchoredPosition = (_startPos + _currentPos) / 2f;
-        _rectTransform.sizeDelta = new Vector2(Mathf.Abs(_startPos.x - _currentPos.x), Mathf.Abs(_startPos.y - _currentPos.y));
+        _rectTransform.anchoredPosition = new Vector2(
+            Mathf.Min(_startPos.x, _currentPos.x),
+            Mathf.Min(_startPos.y, _currentPos.y)
+        );
+        _rectTransform.sizeDelta = new Vector2(
+            Mathf.Abs(_startPos.x - _currentPos.x),
+            Mathf.Abs(_startPos.y - _currentPos.y)
+        );
     }
 
     public Rect EndDrag()

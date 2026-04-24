@@ -45,6 +45,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _selectionBox: {fileID: 0}
+  _tankLayer:
+    serializedVersion: 2
+    m_Bits: 2048
 --- !u!114 &8835174301913368029
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -57,3 +60,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 156fd3d7d87e5e74c8e33c83ed4de606, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _tankLayer:
+    serializedVersion: 2
+    m_Bits: 2048

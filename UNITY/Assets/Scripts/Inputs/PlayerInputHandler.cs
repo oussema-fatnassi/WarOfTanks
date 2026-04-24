@@ -7,12 +7,14 @@ public class PlayerInputHandler : MonoBehaviour
 {
     #region Fields
     [SerializeField] private SelectionBox _selectionBox;
+    [SerializeField] private LayerMask _tankLayer;
 
     private PlayerInputActions _actions;
     private CommandDispatcher _commandDispatcher;
     private Camera _mainCamera;
     private bool _isDragging;
     private Vector2 _pendingClickPosition;
+    private bool _multiSelectHandled;
     #endregion
 
     #region Unity Methods
@@ -70,11 +72,11 @@ public class PlayerInputHandler : MonoBehaviour
     private void OnSelectPressed(InputAction.CallbackContext context)
     {
         _pendingClickPosition = Mouse.current.position.ReadValue();
-        Debug.Log($"Select Pressed at {_pendingClickPosition}");
     }
 
     private void OnSelectReleased(InputAction.CallbackContext context)
     {
+        if (_multiSelectHandled) { _multiSelectHandled = false; return; }
         if (_isDragging)
         {
             Rect r = _selectionBox.EndDrag();
@@ -84,7 +86,7 @@ public class PlayerInputHandler : MonoBehaviour
         }
 
         Vector3 worldClick = ScreenToWorld(_pendingClickPosition);
-        Collider2D hit = Physics2D.OverlapPoint(worldClick);
+        Collider2D hit = Physics2D.OverlapPoint(worldClick, _tankLayer);
         ISelectable selectable = hit != null ? hit.GetComponentInParent<ISelectable>() : null;
         if (selectable != null && !selectable.IsEnemy())
             SelectionManager.Instance.SelectSingle(selectable);
@@ -95,13 +97,14 @@ public class PlayerInputHandler : MonoBehaviour
     private void OnBoxSelectStarted(InputAction.CallbackContext context) 
     {
         _isDragging = true;
-        _selectionBox.BeginDrag(Mouse.current.position.ReadValue());
+        _selectionBox.BeginDrag(_pendingClickPosition);
     }
 
     private void OnMultiSelect(InputAction.CallbackContext context)
     {
+        _multiSelectHandled = true;
         Vector3 worldClick = ScreenToWorld(Mouse.current.position.ReadValue());
-        Collider2D hit = Physics2D.OverlapPoint(worldClick);
+        Collider2D hit = Physics2D.OverlapPoint(worldClick, _tankLayer);
         ISelectable selectable = hit != null ? hit.GetComponentInParent<ISelectable>() : null;
         if (selectable == null || selectable.IsEnemy()) return;
         if (SelectionManager.Instance.IsSelected(selectable))
@@ -116,10 +119,12 @@ public class PlayerInputHandler : MonoBehaviour
 
     private void OnContextAction(InputAction.CallbackContext context)
     {
+        if (_actions.Player.AttackZone.IsPressed()) return;
+
         Vector3 worldClick = ScreenToWorld(Mouse.current.position.ReadValue());
         var selected = SelectionManager.Instance.GetSelectedTanks();
         if (selected.Count == 0) return;
-        Collider2D hit = Physics2D.OverlapPoint(worldClick);
+        Collider2D hit = Physics2D.OverlapPoint(worldClick, _tankLayer);
         ISelectable selectable = hit != null ? hit.GetComponentInParent<ISelectable>() : null;
         if (selectable != null && selectable.IsEnemy())
             _commandDispatcher.IssueAttackCommand(selected, selectable);

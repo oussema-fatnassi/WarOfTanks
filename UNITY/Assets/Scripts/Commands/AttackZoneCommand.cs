@@ -9,6 +9,8 @@ public class AttackZoneCommand : ICommand
     private List<Vector2> _path;
     private int _waypointIndex;
     private bool _isMoving;
+
+    public bool IsComplete => false;
     public AttackZoneCommand(ITankComponents tank, Vector3 targetPoint, Vector3? moveDestination)
     {
         _tank = tank;
@@ -46,7 +48,7 @@ public class AttackZoneCommand : ICommand
             MoveAlongPath(_tank.Controller.transform.position);
 
             turret.RotateTo((Vector2)_targetPoint);
-            if (turret.CanFire) turret.Fire();
+            if (turret.CanFire && turret.IsAimedAt((Vector2)_targetPoint, TankConstants.turretToleranceAngle)) turret.Fire();
         }
         else
         {
@@ -55,7 +57,7 @@ public class AttackZoneCommand : ICommand
             {
                 _tank.Controller.Stop();
                 turret.RotateTo((Vector2)_targetPoint);
-                if (turret.CanFire) turret.Fire();
+                if (turret.CanFire && turret.IsAimedAt((Vector2)_targetPoint, TankConstants.turretToleranceAngle)) turret.Fire();
             }
             else 
             { 

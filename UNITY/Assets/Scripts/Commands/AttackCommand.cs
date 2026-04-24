@@ -9,11 +9,14 @@ public class AttackCommand : ICommand
     private int _waypointIndex;
     private Vector2 _lastTargetPos;
     private const float STALE_THRESHOLD = 0.5f;
+    private bool _isComplete;
+    public bool IsComplete => _isComplete;
 
     public AttackCommand(ITankComponents tank, ISelectable target)
     {
         _tank = tank;
         _target = target;
+        _isComplete = false;
     }
     public void Start() 
     {
@@ -29,11 +32,10 @@ public class AttackCommand : ICommand
         Vector2 currentTargetPos = (Vector2)_target.GetWorldPosition();
         Vector2 currentTankPosition = _tank.Controller.transform.position;
 
-
-
         //Check if the target is Dead
         if (targetTank != null && !targetTank.IsAlive)
         {
+            _isComplete = true;
             Cancel();
             return;
         }
@@ -51,7 +53,7 @@ public class AttackCommand : ICommand
         {
             _tank.Controller.Stop();
             _tank.Turret.RotateTo(_lastTargetPos);
-            if (_tank.Turret.CanFire) _tank.Turret.Fire();
+            if (_tank.Turret.CanFire && _tank.Turret.IsAimedAt(_lastTargetPos, TankConstants.turretToleranceAngle)) _tank.Turret.Fire();
             return;
         }
 
@@ -61,6 +63,14 @@ public class AttackCommand : ICommand
             Cancel();
             return;
         }
+        /* TODO
+         * if (_waypointIndex >= _path.Count)
+          {
+              _path = _tank.Navigation.ComputePath(_tank.Controller.transform.position, (Vector2)_target.GetWorldPosition());
+              _waypointIndex = 0;
+              return;
+          }
+        */
         Vector2 currentWaypoint = _path[_waypointIndex];
         if (Vector2.Distance(currentTankPosition, currentWaypoint) < TankConstants.WaypointArrivalThreshold)
         {

@@ -50,6 +50,7 @@ public class Tank : MonoBehaviour, ISelectable, ICommandReceiver, ITankComponent
         _collider = _tankBody.GetComponent<Collider2D>();
         _tankController = GetComponent<TankController>();
         _turretController = GetComponent<TurretController>();
+        _navigationStrategy = GetComponent<NavigationStrategy>();
         _healthSystem = GetComponent<HealthSystem>();
     }
     private void Start()
@@ -71,6 +72,7 @@ public class Tank : MonoBehaviour, ISelectable, ICommandReceiver, ITankComponent
     private void Update()
     {
         _currentCommand?.Tick();
+        if (_currentCommand?.IsComplete == true) CancelCommand();
     }
     #endregion
 
