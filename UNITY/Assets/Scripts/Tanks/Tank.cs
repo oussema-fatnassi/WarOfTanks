@@ -80,6 +80,7 @@ public class Tank : MonoBehaviour, ISelectable, ICommandReceiver, ITankComponent
     public void Die()
     {
         if (!_isAlive) return;
+        CancelCommand();
         _isAlive = false;
         _tankBody.SetActive(false);
         _cannon.SetActive(false);
