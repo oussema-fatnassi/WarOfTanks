@@ -97,11 +97,6 @@ public class SelectionManager : SingletonBehaviour<SelectionManager>
 
     #endregion
 
-    private void HandleFriendlyTankDeath(Tank tank)
-    {
-        RemoveFromSelection(tank);
-    }
-
     private Collider2D[] GetHitsInRect(Rect screenRect) 
     {
         Vector2 worldMin = _mainCamera.ScreenToWorldPoint(screenRect.min);
