@@ -34,7 +34,7 @@ public class MoveCommand : ICommand
 
         Vector2 currentPosition = _tank.Controller.transform.position;
         Vector2 currentWaypoint = _waypoints[_waypointIndex];
-        if (Vector2.Distance(currentPosition, currentWaypoint) < TankConstants.WaypointArrivalThreshold)
+        if (Vector2.Distance(currentPosition, currentWaypoint) < TankConstants.WAYPOINT_ARRIVAL_THRESHOLD)
         {
             _waypointIndex++;
             return;

@@ -53,7 +53,7 @@ public class AttackCommand : ICommand
         {
             _tank.Controller.Stop();
             _tank.Turret.RotateTo(_lastTargetPos);
-            if (_tank.Turret.CanFire && _tank.Turret.IsAimedAt(_lastTargetPos, TankConstants.turretToleranceAngle)) _tank.Turret.Fire();
+            if (_tank.Turret.CanFire && _tank.Turret.IsAimedAt(_lastTargetPos, TankConstants.TURRET_TOLERANCE_ANGLE)) _tank.Turret.Fire();
             return;
         }
 
@@ -65,7 +65,7 @@ public class AttackCommand : ICommand
             return;
         }
         Vector2 currentWaypoint = _path[_waypointIndex];
-        if (Vector2.Distance(currentTankPosition, currentWaypoint) < TankConstants.WaypointArrivalThreshold)
+        if (Vector2.Distance(currentTankPosition, currentWaypoint) < TankConstants.WAYPOINT_ARRIVAL_THRESHOLD)
         {
             _waypointIndex++;
             return;

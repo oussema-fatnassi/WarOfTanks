@@ -48,7 +48,7 @@ public class AttackZoneCommand : ICommand
             MoveAlongPath(_tank.Controller.transform.position);
 
             turret.RotateTo((Vector2)_targetPoint);
-            if (turret.CanFire && turret.IsAimedAt((Vector2)_targetPoint, TankConstants.turretToleranceAngle)) turret.Fire();
+            if (turret.CanFire && turret.IsAimedAt((Vector2)_targetPoint, TankConstants.TURRET_TOLERANCE_ANGLE)) turret.Fire();
         }
         else
         {
@@ -57,7 +57,7 @@ public class AttackZoneCommand : ICommand
             {
                 _tank.Controller.Stop();
                 turret.RotateTo((Vector2)_targetPoint);
-                if (turret.CanFire && turret.IsAimedAt((Vector2)_targetPoint, TankConstants.turretToleranceAngle)) turret.Fire();
+                if (turret.CanFire && turret.IsAimedAt((Vector2)_targetPoint, TankConstants.TURRET_TOLERANCE_ANGLE)) turret.Fire();
             }
             else 
             { 
@@ -79,7 +79,7 @@ public class AttackZoneCommand : ICommand
             return;
         }
         Vector2 currentWaypoint = _path[_waypointIndex];
-        if (Vector2.Distance(currentTankPosition, currentWaypoint) < TankConstants.WaypointArrivalThreshold)
+        if (Vector2.Distance(currentTankPosition, currentWaypoint) < TankConstants.WAYPOINT_ARRIVAL_THRESHOLD)
         {
             _waypointIndex++;
             return;
