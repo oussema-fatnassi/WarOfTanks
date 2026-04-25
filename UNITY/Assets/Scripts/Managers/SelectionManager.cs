@@ -9,6 +9,7 @@ public class SelectionManager : SingletonBehaviour<SelectionManager>
 
     private List<ISelectable> _selectedTanks; 
     private List<ISelectable> _allFriendlyTanks;
+    private Dictionary<ISelectable, System.Action> _deathHandlers = new Dictionary<ISelectable, System.Action>();
     private Camera _mainCamera;
     #endregion
 
@@ -27,7 +28,23 @@ public class SelectionManager : SingletonBehaviour<SelectionManager>
     {
         _allFriendlyTanks.Add(tank);
         Tank tankMono = tank as Tank;
-        if (tankMono != null) tankMono.OnTankDied += () => RemoveFromSelection(tank);
+        if (tankMono != null)
+        {
+            void handler() => RemoveFromSelection(tank);
+            _deathHandlers[tank] = handler;                         
+            tankMono.OnTankDied += handler;             
+        }
+    }
+    public void UnregisterFriendlyTank(ISelectable tank)
+    {
+        _allFriendlyTanks.Remove(tank);
+        Tank tankMono = tank as Tank;
+        if (tankMono != null && _deathHandlers.TryGetValue(tank, out System.Action handler))
+        {
+            tankMono.OnTankDied -= handler;
+            _deathHandlers.Remove(tank);
+        }
+        RemoveFromSelection(tank);
     }
     public void SelectSingle(ISelectable tank) {
         DeselectAll();
@@ -77,7 +94,13 @@ public class SelectionManager : SingletonBehaviour<SelectionManager>
                 AddToSelection(selectable);
         }
     }
+
     #endregion
+
+    private void HandleFriendlyTankDeath(Tank tank)
+    {
+        RemoveFromSelection(tank);
+    }
 
     private Collider2D[] GetHitsInRect(Rect screenRect) 
     {

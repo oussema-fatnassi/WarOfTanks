@@ -60,17 +60,10 @@ public class AttackCommand : ICommand
         // Move towards target if not in range
         if (_waypointIndex >= _path.Count)
         {
-            Cancel();
+            _path = _tank.Navigation.ComputePath(_tank.Controller.transform.position, (Vector2)_target.GetWorldPosition());
+            _waypointIndex = 0;
             return;
         }
-        /* TODO
-         * if (_waypointIndex >= _path.Count)
-          {
-              _path = _tank.Navigation.ComputePath(_tank.Controller.transform.position, (Vector2)_target.GetWorldPosition());
-              _waypointIndex = 0;
-              return;
-          }
-        */
         Vector2 currentWaypoint = _path[_waypointIndex];
         if (Vector2.Distance(currentTankPosition, currentWaypoint) < TankConstants.WaypointArrivalThreshold)
         {
