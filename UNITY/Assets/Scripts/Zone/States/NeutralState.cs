@@ -13,7 +13,7 @@ public class NeutralState : State<Zone>
     /// <summary>Resets the zone visual to neutral (gray) and clears capture progress.</summary>
     protected override void Enter()
     {
-        Debug.Log("Entered Neutral State");
+        DebugLogger.Log(Context.ShowDebugLogs, "Entered Neutral State", nameof(NeutralState));
         Context.controllingTeam = -1;
         Context.ResetProgress();
         Context.UI.SetNeutral();
@@ -25,7 +25,7 @@ public class NeutralState : State<Zone>
     /// </summary>
     protected override void Execute()
     {
-        Debug.Log("Executing Neutral State");
+        DebugLogger.Log(Context.ShowDebugLogs, "Executing Neutral State", nameof(NeutralState));
         if(Context.IsContested())
         {
             Machine.ChangeState(new ContestedState(Machine));
@@ -44,6 +44,6 @@ public class NeutralState : State<Zone>
 
     protected override void Exit()
     {
-        Debug.Log("Exited Neutral State");
+        DebugLogger.Log(Context.ShowDebugLogs, "Exited Neutral State", nameof(NeutralState));
     }
 }

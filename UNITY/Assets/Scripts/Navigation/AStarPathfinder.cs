@@ -9,6 +9,7 @@ namespace WarOfTanks.Navigation
     /// </summary>
     public class AStarPathfinder : BasePathfinder
     {
+        public AStarPathfinder(NavigationGrid grid) : base(grid) { }
         /// <summary>
         /// Finds the optimal path from start to target using the A* algorithm.
         /// The algorithm maintains an open set of nodes to explore and a closed set of nodes already evaluated.
@@ -19,9 +20,9 @@ namespace WarOfTanks.Navigation
         /// <param name="startPos">Grid coordinates of the start cell.</param>
         /// <param name="targetPos">Grid coordinates of the target cell.</param>
         /// <returns>Ordered list of nodes forming the path, or null if no path exists.</returns>
-        public override List<PathNode> FindPath(Vector2Int startPos, Vector2Int targetPos)
+        public override List<PathNode> FindPath(Vector2Int startPos, Vector2Int targetPos, HashSet<Vector2Int> blockedPositions = null)
         {
-            Grid grid = GetGrid();
+            NavigationGrid grid = GetGrid();
             if (grid == null)
                 return null;
 
@@ -61,6 +62,9 @@ namespace WarOfTanks.Navigation
                 foreach (PathNode neighbor in grid.GetNeighbors(currentNode))
                 {
                     if (!neighbor.IsWalkable || closedSet.Contains(neighbor))
+                        continue;
+
+                    if (blockedPositions != null && neighbor != targetNode && blockedPositions.Contains(neighbor.GridPosition))
                         continue;
 
                     float newG = currentNode.GCost + CalculateStepCost(currentNode, neighbor) + neighbor.MovementCost;

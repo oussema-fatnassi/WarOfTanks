@@ -7,17 +7,17 @@ namespace WarOfTanks.Navigation
     /// Abstract base class for all pathfinding algorithms. Handles grid resolution and path retracing.
     /// Subclasses implement the specific pathfinding logic in FindPath(). This design allows for easy swapping of algorithms without changing how the grid is accessed or how paths are retraced.
     /// </summary>
-    public abstract class BasePathfinder : MonoBehaviour, INavigable
+    public abstract class BasePathfinder : INavigable
     {
-        private Grid _grid;
+        private readonly NavigationGrid _grid;
 
-        protected virtual void Awake()
+        protected BasePathfinder(NavigationGrid grid)
         {
-            _grid = FindObjectOfType<Grid>();
+            _grid = grid;
         }
 
         /// <summary>Returns the navigation grid used by this pathfinder.</summary>
-        public Grid GetGrid()
+        public NavigationGrid GetGrid()
         {
             return _grid;
         }
@@ -33,7 +33,7 @@ namespace WarOfTanks.Navigation
         /// <param name="startPosition">Grid coordinates of the start cell.</param>
         /// <param name="targetPosition">Grid coordinates of the target cell.</param>
         /// <returns>Ordered list of nodes from start to target, or null if no path exists.</returns>
-        public abstract List<PathNode> FindPath(Vector2Int startPosition, Vector2Int targetPosition);
+        public abstract List<PathNode> FindPath(Vector2Int startPosition, Vector2Int targetPosition, HashSet<Vector2Int> blockedPositions = null);
 
         /// <summary>
         /// Reconstructs the path by walking back through each node's ParentNode from end to start.
