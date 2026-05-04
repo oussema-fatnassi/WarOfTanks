@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class SelectionIndicator : MonoBehaviour
 {
+    [SerializeField] private bool _showDebugLogs = false;
     private LineRenderer _lineRenderer;
     private Tank _tank;
 
@@ -25,6 +26,7 @@ public class SelectionIndicator : MonoBehaviour
     }
     private void HandleSelected(bool isSelected)
     {
+        DebugLogger.Log(_showDebugLogs,$"SelectionIndicator: Tank '{_tank.name}' selection state changed to {isSelected}");
         _lineRenderer.enabled = isSelected;
     }
     private void InitializeLineRenderer()

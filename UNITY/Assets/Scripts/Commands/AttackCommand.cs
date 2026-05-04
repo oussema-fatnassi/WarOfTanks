@@ -8,7 +8,6 @@ public class AttackCommand : ICommand
     private List<Vector2> _path;
     private int _waypointIndex;
     private Vector2 _lastTargetPos;
-    private const float STALE_THRESHOLD = 0.5f;
     private bool _isComplete;
     public bool IsComplete => _isComplete;
 
@@ -41,7 +40,7 @@ public class AttackCommand : ICommand
         }
 
         // Check if target has moved significantly
-        if (Vector2.Distance(currentTargetPos, _lastTargetPos) > STALE_THRESHOLD)
+        if (Vector2.Distance(currentTargetPos, _lastTargetPos) > TankConstants.STALE_THRESHOLD)
         {
             _lastTargetPos = currentTargetPos;
             _path = _tank.Navigation.ComputePath(_tank.Controller.transform.position, _lastTargetPos);
@@ -73,6 +72,7 @@ public class AttackCommand : ICommand
         else
         {
             _tank.Controller.Move(currentWaypoint - currentTankPosition);
+            _tank.Controller.RotateToward(_path[_waypointIndex] - currentTankPosition);
         }
     }
 

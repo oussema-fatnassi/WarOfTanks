@@ -215,6 +215,7 @@ MonoBehaviour:
   _capturedTimeout: 3
   _scoringRate: 1
   _zoneUIController: {fileID: 5442060139482982396}
+  _showDebugLogs: 0
   controllingTeam: -1
   captureProgress: 0
   contestedBy: 

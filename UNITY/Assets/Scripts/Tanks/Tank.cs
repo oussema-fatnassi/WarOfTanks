@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using WarOfTanks.Navigation;
 using UnityEngine;
 
 public class Tank : MonoBehaviour, ISelectable, ICommandReceiver, ITankComponents
@@ -18,6 +19,11 @@ public class Tank : MonoBehaviour, ISelectable, ICommandReceiver, ITankComponent
     [Header("Selection & Commands")]
     [SerializeField] private NavigationStrategy _navigationStrategy;
     [SerializeField] private float _firingRange;
+
+    [Header("Navigation")]
+    [SerializeField] private LayerMask _tankLayerMask;
+    [SerializeField] private float _blockScanRadius = 2f;
+    private NavigationGrid _navigationGrid;
 
     private bool _isAlive = true;
 
@@ -52,6 +58,7 @@ public class Tank : MonoBehaviour, ISelectable, ICommandReceiver, ITankComponent
         _turretController = GetComponent<TurretController>();
         _navigationStrategy = GetComponent<NavigationStrategy>();
         _healthSystem = GetComponent<HealthSystem>();
+        _navigationGrid = FindObjectOfType<NavigationGrid>();
     }
     private void Start()
     {
@@ -127,6 +134,34 @@ public class Tank : MonoBehaviour, ISelectable, ICommandReceiver, ITankComponent
     {
         _currentCommand?.Cancel();
         _currentCommand = null;
+    }
+    #endregion
+
+    #region Implementation of ITankComponents
+    public HashSet<Vector2Int> GetBlockedCells(Vector2 near)
+    {
+        var blocked = new HashSet<Vector2Int>();
+        if (_navigationGrid == null)
+            return blocked;
+
+        Collider2D[] hits = Physics2D.OverlapCircleAll(near, _blockScanRadius, _tankLayerMask);
+        foreach (Collider2D col in hits)
+        {
+            if (col.transform.root == transform)
+                continue;
+
+            Vector2Int cell = _navigationGrid.WorldToGridPosition(col.transform.root.position);
+            for (int dx = -1; dx <= 1; dx++)
+            {
+                for (int dy = -1; dy <= 1; dy++)
+                {
+                    Vector2Int p = new Vector2Int(cell.x + dx, cell.y + dy);
+                    if (_navigationGrid.IsValidPosition(p.x, p.y))
+                        blocked.Add(p);
+                }
+            }
+        }
+        return blocked;
     }
     #endregion
 

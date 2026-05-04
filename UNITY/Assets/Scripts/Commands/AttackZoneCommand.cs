@@ -87,6 +87,7 @@ public class AttackZoneCommand : ICommand
         else
         {
             _tank.Controller.Move(currentWaypoint - currentTankPosition);
+            _tank.Controller.RotateToward(_path[_waypointIndex] - currentTankPosition);
         }
     }
 }
