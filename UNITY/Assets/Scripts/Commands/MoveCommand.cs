@@ -30,6 +30,13 @@ public class MoveCommand : ICommand
     }
     public void Tick() 
     {
+        if (_waypointIndex >= _waypoints.Count)
+        {
+            _isComplete = true;
+            Cancel();
+            return;
+        }
+
         Vector2 currentPosition = _tank.Controller.transform.position;
         if (Time.time - _lastProgressTime >= TankConstants.STALL_CHECK_INTERVAL)
         {
@@ -40,13 +47,6 @@ public class MoveCommand : ICommand
             }
             _lastCheckedPosition = currentPosition;
             _lastProgressTime = Time.time;
-        }
-
-        if (_waypointIndex >= _waypoints.Count)
-        {
-            _isComplete = true;
-            Cancel();
-            return;
         }
 
         Vector2 currentWaypoint = _waypoints[_waypointIndex];
