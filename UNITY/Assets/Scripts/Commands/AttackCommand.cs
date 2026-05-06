@@ -15,7 +15,6 @@ public class AttackCommand : ICommand
     {
         _tank = tank;
         _target = target;
-        _isComplete = false;
     }
     public void Start() 
     {
@@ -27,15 +26,15 @@ public class AttackCommand : ICommand
     public void Tick()
     {
         Tank targetTank = _target as Tank;
-        Vector2 currentTargetPos = (Vector2)_target.GetWorldPosition();
-        Vector2 currentTankPosition = _tank.Controller.transform.position;
-
         if (targetTank != null && !targetTank.IsAlive)
         {
             _isComplete = true;
             Cancel();
             return;
         }
+
+        Vector2 currentTargetPos = (Vector2)_target.GetWorldPosition();
+        Vector2 currentTankPosition = _tank.Controller.transform.position;
 
         if (Vector2.Distance(currentTargetPos, _lastTargetPos) > TankConstants.STALE_THRESHOLD)
         {
@@ -64,11 +63,9 @@ public class AttackCommand : ICommand
             _waypointIndex++;
             return;
         }
-        else
-        {
-            _tank.Controller.Move(currentWaypoint - currentTankPosition);
-            _tank.Controller.RotateToward(_path[_waypointIndex] - currentTankPosition);
-        }
+       
+        _tank.Controller.Move(currentWaypoint - currentTankPosition);
+        _tank.Controller.RotateToward(_path[_waypointIndex] - currentTankPosition);
     }
 
     public void Cancel() 

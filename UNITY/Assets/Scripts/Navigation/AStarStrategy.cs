@@ -25,8 +25,8 @@ public class AStarStrategy : NavigationStrategy
         if (_pathfinder == null) 
         {
             DebugLogger.LogWarning("AStarPathfinder is not initialized or grid reference is missing.");
-            //return new List<Vector2> { to }; 
-            return new List<Vector2>();
+            return new List<Vector2> { to };
+            //return new List<Vector2>();
         }
 
         Vector2Int startGrid = _grid.WorldToGridPosition(from);
@@ -42,8 +42,8 @@ public class AStarStrategy : NavigationStrategy
             if (startGrid.x == -1)
             {
                 DebugLogger.LogWarning($"No walkable cell near start {from}");
-                //return new List<Vector2> { to };
-                return new List<Vector2>();
+                return new List<Vector2> { to };
+                //return new List<Vector2>();
             }
         }
 
@@ -56,8 +56,8 @@ public class AStarStrategy : NavigationStrategy
             if (targetGrid.x == -1)
             {
                 DebugLogger.LogWarning($"No walkable cell near {to}");
-                //return new List<Vector2> { to };
-                return new List<Vector2>();
+                return new List<Vector2> { to };
+                //return new List<Vector2>();
             }
         }
 
@@ -66,8 +66,8 @@ public class AStarStrategy : NavigationStrategy
         if (pathNodes == null || pathNodes.Count == 0)
         { 
             DebugLogger.LogWarning($"No path found from {from} to {to} using A* Pathfinder. {this}");
-            //return new List<Vector2> { to };
-            return new List<Vector2>();
+            return new List<Vector2> { to };
+            //return new List<Vector2>();
         }
 
         List<Vector2> path = new List<Vector2>();

@@ -16,7 +16,7 @@ public class SelectionIndicator : MonoBehaviour
         InitializeLineRenderer();
         _lineRenderer.enabled = false;
     }
-    void Start()
+    private void Start()
     {
         _tank.OnSelected += HandleSelected;
     }

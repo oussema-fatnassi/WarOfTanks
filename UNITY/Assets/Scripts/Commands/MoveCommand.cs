@@ -40,9 +40,11 @@ public class MoveCommand : ICommand
         Vector2 currentPosition = _tank.Controller.transform.position;
         if (Time.time - _lastProgressTime >= TankConstants.STALL_CHECK_INTERVAL)
         {
-            if (Vector2.Distance(currentPosition, _lastCheckedPosition) < TankConstants.WAYPOINT_ARRIVAL_THRESHOLD)
+            if (Vector2.Distance(currentPosition, _lastCheckedPosition) < TankConstants.STALL_DISTANCE_THRESHOLD)
             {
                 _waypoints = _tank.Navigation.ComputePath(currentPosition, _destination, _tank.GetBlockedCells(currentPosition));
+                if (_waypoints.Count == 0)
+                    _waypoints = _tank.Navigation.ComputePath(currentPosition, _destination);
                 _waypointIndex = 0;
                 if (_waypoints.Count == 0) { _isComplete = true; Cancel(); return; }
             }

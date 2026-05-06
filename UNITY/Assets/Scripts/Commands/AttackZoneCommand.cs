@@ -9,6 +9,7 @@ public class AttackZoneCommand : ICommand
     private List<Vector2> _path;
     private int _waypointIndex;
     private bool _isMoving;
+    private bool _arrived;
 
     public bool IsComplete => false;
     public AttackZoneCommand(ITankComponents tank, Vector3 targetPoint, Vector3? moveDestination)
@@ -23,7 +24,7 @@ public class AttackZoneCommand : ICommand
     {
         if (_isMoving)
         {
-            _path = _tank.Navigation.ComputePath(_tank.Controller.transform.position, _moveDestination);
+            _path = _tank.Navigation.ComputePath(_tank.Controller.transform.position, _moveDestination, _tank.GetBlockedCells(_tank.Controller.transform.position));
         }
         else
         {
@@ -33,7 +34,7 @@ public class AttackZoneCommand : ICommand
             }
             else 
             {
-                _path = _tank.Navigation.ComputePath(_tank.Controller.transform.position, _targetPoint);
+                _path = _tank.Navigation.ComputePath(_tank.Controller.transform.position, _targetPoint, _tank.GetBlockedCells(_tank.Controller.transform.position));
             }
         }
         _waypointIndex = 0;
@@ -75,7 +76,7 @@ public class AttackZoneCommand : ICommand
     {
         if (_waypointIndex >= _path.Count)
         {
-            Cancel();
+            if (!_arrived) { Cancel(); _arrived = true; }
             return;
         }
         Vector2 currentWaypoint = _path[_waypointIndex];
