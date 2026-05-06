@@ -47,10 +47,12 @@ public class AStarStrategy : NavigationStrategy
             }
         }
 
+        bool targetRedirected = false;
         PathNode targetNode = _grid.GetNode(targetGrid.x, targetGrid.y);
         if (targetNode != null && !targetNode.IsWalkable)
         {
             targetGrid = FindNearestWalkableGrid(targetGrid);
+            targetRedirected = true;
             if (targetGrid.x == -1)
             {
                 DebugLogger.LogWarning($"No walkable cell near {to}");
@@ -74,7 +76,8 @@ public class AStarStrategy : NavigationStrategy
             Vector2 worldPos = _grid.GridToWorldPosition(node.GridPosition);
             path.Add(worldPos);
         }
-        path[path.Count - 1] = to;
+        if (!targetRedirected)
+            path[path.Count - 1] = to;
         return path;
     }
 
