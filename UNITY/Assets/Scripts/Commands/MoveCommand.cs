@@ -56,11 +56,9 @@ public class MoveCommand : ICommand
             _waypointIndex++;
             return;
         }
-        else
-        {
-            _tank.Controller.Move(_waypoints[_waypointIndex] - currentPosition);
-            _tank.Controller.RotateToward(_waypoints[_waypointIndex] - currentPosition);
-        }
+
+        _tank.Controller.Move(_waypoints[_waypointIndex] - currentPosition);
+        _tank.Controller.RotateToward(_waypoints[_waypointIndex] - currentPosition);
     }
     public void Cancel() { _tank.Controller.Stop(); }
 }

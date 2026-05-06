@@ -2,12 +2,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using WarOfTanks.Navigation;
 
 public class PlayerInputHandler : MonoBehaviour
 {
     #region Fields
     [SerializeField] private SelectionBox _selectionBox;
     [SerializeField] private LayerMask _tankLayer;
+    [SerializeField] private NavigationGrid _grid;
 
     private PlayerInputActions _actions;
     private CommandDispatcher _commandDispatcher;
@@ -129,7 +131,10 @@ public class PlayerInputHandler : MonoBehaviour
         if (selectable != null && selectable.IsEnemy())
             _commandDispatcher.IssueAttackCommand(selected, selectable);
         else
+        {
+            if (!IsWalkableAt(worldClick)) return;
             _commandDispatcher.IssueMoveCommand(selected, worldClick);
+        }
     }
 
     private void OnAttackZone(InputAction.CallbackContext context)
@@ -154,6 +159,13 @@ public class PlayerInputHandler : MonoBehaviour
         Vector3 world = _mainCamera.ScreenToWorldPoint(screenPos);
         world.z = 0f;
         return world;
+    }
+    private bool IsWalkableAt(Vector3 worldPos)
+    {
+        if (_grid == null) return true;
+        Vector2Int cell = _grid.WorldToGridPosition(worldPos);
+        PathNode node = _grid.GetNode(cell.x, cell.y);
+        return node != null && node.IsWalkable;
     }
     #endregion
 }

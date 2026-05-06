@@ -36,6 +36,7 @@ public class TankController : MonoBehaviour
     #region Public Methods
     public void Move(Vector2 direction)
     {
+        _rigidbody.constraints = RigidbodyConstraints2D.FreezeRotation;
         _moveDirection = direction.normalized;
     }
 
@@ -48,6 +49,7 @@ public class TankController : MonoBehaviour
     {
         _moveDirection = Vector2.zero;
         _desiredRotation = 0;
+        _rigidbody.constraints = RigidbodyConstraints2D.FreezeAll;
     }
 
     public void RotateToward(Vector2 targetDirection)

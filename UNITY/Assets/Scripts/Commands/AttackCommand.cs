@@ -20,18 +20,16 @@ public class AttackCommand : ICommand
     public void Start() 
     {
         _lastTargetPos = (Vector2)_target.GetWorldPosition();
-        _path = _tank.Navigation.ComputePath(_tank.Controller.transform.position, _lastTargetPos);
+        _path = _tank.Navigation.ComputePath(_tank.Controller.transform.position, _lastTargetPos, _tank.GetBlockedCells(_tank.Controller.transform.position));
         _waypointIndex = 0;
     }
 
     public void Tick()
     {
-        // Reference all variables needed in the frame loop
         Tank targetTank = _target as Tank;
         Vector2 currentTargetPos = (Vector2)_target.GetWorldPosition();
         Vector2 currentTankPosition = _tank.Controller.transform.position;
 
-        //Check if the target is Dead
         if (targetTank != null && !targetTank.IsAlive)
         {
             _isComplete = true;
@@ -39,15 +37,13 @@ public class AttackCommand : ICommand
             return;
         }
 
-        // Check if target has moved significantly
         if (Vector2.Distance(currentTargetPos, _lastTargetPos) > TankConstants.STALE_THRESHOLD)
         {
             _lastTargetPos = currentTargetPos;
-            _path = _tank.Navigation.ComputePath(_tank.Controller.transform.position, _lastTargetPos);
+            _path = _tank.Navigation.ComputePath(_tank.Controller.transform.position, _lastTargetPos, _tank.GetBlockedCells(_tank.Controller.transform.position));
             _waypointIndex = 0;
         }
 
-        // Check if is in firing range
         if (Vector2.Distance(currentTankPosition, _lastTargetPos) <= _tank.FiringRange)
         {
             _tank.Controller.Stop();
@@ -56,10 +52,9 @@ public class AttackCommand : ICommand
             return;
         }
 
-        // Move towards target if not in range
         if (_waypointIndex >= _path.Count)
         {
-            _path = _tank.Navigation.ComputePath(_tank.Controller.transform.position, (Vector2)_target.GetWorldPosition());
+            _path = _tank.Navigation.ComputePath(_tank.Controller.transform.position, (Vector2)_target.GetWorldPosition(), _tank.GetBlockedCells(_tank.Controller.transform.position));
             _waypointIndex = 0;
             return;
         }
