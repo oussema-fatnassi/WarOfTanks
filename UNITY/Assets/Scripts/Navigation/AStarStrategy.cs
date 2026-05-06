@@ -30,6 +30,21 @@ public class AStarStrategy : NavigationStrategy
         
         Vector2Int startGrid = _grid.WorldToGridPosition(from);
         Vector2Int targetGrid = _grid.WorldToGridPosition(to);
+
+        if (startGrid == targetGrid)
+            return new List<Vector2>();
+
+        PathNode targetNode = _grid.GetNode(targetGrid.x, targetGrid.y);
+        if (targetNode != null && !targetNode.IsWalkable)
+        {
+            targetGrid = FindNearestWalkableGrid(targetGrid);
+            if (targetGrid.x == -1)
+            {
+                DebugLogger.LogWarning($"No walkable cell near {to}");
+                return new List<Vector2> { to };
+            }
+        }
+
         List<PathNode> pathNodes = _pathfinder.FindPath(startGrid, targetGrid, blocked);
         
         if (pathNodes == null || pathNodes.Count == 0)
@@ -46,5 +61,26 @@ public class AStarStrategy : NavigationStrategy
         }
         path[path.Count - 1] = to;
         return path;
+    }
+
+    private Vector2Int FindNearestWalkableGrid(Vector2Int center)
+    {
+        for (int radius = 1; radius <= 5; radius++)
+        {
+            for (int dx = -radius; dx <= radius; dx++)
+            {
+                for (int dy = -radius; dy <= radius; dy++)
+                {
+                    if (Mathf.Abs(dx) != radius && Mathf.Abs(dy) != radius) continue;
+                    int nx = center.x + dx;
+                    int ny = center.y + dy;
+                    if (!_grid.IsValidPosition(nx, ny)) continue;
+                    PathNode node = _grid.GetNode(nx, ny);
+                    if (node != null && node.IsWalkable)
+                        return new Vector2Int(nx, ny);
+                }
+            }
+        }
+        return new Vector2Int(-1, -1);
     }
 }

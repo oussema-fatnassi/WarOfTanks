@@ -44,6 +44,7 @@ public class MoveCommand : ICommand
             {
                 _waypoints = _tank.Navigation.ComputePath(currentPosition, _destination, _tank.GetBlockedCells(currentPosition));
                 _waypointIndex = 0;
+                if (_waypoints.Count == 0) { _isComplete = true; Cancel(); return; }
             }
             _lastCheckedPosition = currentPosition;
             _lastProgressTime = Time.time;
