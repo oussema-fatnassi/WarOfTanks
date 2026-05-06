@@ -1,9 +1,12 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using WarOfTanks.Navigation;
 
+/// <summary>
+/// Translates Unity Input System events into selection and command operations on the player's tanks.
+/// Owns the drag-selection box UI, routes right-click context actions to CommandDispatcher,
+/// and guards move commands against non-walkable click targets using the NavigationGrid.
+/// </summary>
 public class PlayerInputHandler : MonoBehaviour
 {
     #region Fields
@@ -16,6 +19,8 @@ public class PlayerInputHandler : MonoBehaviour
     private Camera _mainCamera;
     private bool _isDragging;
     private Vector2 _pendingClickPosition;
+    // Shift+LMB fires both MultiSelect.performed and Select.canceled. This flag tells
+    // OnSelectReleased to skip its deselect-all logic when a multi-select already handled the press.
     private bool _multiSelectHandled;
     #endregion
 
@@ -30,37 +35,24 @@ public class PlayerInputHandler : MonoBehaviour
     private void OnEnable()
     {
         _actions.Player.Enable();
-        
         _actions.Player.Select.performed += OnSelectPressed;
         _actions.Player.Select.canceled += OnSelectReleased;
-
         _actions.Player.BoxSelect.performed += OnBoxSelectStarted;
-        
         _actions.Player.MultiSelect.performed += OnMultiSelect;
-
         _actions.Player.ContextAction.performed += OnContextAction;
-
         _actions.Player.AttackZone.performed += OnAttackZone;
-
         _actions.Player.StopCommand.performed += OnStopCommand;
     }
 
     private void OnDisable()
     {
-        
         _actions.Player.Select.performed -= OnSelectPressed;
         _actions.Player.Select.canceled -= OnSelectReleased;
-        
         _actions.Player.BoxSelect.performed -= OnBoxSelectStarted;
-        
         _actions.Player.MultiSelect.performed -= OnMultiSelect;
-        
         _actions.Player.ContextAction.performed -= OnContextAction;
-        
         _actions.Player.AttackZone.performed -= OnAttackZone;
-        
         _actions.Player.StopCommand.performed -= OnStopCommand;
-        
         _actions.Player.Disable();
     }
 
@@ -76,6 +68,10 @@ public class PlayerInputHandler : MonoBehaviour
         _pendingClickPosition = Mouse.current.position.ReadValue();
     }
 
+    /// <summary>
+    /// LMB release handler. Finalises a box-selection drag if one was in progress; otherwise
+    /// selects the friendly tank under the cursor or deselects all when clicking empty space.
+    /// </summary>
     private void OnSelectReleased(InputAction.CallbackContext context)
     {
         if (_multiSelectHandled) { _multiSelectHandled = false; return; }
@@ -96,7 +92,7 @@ public class PlayerInputHandler : MonoBehaviour
             SelectionManager.Instance.DeselectAll();
     }
 
-    private void OnBoxSelectStarted(InputAction.CallbackContext context) 
+    private void OnBoxSelectStarted(InputAction.CallbackContext context)
     {
         _isDragging = true;
         _selectionBox.BeginDrag(_pendingClickPosition);
@@ -110,15 +106,18 @@ public class PlayerInputHandler : MonoBehaviour
         ISelectable selectable = hit != null ? hit.GetComponentInParent<ISelectable>() : null;
         if (selectable == null || selectable.IsEnemy()) return;
         if (SelectionManager.Instance.IsSelected(selectable))
-        {
             SelectionManager.Instance.RemoveFromSelection(selectable);
-        }
         else
-        {
             SelectionManager.Instance.AddToSelection(selectable);
-        }
     }
 
+    /// <summary>
+    /// RMB handler. Issues AttackCommand on an enemy hit, or MoveCommand on empty walkable space.
+    /// A+RMB fires both ContextAction and AttackZone callbacks simultaneously; the IsPressed guard
+    /// ensures a MoveCommand is not also issued on every AttackZone input.
+    /// Move commands are silently rejected on non-walkable cells (Cover, Obstacle) to avoid
+    /// issuing unreachable destinations to the pathfinder.
+    /// </summary>
     private void OnContextAction(InputAction.CallbackContext context)
     {
         if (_actions.Player.AttackZone.IsPressed()) return;
@@ -160,6 +159,12 @@ public class PlayerInputHandler : MonoBehaviour
         world.z = 0f;
         return world;
     }
+
+    /// <summary>
+    /// Returns true if the given world position maps to a walkable NavigationGrid cell.
+    /// Returns true when <c>_grid</c> is not assigned so the system degrades gracefully
+    /// rather than silently blocking all move commands if the Inspector wire is missing.
+    /// </summary>
     private bool IsWalkableAt(Vector3 worldPos)
     {
         if (_grid == null) return true;
