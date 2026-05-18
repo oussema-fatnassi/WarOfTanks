@@ -17,7 +17,7 @@ public class HealthBarUI : MonoBehaviour
         _healthSystem = GetComponentInParent<HealthSystem>();
         _canvas = GetComponentInParent<Canvas>();
     }
-    void Start()
+    private void Start()
     {
         _healthSystem.OnHealthChanged += UpdateHealthFillImage;
         _healthFillImage.fillAmount = _healthSystem.HealthPercentage;
