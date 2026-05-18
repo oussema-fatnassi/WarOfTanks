@@ -17,6 +17,7 @@ type Claims struct {
 // RefreshClaims is the payload embedded in refresh tokens.
 type RefreshClaims struct {
 	PlayerID string `json:"playerId"`
+	Username string `json:"username"`
 	jwt.RegisteredClaims
 }
 
@@ -49,9 +50,10 @@ func (s *JWTService) GenerateAccessToken(playerID, username string) (string, err
 }
 
 // GenerateRefreshToken creates a signed JWT valid for 7 days.
-func (s *JWTService) GenerateRefreshToken(playerID string) (string, error) {
+func (s *JWTService) GenerateRefreshToken(playerID, username string) (string, error) {
 	claims := RefreshClaims{
 		PlayerID: playerID,
+		Username: username,
 		RegisteredClaims: jwt.RegisteredClaims{
 			ExpiresAt: jwt.NewNumericDate(time.Now().Add(7 * 24 * time.Hour)),
 			IssuedAt:  jwt.NewNumericDate(time.Now()),
