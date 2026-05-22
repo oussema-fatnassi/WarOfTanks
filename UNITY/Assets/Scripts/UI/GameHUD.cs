@@ -1,7 +1,7 @@
 using UnityEngine;
 using TMPro;
-using System;
 
+/// <summary>Polls GameManager each frame to update both team scores and the MM:SS countdown timer.</summary>
 public class GameHUD : MonoBehaviour
 {
     [SerializeField] private TextMeshProUGUI _scoreTeamAText;
@@ -13,7 +13,7 @@ public class GameHUD : MonoBehaviour
         if (GameManager.Instance == null) return;
         _scoreTeamAText.text = GameManager.Instance.GetScore(0).ToString();
         _scoreTeamBText.text = GameManager.Instance.GetScore(1).ToString();
-        float remaining = GameManager.Instance.GetRemainingTime();
-        _timerText.text = TimeSpan.FromSeconds(remaining).ToString(@"mm\:ss");
+        int total = Mathf.FloorToInt(GameManager.Instance.GetRemainingTime());
+        _timerText.text = $"{total / 60:00}:{total % 60:00}";
     }
 }

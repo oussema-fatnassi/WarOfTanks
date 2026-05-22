@@ -1,5 +1,9 @@
 using System.Collections.Generic;
 
+/// <summary>
+/// Tracks zone scores and kill stats for both teams.
+/// Only zone score counts toward HasTeamWon — kills are stats only.
+/// </summary>
 public class ScoreManager
 {
     private int _scoreLimit;
@@ -41,6 +45,7 @@ public class ScoreManager
         return GetScore(teamId) >= _scoreLimit;
     }
 
+    /// <summary>Returns 0 (player) or 1 (enemy). Returns -1 if scores are equal (draw).</summary>
     public int GetLeadingTeam()
     {
         if (_zoneScoresMap[0] > _zoneScoresMap[1])

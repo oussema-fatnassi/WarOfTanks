@@ -8654,6 +8654,17 @@ TilemapCollider2D:
   m_Offset: {x: 0, y: 0}
   m_MaximumTileChangeCount: 1000
   m_ExtrusionFactor: 0.00001
+--- !u!114 &371128315 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 180494590832741567, guid: 4a06f081ab8d3ac4198c232eb5e12d31, type: 3}
+  m_PrefabInstance: {fileID: 1478194855}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b49dd17d99a1b7f4eb895c9efde4220e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &591256964
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -8805,6 +8816,11 @@ PrefabInstance:
       objectReference: {fileID: 32041723}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8c3bdc1bc81e82f49acf03aaac5e8b65, type: 3}
+--- !u!1 &797621245 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 797621245, guid: 670ef2f9541274991bebd342ab9d8457, type: 3}
+  m_PrefabInstance: {fileID: 5448338422622351104}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &823788594
 GameObject:
   m_ObjectHideFlags: 0
@@ -8914,6 +8930,17 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
+--- !u!114 &843500894 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5442060140635541232, guid: 11b90816afcc8466cb56d350d40bef62, type: 3}
+  m_PrefabInstance: {fileID: 5442060141138012819}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8d295e268cd06424cab9704acb0fb8eb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &920961302
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -9744,6 +9771,17 @@ MonoBehaviour:
     m_Bits: 256
   _cellCheckRadiusMultiplier: 0.3
   _showGizmos: 0
+--- !u!114 &1258859467 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1258859467, guid: 670ef2f9541274991bebd342ab9d8457, type: 3}
+  m_PrefabInstance: {fileID: 5448338422622351104}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3b644f1461a52c34b9ad1b0a7aca82e3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1374103583
 GameObject:
   m_ObjectHideFlags: 0
@@ -11354,6 +11392,22 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1478194857, guid: 4a06f081ab8d3ac4198c232eb5e12d31, type: 3}
+      propertyPath: _zone
+      value: 
+      objectReference: {fileID: 843500894}
+    - target: {fileID: 1478194857, guid: 4a06f081ab8d3ac4198c232eb5e12d31, type: 3}
+      propertyPath: _pausePanel
+      value: 
+      objectReference: {fileID: 797621245}
+    - target: {fileID: 1478194857, guid: 4a06f081ab8d3ac4198c232eb5e12d31, type: 3}
+      propertyPath: _gameOverScreen
+      value: 
+      objectReference: {fileID: 1258859467}
+    - target: {fileID: 1478194857, guid: 4a06f081ab8d3ac4198c232eb5e12d31, type: 3}
+      propertyPath: _playerInputHandler
+      value: 
+      objectReference: {fileID: 371128315}
     - target: {fileID: 180494590832741567, guid: 4a06f081ab8d3ac4198c232eb5e12d31, type: 3}
       propertyPath: _grid
       value: 

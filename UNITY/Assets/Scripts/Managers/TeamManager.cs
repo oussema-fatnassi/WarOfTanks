@@ -1,6 +1,10 @@
 using System.Collections.Generic;
 using System.Linq;
 
+/// <summary>
+/// Holds all registered tanks split by team. Tanks are never removed — they stay registered
+/// even after death so GetAliveTanks() can filter dynamically by tank.IsAlive.
+/// </summary>
 public class TeamManager
 {
     private List<Tank> _teamA;
