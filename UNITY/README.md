@@ -12,7 +12,7 @@
 1. Open Unity Hub.
 2. Click **Add** and select the `UNITY/` folder.
 3. Open the project with Unity 2020.3.49f1.
-4. Open the main scene from `Assets/Scenes/`.
+4. Open `Assets/Scenes/Game.unity` for the main game, or `Assets/Scenes/MainMenu.unity` for the main menu.
 5. Press **Play** to run.
 
 ## Project Structure
@@ -21,19 +21,23 @@
 UNITY/
 └── Assets/
     ├── Scenes/
-    │   └── FeaturesTesting/   # Per-issue test scenes
+    │   ├── Game.unity             # Main match scene
+    │   ├── MainMenu.unity         # Main menu scene
+    │   └── FeaturesTesting/       # Per-issue test scenes
     ├── Scripts/
-    │   ├── Commands/          # ICommand implementations (Move, Attack, AttackZone, Stop)
-    │   ├── Inputs/            # PlayerInputHandler (Unity Input System)
-    │   ├── Interfaces/        # ICommand, ICommandReceiver, ISelectable, ITankComponents, IDamageable
-    │   ├── Managers/          # SelectionManager singleton
-    │   ├── Navigation/        # NavigationStrategy, AStarStrategy, StraightLineStrategy
-    │   ├── Tanks/             # Tank, TankController, TurretController, SelectionIndicator, TankConstants
-    │   ├── Tools/             # SingletonBehaviour<T>
-    │   └── UI/                # SelectionBox, HealthBarUI
-    ├── Prefabs/               # Tank, GameManager, UI, Zone prefabs
-    ├── Sprites/               # Sprite assets
-    └── Tilemaps/              # Tile assets and palettes
+    │   ├── Commands/              # ICommand implementations (Move, Attack, AttackZone, Stop)
+    │   ├── GameStates/            # PlayingState, PausedState, GameOverState, GameStateMachine
+    │   ├── Inputs/                # PlayerInputHandler (Unity Input System)
+    │   ├── Interfaces/            # ICommand, ICommandReceiver, ISelectable, ITankComponents, IDamageable
+    │   ├── Managers/              # GameManager, MatchTimer, ScoreManager, TeamManager, SelectionManager
+    │   ├── Navigation/            # NavigationStrategy, AStarStrategy, StraightLineStrategy
+    │   ├── Tanks/                 # Tank, TankController, TurretController, SelectionIndicator, TankConstants
+    │   ├── Tools/                 # SingletonBehaviour<T>
+    │   ├── UI/                    # GameHUD, GameOverScreen, MainMenuController, SelectionBox, HealthBarUI
+    │   └── Zone/                  # Zone, ZoneCaptureStateMachine, zone states
+    ├── Prefabs/                   # Tank, GameManager, UI, Zone prefabs
+    ├── Sprites/                   # Sprite assets
+    └── Tilemaps/                  # Tile assets and palettes
 ```
 
 ## Key Systems
@@ -47,16 +51,16 @@ UNITY/
 | RTS Camera | [#11](https://github.com/oussema-fatnassi/WarOfTanks/issues/11) | ✅ Done |
 | Generic State Machine System | [#12](https://github.com/oussema-fatnassi/WarOfTanks/issues/12) | ✅ Done |
 | Navigation - A* Pathfinding | [#13](https://github.com/oussema-fatnassi/WarOfTanks/issues/13) | ✅ Done |
-| Navigation - Dijkstra | [#14](https://github.com/oussema-fatnassi/WarOfTanks/issues/14) | Not started |
-| Navigation - Flow Field | [#15](https://github.com/oussema-fatnassi/WarOfTanks/issues/15) | Not started |
 | Local Obstacle Avoidance | [#16](https://github.com/oussema-fatnassi/WarOfTanks/issues/16) | ✅ Done |
 | Control Zone - State Machine | [#17](https://github.com/oussema-fatnassi/WarOfTanks/issues/17) | ✅ Done |
-| Gameplay & Win Conditions | [#18](https://github.com/oussema-fatnassi/WarOfTanks/issues/18) | Not started |
+| Gameplay & Win Conditions - Teams, Score, Timer, Main Menu | [#18](https://github.com/oussema-fatnassi/WarOfTanks/issues/18) | ✅ Done |
+| AI - Generic Behaviour Tree System | [#21](https://github.com/oussema-fatnassi/WarOfTanks/issues/21) | ✅ Done |
+| AI - Tank Behaviour Trees (Specializations) | [#22](https://github.com/oussema-fatnassi/WarOfTanks/issues/22) | 🔄 In Progress |
 | Detection System - Field of View | [#19](https://github.com/oussema-fatnassi/WarOfTanks/issues/19) | Not started |
 | Fog of War (WebGL-Compatible) | [#20](https://github.com/oussema-fatnassi/WarOfTanks/issues/20) | Not started |
-| AI - Generic Behaviour Tree System | [#21](https://github.com/oussema-fatnassi/WarOfTanks/issues/21) | Not started |
-| AI - Tank Behaviour Trees (Specializations) | [#22](https://github.com/oussema-fatnassi/WarOfTanks/issues/22) | Not started |
 | Commander AI | [#23](https://github.com/oussema-fatnassi/WarOfTanks/issues/23) | Not started |
+| Navigation - Dijkstra | [#14](https://github.com/oussema-fatnassi/WarOfTanks/issues/14) | Not started |
+| Navigation - Flow Field | [#15](https://github.com/oussema-fatnassi/WarOfTanks/issues/15) | Not started |
 | WebGL Build (GitHub Actions) | [#7](https://github.com/oussema-fatnassi/WarOfTanks/issues/7) | Not started |
 
 ## Architecture Notes
@@ -66,5 +70,6 @@ UNITY/
 - State machine diagrams committed to `docs/state-machines/` — Zone Capture FSM and Game State FSM ([#3](https://github.com/oussema-fatnassi/WarOfTanks/issues/3) ✅)
 - Technology justification committed to `docs/technical-note/` ([#35](https://github.com/oussema-fatnassi/WarOfTanks/issues/35) — Figma mockups remaining)
 - Navigation uses a custom Physics2D LayerMask-based grid (not Unity NavMesh) — Grid, PathNode, and INavigable are modular and algorithm-agnostic
-- The AI + tank system must remain a self-contained modular prefab (championship requirement).
-- Naming conventions: see `docs/naming-conventions.md` in the root repo.
+- `GameManager` is a singleton (`SingletonBehaviour<GameManager>`) that owns the full match lifecycle via a `GameStateMachine` (PlayingState / PausedState / GameOverState)
+- The AI + tank system must remain a self-contained modular prefab (championship requirement)
+- Naming conventions: see `docs/naming-conventions.md` in the root repo
