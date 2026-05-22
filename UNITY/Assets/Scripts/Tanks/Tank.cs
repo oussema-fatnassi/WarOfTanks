@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using WarOfTanks.Navigation;
 using UnityEngine;
 
+using WarOfTanks.Enums;
+
 public class Tank : MonoBehaviour, ISelectable, IDamageable, ICommandReceiver, ITankComponents
 {
     #region Fields
@@ -69,12 +71,14 @@ public class Tank : MonoBehaviour, ISelectable, IDamageable, ICommandReceiver, I
             return;
         }
         if (!IsEnemy()) SelectionManager.Instance?.RegisterFriendlyTank(this);
+        GameManager.Instance?.RegisterTank(this);
     }
 
     private void OnDestroy()
     {
         _healthSystem.OnDeath -= Die;
         SelectionManager.Instance?.UnregisterFriendlyTank(this);
+        GameManager.Instance?.UnregisterTank(this);
     }
 
     private void Update()
