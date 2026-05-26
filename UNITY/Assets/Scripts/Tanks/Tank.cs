@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using WarOfTanks.Navigation;
 using UnityEngine;
 
+using WarOfTanks.Enums;
+
 public class Tank : MonoBehaviour, ISelectable, IDamageable, ICommandReceiver, ITankComponents
 {
     #region Fields
@@ -48,6 +50,7 @@ public class Tank : MonoBehaviour, ISelectable, IDamageable, ICommandReceiver, I
     public NavigationStrategy Navigation => _navigationStrategy;
     public float FiringRange => _firingRange;
     public ICommand CurrentCommand => _currentCommand;
+    public Vector3 SpawnPosition => _spawnPoint.position;
     #endregion
 
     #region Unity Methods
@@ -63,6 +66,8 @@ public class Tank : MonoBehaviour, ISelectable, IDamageable, ICommandReceiver, I
     private void Start()
     {
         _healthSystem.OnDeath += Die;
+        GameManager.Instance?.RegisterTank(this);
+
         if (SelectionManager.Instance == null)
         { 
             Debug.LogWarning("No SelectionManager found in the scene. Please add one to manage tank selection.");
@@ -75,6 +80,7 @@ public class Tank : MonoBehaviour, ISelectable, IDamageable, ICommandReceiver, I
     {
         _healthSystem.OnDeath -= Die;
         SelectionManager.Instance?.UnregisterFriendlyTank(this);
+        GameManager.Instance?.UnregisterTank(this);
     }
 
     private void Update()

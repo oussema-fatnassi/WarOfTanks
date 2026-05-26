@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using WarOfTanks.StateMachine;
 using WarOfTanks.UI;
+using WarOfTanks.Enums;
 
 namespace WarOfTanks.Zone
 {
@@ -132,7 +133,7 @@ namespace WarOfTanks.Zone
             var tank = other.GetComponentInParent<Tank>();
             if (tank == null) return;
 
-            if (tank.TeamId == 0)
+            if (tank.TeamId == ETankTeam.PLAYER)
             {
                 _teamPlayerTanksInZone.Add(other.gameObject);
                 if (!contestedBy.Contains(0)) contestedBy.Add(0);
@@ -150,7 +151,7 @@ namespace WarOfTanks.Zone
             var tank = other.GetComponentInParent<Tank>();
             if (tank == null) return;
 
-            if (tank.TeamId == 0)
+            if (tank.TeamId == ETankTeam.PLAYER)
             {
                 _teamPlayerTanksInZone.Remove(other.gameObject);
                 if (_teamPlayerTanksInZone.Count == 0) contestedBy.Remove(0);

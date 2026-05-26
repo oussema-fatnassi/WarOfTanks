@@ -1,0 +1,6 @@
+{
+    "dotnet.defaultSolution": "UNITY/UNITY.sln",
+    "dotnet.server.useOmnisharp": true,
+    "omnisharp.useModernNet": false,
+    "omnisharp.useGlobalMono": "always"
+}

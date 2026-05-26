@@ -1,9 +1,8 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-public enum ETankTeam
+namespace WarOfTanks.Enums
 {
-    PLAYER,
-    ENEMY
+    public enum ETankTeam
+    {
+        PLAYER,
+        ENEMY
+    }
 }
