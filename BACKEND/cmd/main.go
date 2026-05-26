@@ -49,7 +49,9 @@ func main() {
 	jwtSvc := services.NewJWTService(cfg.JWTSecret, cfg.JWTRefreshSecret)
 
 	// Initialize handlers
-	authHandler := handlers.NewAuthHandler(db, jwtSvc)
+	authHandler   := handlers.NewAuthHandler(db, jwtSvc)
+	playerHandler := handlers.NewPlayerHandler(db)
+	matchHandler  := handlers.NewMatchHandler(db, client)
 
 	// Initialize Gin router
 	r := gin.Default()
@@ -74,6 +76,12 @@ func main() {
 		protected.Use(middleware.AuthRequired(jwtSvc))
 		{
 			protected.POST("/auth/logout", authHandler.Logout)
+
+			protected.GET("/players",    playerHandler.GetPlayers)
+			protected.GET("/players/me", playerHandler.GetMe)
+
+			protected.POST("/matches", matchHandler.SaveMatch)
+			protected.GET("/matches",  matchHandler.GetMatches)
 		}
 	}
 
