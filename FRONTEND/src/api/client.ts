@@ -34,7 +34,11 @@ client.interceptors.response.use(
       !requestUrl.includes('/auth/register') &&
       !requestUrl.includes('/auth/refresh')
 
-    if (error.response?.status === 401 && canRefresh && !originalRequest._retry) {
+    if (
+      error.response?.status === 401 &&
+      canRefresh &&
+      !originalRequest._retry
+    ) {
       if (isRefreshing) {
         return new Promise((resolve, reject) => {
           pendingQueue.push((token) => {
