@@ -78,11 +78,11 @@ func main() {
 		{
 			protected.POST("/auth/logout", authHandler.Logout)
 
-			protected.GET("/players",    playerHandler.GetPlayers)
+			protected.GET("/players", playerHandler.GetPlayers)
 			protected.GET("/players/me", playerHandler.GetMe)
 
 			protected.POST("/matches", matchHandler.SaveMatch)
-			protected.GET("/matches",  matchHandler.GetMatches)
+			protected.GET("/matches", matchHandler.GetMatches)
 		}
 	}
 
