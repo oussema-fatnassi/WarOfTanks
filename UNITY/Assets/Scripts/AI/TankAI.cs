@@ -3,6 +3,10 @@ using WarOfTanks.Navigation;
 using WarOfTanks.Enums;
 using System.Collections.Generic;
 using System.Collections;
+using ActionNode = WarOfTanks.AI.BehaviourTree.ActionNode;
+using BehaviourTreeController = WarOfTanks.AI.BehaviourTree.BehaviourTree;
+using NodeStatus = WarOfTanks.AI.BehaviourTree.NodeStatus;
+using ZoneController = WarOfTanks.Zone.Zone;
 
 namespace WarOfTanks.AI
 {
@@ -21,7 +25,8 @@ namespace WarOfTanks.AI
     /// It will also include error handling to ensure that the AI can gracefully handle situations where pathfinding fails or when the tank encounters unexpected obstacles.
     /// </summary>
     [RequireComponent(typeof(TankController))]
-    public class TankAI : MonoBehaviour
+    [RequireComponent(typeof(VisionSystem))]
+    public partial class TankAI : MonoBehaviour
     {
         private List<PathNode> _currentPath;
         private int _currentPathIndex;
@@ -43,11 +48,25 @@ namespace WarOfTanks.AI
         private INavigable _navigator;
         private NavigationGrid _grid;
         private TankController _tankController;
+        private Tank _tank;
+
+        [Header("Behaviour Tree")]
+        [SerializeField] private ETankRole _role;
+        [SerializeField] private float _btTickInterval = 0.1f;
+
+        private float _btTimer;
+        private BehaviourTreeController _behaviourTree;
+        private TankBlackboard _blackboard;
+        private VisionSystem _visionSystem;
+        private ZoneController _zone;
+        private Vector2Int _currentTargetGridPosition;
         
         private void Awake()
         {
             _grid = FindObjectOfType<NavigationGrid>();
             _tankController = GetComponent<TankController>();
+            _tank = GetComponent<Tank>();
+            _visionSystem = GetComponent<VisionSystem>();
 
             if (_grid == null)
             {
@@ -63,6 +82,20 @@ namespace WarOfTanks.AI
                 return;
             }
 
+            if (_tank == null)
+            {
+                DebugLogger.LogError($"{nameof(TankAI)} requires a {nameof(Tank)} on the same GameObject.", this);
+                enabled = false;
+                return;
+            }
+
+            if (_visionSystem == null)
+            {
+                DebugLogger.LogError($"{nameof(TankAI)} requires a {nameof(VisionSystem)} on the same GameObject.", this);
+                enabled = false;
+                return;
+            }
+
             if (_tankLayerMask == 0)
             {
                 DebugLogger.LogWarning($"{nameof(TankAI)}: _tankLayerMask is not set. Block detection will not work.", this);
@@ -71,8 +104,23 @@ namespace WarOfTanks.AI
             _navigator = PathfinderFactory.Create(EPathfinderType.ASTAR, _grid);
         }
 
+        private void Start()
+        {
+            _zone = FindObjectOfType<ZoneController>();
+
+            _blackboard = new TankBlackboard
+            {
+                self = _tank,
+                zone = _zone
+            };
+
+            _behaviourTree = BuildBehaviourTree();
+        }
+
         private void Update()
         {
+            TickBehaviourTree();
+
             if (_currentPath == null || _currentPath.Count == 0 || _isWaiting)
                 return;
 
@@ -131,9 +179,13 @@ namespace WarOfTanks.AI
         /// </summary>
         public void SetDestination(Vector2Int targetGrid)
         {
+            if (IsAlreadyMovingTo(targetGrid))
+                return;
+
             if (_grid == null || _navigator == null)
                 return;
 
+            _currentTargetGridPosition = targetGrid;
             _targetGridPosition = targetGrid;
             _currentPathIndex = 0;
 
@@ -162,9 +214,10 @@ namespace WarOfTanks.AI
                 if (hit.transform.root == transform)
                     continue;
 
-                if (hit.transform.root.CompareTag("Tank"))
+                Tank blockingTank = hit.transform.GetComponentInParent<Tank>();
+                if (blockingTank != null && blockingTank != _tank)
                 {
-                    _lastBlockerPosition = hit.transform.root.position;
+                    _lastBlockerPosition = blockingTank.transform.position;
                     return true;
                 }
             }
@@ -271,6 +324,71 @@ namespace WarOfTanks.AI
             _currentPath = null;
             _currentPathIndex = 0;
             _tankController.Stop();
+        }
+
+        private bool IsAtDestination()
+        {
+            if (_grid == null)
+                return false;
+
+            return _grid.WorldToGridPosition(transform.position) == _currentTargetGridPosition
+                && (_currentPath == null || _currentPath.Count == 0);
+        }
+
+        private bool IsInZone()
+        {
+            if (_zone == null)
+                return false;
+
+            Collider2D zoneCollider = _zone.GetComponent<Collider2D>();
+            if (zoneCollider != null)
+            {
+                return zoneCollider.OverlapPoint(transform.position);
+            }
+
+            return Vector2.Distance(transform.position, _zone.transform.position) < 1f;
+        }
+
+        private bool IsAlreadyMovingTo(Vector2Int target)
+        {
+            return target == _currentTargetGridPosition
+                && _currentPath != null
+                && _currentPath.Count > 0;
+        }
+
+        private void TickBehaviourTree()
+        {
+            if (_behaviourTree == null || _blackboard == null)
+                return;
+
+            _btTimer += Time.deltaTime;
+            if (_btTimer < _btTickInterval)
+                return;
+
+            _btTimer = 0f;
+            List<Tank> allTanks = GameManager.Instance != null ? GameManager.Instance.GetAllTanks() : new List<Tank>();
+            _blackboard.Update(_visionSystem, allTanks);
+            _behaviourTree.Tick();
+        }
+
+        private BehaviourTreeController BuildBehaviourTree()
+        {
+            switch (_role)
+            {
+                case ETankRole.ATTACKER:
+                    return BuildAttackerTree();
+                case ETankRole.DEFENDER:
+                    return BuildDefenderTree();
+                case ETankRole.CAPTOR:
+                    return BuildCaptorTree();
+                default:
+                    return BuildIdleTree();
+            }
+        }
+
+        private BehaviourTreeController BuildIdleTree()
+        {
+            return new BehaviourTreeController(new ActionNode(() => NodeStatus.Success));
         }
     }
 }
