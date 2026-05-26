@@ -82,9 +82,15 @@ npm run dev
 - ✅ [#17](https://github.com/oussema-fatnassi/WarOfTanks/issues/17) Control Zone - State Machine — 4-state FSM (Neutral/Capturing/Captured/Contested), circular gauge UI, team color feedback
 - ✅ [#13](https://github.com/oussema-fatnassi/WarOfTanks/issues/13) Navigation - A\* Pathfinding — custom Physics2D grid, PathNode system, hazard cost, diagonal movement, INavigable interface
 - ✅ [#16](https://github.com/oussema-fatnassi/WarOfTanks/issues/16) Local Obstacle Avoidance — CircleCast block detection, dynamic HashSet-based path recalculation, anti-oscillation rolling window
-- ✅ [#25](https://github.com/oussema-fatnassi/WarOfTanks/issues/25) | Player Model & Auth Routes (Register + Login)
-- ✅ [#54](https://github.com/oussama-fatnassi/WarOfTanks/issues/54) | MongoDB Database Initialization — Collections, Indexes & Seed Data
+- ✅ [#25](https://github.com/oussema-fatnassi/WarOfTanks/issues/25) Player Model & Auth Routes (Register + Login)
+- ✅ [#26](https://github.com/oussema-fatnassi/WarOfTanks/issues/26) JWT Auth Middleware & Refresh Token Route — access token (1h) + refresh token (7d), middleware protecting all authenticated routes
 - ✅ [#51](https://github.com/oussema-fatnassi/WarOfTanks/issues/51) Frontend App Structure — React Router v6, Axios client with JWT interceptors, TypeScript types, protected routes
+- ✅ [#54](https://github.com/oussema-fatnassi/WarOfTanks/issues/54) MongoDB Database Initialization — Collections, Indexes & Seed Data
+
+### Sprint 4 — AI Systems & Backend Routes
+
+- ✅ [#18](https://github.com/oussema-fatnassi/WarOfTanks/issues/18) Gameplay & Win Conditions — GameStateMachine (Playing/Paused/GameOver), configurable timer, zone-based scoring, GameHUD, GameOverScreen, MainMenuController
+- ✅ [#21](https://github.com/oussema-fatnassi/WarOfTanks/issues/21) AI - Generic Behaviour Tree System — pure C# BT framework (IBehaviourNode, Selector, Sequence, Inverter, Repeater, ActionNode, ConditionNode, BehaviourTree root), dedicated asmdef, 14 unit tests, UML diagram committed
 
 ## In Progress / Remaining
 
@@ -92,9 +98,7 @@ npm run dev
 
 | #                                                               | Title                                                 | Owner   | Priority | Status      |
 | --------------------------------------------------------------- | ----------------------------------------------------- | ------- | -------- | ----------- |
-| [#14](https://github.com/oussema-fatnassi/WarOfTanks/issues/14) | Navigation - Dijkstra                                 | Oroitz  | Medium   | Not started |
-| [#18](https://github.com/oussema-fatnassi/WarOfTanks/issues/18) | Gameplay & Win Conditions - Teams, Score, Timer, Menu | Oroitz  | High     | Not started |
-| [#26](https://github.com/oussema-fatnassi/WarOfTanks/issues/26) | JWT Auth Middleware & Refresh Token Route             | Kamelia | Critical | Not started |
+| [#14](https://github.com/oussema-fatnassi/WarOfTanks/issues/14) | Navigation - Dijkstra | Oroitz | Medium | Not started |
 
 ### Sprint 4 — AI Systems & Backend Routes (May 18 – May 24)
 
@@ -103,7 +107,6 @@ npm run dev
 | [#15](https://github.com/oussema-fatnassi/WarOfTanks/issues/15) | Navigation - Flow Field                     | Kamelia | Medium   | Not started |
 | [#19](https://github.com/oussema-fatnassi/WarOfTanks/issues/19) | Detection System - Field of View            | Oroitz  | High     | Not started |
 | [#20](https://github.com/oussema-fatnassi/WarOfTanks/issues/20) | Fog of War (WebGL-Compatible)               | Oroitz  | High     | Not started |
-| [#21](https://github.com/oussema-fatnassi/WarOfTanks/issues/21) | AI - Generic Behaviour Tree System          | Oussema | Critical | Not started |
 | [#22](https://github.com/oussema-fatnassi/WarOfTanks/issues/22) | AI - Tank Behaviour Trees (Specializations) | Oroitz  | Critical | Not started |
 | [#27](https://github.com/oussema-fatnassi/WarOfTanks/issues/27) | Player & Match Routes                       | Kamelia | High     | Not started |
 | [#28](https://github.com/oussema-fatnassi/WarOfTanks/issues/28) | Backend Unit Tests & CI Integration         | Kamelia | High     | Not started |

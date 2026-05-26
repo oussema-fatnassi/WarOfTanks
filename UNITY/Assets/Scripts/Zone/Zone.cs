@@ -1,4 +1,5 @@
 using UnityEngine;
+using System;
 using System.Collections.Generic;
 using WarOfTanks.StateMachine;
 using WarOfTanks.UI;
@@ -45,6 +46,8 @@ namespace WarOfTanks.Zone
         /// <summary>Team IDs currently present in the zone. Two entries means contested.</summary>
         public List<int> contestedBy = new List<int>();
 
+        public event Action<int> OnZoneScored;
+
         // --- Read-only accessors for states ---
         public int PlayerTankCount => _teamPlayerTanksInZone.Count;
         public int AITankCount     => _teamAITanksInZone.Count;
@@ -82,6 +85,11 @@ namespace WarOfTanks.Zone
         public bool IsCaptured()
         {
             return controllingTeam != -1;
+        }
+
+        public void RaiseZoneScored(int teamId)
+        {
+            OnZoneScored?.Invoke(teamId);
         }
 
         // --- Progress mutation — Zone is the sole owner ---

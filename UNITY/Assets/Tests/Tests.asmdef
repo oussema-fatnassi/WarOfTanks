@@ -1,7 +1,8 @@
 {
     "name": "Tests",
     "references": [
-        "WarOfTanks.StateMachine"
+        "WarOfTanks.StateMachine",
+        "WarOfTanks.AI.BehaviourTree"
     ],
     "optionalUnityReferences": [
         "TestAssemblies"

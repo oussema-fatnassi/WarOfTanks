@@ -42,9 +42,8 @@ public class CapturedState : State<Zone>
             if (_scoringTimer >= Context.ScoringRate)
             {
                 _scoringTimer = 0f;
-                // TODO: Add score to the controlling team
+                Context.RaiseZoneScored(Context.controllingTeam);
                 DebugLogger.Log(Context.ShowDebugLogs, "Scoring for team " + Context.controllingTeam, nameof(CapturedState));
-                //Context.UI.AddScore(Context.controllingTeam);
             }
         }
         else

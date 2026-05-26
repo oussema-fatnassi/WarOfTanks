@@ -23,6 +23,9 @@ UNITY/
     ├── Scenes/
     │   └── FeaturesTesting/   # Per-issue test scenes
     ├── Scripts/
+    │   ├── AI/
+    │   │   ├── BehaviourTree/ # IBehaviourNode, NodeStatus, Selector, Sequence, Inverter, Repeater, ActionNode, ConditionNode, BehaviourTree
+    │   │   └── TankAI.cs      # MonoBehaviour AI controller (pathfinding, block detection)
     │   ├── Commands/          # ICommand implementations (Move, Attack, AttackZone, Stop)
     │   ├── Inputs/            # PlayerInputHandler (Unity Input System)
     │   ├── Interfaces/        # ICommand, ICommandReceiver, ISelectable, ITankComponents, IDamageable
@@ -31,6 +34,8 @@ UNITY/
     │   ├── Tanks/             # Tank, TankController, TurretController, SelectionIndicator, TankConstants
     │   ├── Tools/             # SingletonBehaviour<T>
     │   └── UI/                # SelectionBox, HealthBarUI
+    ├── Tests/
+    │   └── BehaviourTreeTests.cs  # 14 unit tests (Unity Test Runner)
     ├── Prefabs/               # Tank, GameManager, UI, Zone prefabs
     ├── Sprites/               # Sprite assets
     └── Tilemaps/              # Tile assets and palettes
@@ -51,10 +56,10 @@ UNITY/
 | Navigation - Flow Field | [#15](https://github.com/oussema-fatnassi/WarOfTanks/issues/15) | Not started |
 | Local Obstacle Avoidance | [#16](https://github.com/oussema-fatnassi/WarOfTanks/issues/16) | ✅ Done |
 | Control Zone - State Machine | [#17](https://github.com/oussema-fatnassi/WarOfTanks/issues/17) | ✅ Done |
-| Gameplay & Win Conditions | [#18](https://github.com/oussema-fatnassi/WarOfTanks/issues/18) | Not started |
+| Gameplay & Win Conditions | [#18](https://github.com/oussema-fatnassi/WarOfTanks/issues/18) | ✅ Done |
 | Detection System - Field of View | [#19](https://github.com/oussema-fatnassi/WarOfTanks/issues/19) | Not started |
 | Fog of War (WebGL-Compatible) | [#20](https://github.com/oussema-fatnassi/WarOfTanks/issues/20) | Not started |
-| AI - Generic Behaviour Tree System | [#21](https://github.com/oussema-fatnassi/WarOfTanks/issues/21) | Not started |
+| AI - Generic Behaviour Tree System | [#21](https://github.com/oussema-fatnassi/WarOfTanks/issues/21) | ✅ Done |
 | AI - Tank Behaviour Trees (Specializations) | [#22](https://github.com/oussema-fatnassi/WarOfTanks/issues/22) | Not started |
 | Commander AI | [#23](https://github.com/oussema-fatnassi/WarOfTanks/issues/23) | Not started |
 | WebGL Build (GitHub Actions) | [#7](https://github.com/oussema-fatnassi/WarOfTanks/issues/7) | Not started |
@@ -66,5 +71,6 @@ UNITY/
 - State machine diagrams committed to `docs/state-machines/` — Zone Capture FSM and Game State FSM ([#3](https://github.com/oussema-fatnassi/WarOfTanks/issues/3) ✅)
 - Technology justification committed to `docs/technical-note/` ([#35](https://github.com/oussema-fatnassi/WarOfTanks/issues/35) — Figma mockups remaining)
 - Navigation uses a custom Physics2D LayerMask-based grid (not Unity NavMesh) — Grid, PathNode, and INavigable are modular and algorithm-agnostic
-- The AI + tank system must remain a self-contained modular prefab (championship requirement).
-- Naming conventions: see `docs/naming-conventions.md` in the root repo.
+- Behaviour Tree framework (`Assets/Scripts/AI/BehaviourTree/`) is pure C# with no MonoBehaviour dependencies — `TankAI` is the only Unity integration point
+- The AI + tank system must remain a self-contained modular prefab (championship requirement)
+- Naming conventions: see `docs/naming-conventions.md` in the root repo
