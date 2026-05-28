@@ -16,20 +16,8 @@ jobs:
     name: Go Tests
     runs-on: ubuntu-latest
 
-    services:
-      mongodb:
-        image: mongo:7
-        ports:
-          - 27017:27017
-        options: >-
-          --health-cmd "mongosh --eval 'db.runCommand({ ping: 1 })'"
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
-
     env:
-      MONGODB_URI: ${{ secrets.MONGODB_URI_TEST != '' && secrets.MONGODB_URI_TEST || 'mongodb://localhost:27017' }}
-      MONGODB_DB_NAME: war_of_tanks_test
+      MONGODB_TEST_URI: mongodb://localhost:27017/?replicaSet=rs0
       JWT_SECRET: ci-test-secret
       JWT_REFRESH_SECRET: ci-test-refresh-secret
       PORT: 8080
@@ -37,6 +25,13 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+
+      - name: Start MongoDB replica set
+        run: |
+          docker run -d --name mongodb -p 27017:27017 mongo:7 mongod --replSet rs0 --bind_ip_all
+          until docker exec mongodb mongosh --quiet --eval "db.adminCommand('ping')" 2>/dev/null; do sleep 2; done
+          docker exec mongodb mongosh --eval "rs.initiate({_id:'rs0',members:[{_id:0,host:'localhost:27017'}]})"
+          until docker exec mongodb mongosh --quiet --eval "db.hello().isWritablePrimary" 2>/dev/null | grep -q true; do sleep 2; done
 
       - name: Set up Go
         uses: actions/setup-go@v5
