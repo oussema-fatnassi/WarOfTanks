@@ -8743,17 +8743,6 @@ TilemapCollider2D:
   m_Offset: {x: 0, y: 0}
   m_MaximumTileChangeCount: 1000
   m_ExtrusionFactor: 0.00001
---- !u!114 &504087798 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 180494590832741567, guid: 4a06f081ab8d3ac4198c232eb5e12d31, type: 3}
-  m_PrefabInstance: {fileID: 1478194855}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b49dd17d99a1b7f4eb895c9efde4220e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1001 &591256964
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -11453,10 +11442,6 @@ PrefabInstance:
       propertyPath: _gameOverScreen
       value: 
       objectReference: {fileID: 1109845144}
-    - target: {fileID: 1478194857, guid: 4a06f081ab8d3ac4198c232eb5e12d31, type: 3}
-      propertyPath: _playerInputHandler
-      value: 
-      objectReference: {fileID: 504087798}
     - target: {fileID: 180494590832741567, guid: 4a06f081ab8d3ac4198c232eb5e12d31, type: 3}
       propertyPath: _grid
       value: 
@@ -11843,17 +11828,9 @@ PrefabInstance:
       propertyPath: _captureBar
       value: 
       objectReference: {fileID: 1022643012}
-    - target: {fileID: 5442060139482982399, guid: 11b90816afcc8466cb56d350d40bef62, type: 3}
-      propertyPath: m_Layer
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 5442060140635541196, guid: 11b90816afcc8466cb56d350d40bef62, type: 3}
       propertyPath: m_Name
       value: ControlZone
-      objectReference: {fileID: 0}
-    - target: {fileID: 5442060140635541196, guid: 11b90816afcc8466cb56d350d40bef62, type: 3}
-      propertyPath: m_Layer
-      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5442060140635541235, guid: 11b90816afcc8466cb56d350d40bef62, type: 3}
       propertyPath: m_RootOrder

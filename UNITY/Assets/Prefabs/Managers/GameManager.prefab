@@ -49,6 +49,7 @@ MonoBehaviour:
   _tankLayer:
     serializedVersion: 2
     m_Bits: 2048
+  _grid: {fileID: 0}
 --- !u!114 &8835174301913368029
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -77,3 +78,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _enableLogs: 1
+  _allTanks: []
+  _matchDuration: 180
+  _scoreLimit: 100
+  _zone: {fileID: 0}
+  _pausePanel: {fileID: 0}
+  _gameOverScreen: {fileID: 0}
+  _playerInputHandler: {fileID: 180494590832741567}
