@@ -9,7 +9,7 @@ namespace WarOfTanks.AI
         /// <summary>
         /// Builds the captor role tree: retreat when low, hold the zone, and signal visible enemies.
         /// </summary>
-        private BehaviourTreeController BuildCaptorTree()
+        private IBehaviourNode BuildCaptorTreeRoot()
         {
             Selector root = new Selector(new List<IBehaviourNode>
             {
@@ -43,7 +43,7 @@ namespace WarOfTanks.AI
                 new ActionNode(MoveToZone)
             });
 
-            return new BehaviourTreeController(root);
+            return root;
         }
     }
 }

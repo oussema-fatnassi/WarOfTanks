@@ -10,7 +10,7 @@ namespace WarOfTanks.AI
         /// <summary>
         /// Builds the defender role tree: retreat when low, intercept threats, guard the zone, otherwise patrol.
         /// </summary>
-        private BehaviourTreeController BuildDefenderTree()
+        private IBehaviourNode BuildDefenderTreeRoot()
         {
             Selector root = new Selector(new List<IBehaviourNode>
             {
@@ -49,7 +49,7 @@ namespace WarOfTanks.AI
                 new ActionNode(PatrolZoneToSpawn)
             });
 
-            return new BehaviourTreeController(root);
+            return root;
         }
     }
 }
