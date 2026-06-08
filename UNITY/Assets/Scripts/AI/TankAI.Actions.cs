@@ -277,13 +277,80 @@ namespace WarOfTanks.AI
         }
 
         /// <summary>
+        /// Executes the full aggression order.
+        /// Returns success when the tank is in firing range and can attack the closest enemy.
+        /// Returns running when the tank is moving to firing range.
+        /// Returns failure when the tank is not in a position to attack the closest enemy.
+        /// </summary>
+        private NodeStatus ExecuteFullAggressionOrder()
+        {
+            bool hasVisibleEnemy =
+                _blackboard != null &&
+                _blackboard.closestEnemy != null &&
+                _blackboard.closestEnemy.target != null &&
+                _blackboard.closestEnemy.isInLineOfSight;
+
+            if (!hasVisibleEnemy)
+            {
+                return PatrolBetweenSpawns();
+            }
+
+            NodeStatus moveResult = MoveToFiringRange();
+
+            if (moveResult != NodeStatus.Success)
+            {
+                return moveResult;
+            }
+
+            return AttackClosestEnemy();
+        }
+
+        /// <summary>
         /// Placeholder action for future commander signalling when an enemy is visible.
-        /// Returns running so the captor keeps the signal branch active until the
+        /// Returns success so the captor keeps the signal branch active until the
         /// commander AI is implemented.
         /// </summary>
         private NodeStatus SignalEnemyVisible()
         {
-            return NodeStatus.Running;
+            return NodeStatus.Success;
+        }
+
+        /// <summary>
+        /// Executes the strategic order.
+        /// </summary>
+        private NodeStatus ExecuteStrategicOrder()
+        {
+            NodeStatus result;
+
+            switch (_strategicOrder)
+            {
+                case EStrategicOrder.CAPTUREZONE:
+                    result = MoveToZone();
+                    break;
+
+                case EStrategicOrder.DEFENDZONE:
+                    result = MoveToZonePerimeter();
+                    break;
+
+                case EStrategicOrder.FALLBACK:
+                    result = MoveToSpawn();
+                    break;
+
+                case EStrategicOrder.FULLAGGRESSION:
+                    result = ExecuteFullAggressionOrder();
+                    break;
+
+                case EStrategicOrder.NONE:
+                default:
+                    return NodeStatus.Failure;
+            }
+
+            if (result == NodeStatus.Success)
+            {
+                _strategicOrder = EStrategicOrder.NONE;
+            }
+
+            return result;
         }
     }
 }

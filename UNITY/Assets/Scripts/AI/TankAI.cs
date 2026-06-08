@@ -7,6 +7,7 @@ using ActionNode = WarOfTanks.AI.BehaviourTree.ActionNode;
 using BehaviourTreeController = WarOfTanks.AI.BehaviourTree.BehaviourTree;
 using NodeStatus = WarOfTanks.AI.BehaviourTree.NodeStatus;
 using ZoneController = WarOfTanks.Zone.Zone;
+using WarOfTanks.AI.BehaviourTree;
 
 namespace WarOfTanks.AI
 {
@@ -53,6 +54,7 @@ namespace WarOfTanks.AI
         private NavigationGrid _grid;
         private TankController _tankController;
         private Tank _tank;
+        private HealthSystem _healthSystem;
 
         [Header("Behaviour Tree")]
         [SerializeField] private ETankRole _role;
@@ -64,12 +66,18 @@ namespace WarOfTanks.AI
         private VisionSystem _visionSystem;
         private ZoneController _zone;
         private Vector2Int _currentTargetGridPosition;
+        private EStrategicOrder _strategicOrder = EStrategicOrder.NONE;
+        public List<DetectionResult> EnemyResults => _blackboard?.enemyResults ?? new List<DetectionResult>();
+        public ETankRole Role => _role;
+        public float HealthRatio => _healthSystem != null ? _healthSystem.HealthPercentage : 1f;
+        public bool NeedsHealing => HealthRatio < 0.3f;
         
         private void Awake()
         {
             _grid = FindObjectOfType<NavigationGrid>();
             _tankController = GetComponent<TankController>();
             _tank = GetComponent<Tank>();
+            _healthSystem = GetComponent<HealthSystem>();
             _visionSystem = GetComponent<VisionSystem>();
 
             if (_grid == null)
@@ -402,16 +410,41 @@ namespace WarOfTanks.AI
         /// </summary>
         private BehaviourTreeController BuildBehaviourTree()
         {
+            Selector root = new Selector(new List<IBehaviourNode>
+            {
+                new Sequence(new List<IBehaviourNode>
+                {
+                    new ConditionNode(() => NeedsHealing),
+                    new ActionNode(MoveToSpawn)
+                }),
+
+                new Sequence(new List<IBehaviourNode>
+                {
+                    new ConditionNode(() => _strategicOrder != EStrategicOrder.NONE),
+                    new ActionNode(ExecuteStrategicOrder)
+                }),
+
+                BuildRoleTreeRoot()
+            });
+
+            return new BehaviourTreeController(root);
+        }
+
+        private IBehaviourNode BuildRoleTreeRoot()
+        {
             switch (_role)
             {
                 case ETankRole.ATTACKER:
-                    return BuildAttackerTree();
+                    return BuildAttackerTreeRoot();
+
                 case ETankRole.DEFENDER:
-                    return BuildDefenderTree();
+                    return BuildDefenderTreeRoot();
+
                 case ETankRole.CAPTOR:
-                    return BuildCaptorTree();
+                    return BuildCaptorTreeRoot();
+
                 default:
-                    return BuildIdleTree();
+                    return new ActionNode(() => NodeStatus.Success);
             }
         }
 
@@ -421,6 +454,17 @@ namespace WarOfTanks.AI
         private BehaviourTreeController BuildIdleTree()
         {
             return new BehaviourTreeController(new ActionNode(() => NodeStatus.Success));
+        }
+
+        /// <summary>
+        /// Receives a strategic order from the commander.
+        /// </summary>
+        public void ReceiveOrder(EStrategicOrder order)
+        {
+            if (NeedsHealing && order != EStrategicOrder.FALLBACK)
+                return;
+
+            _strategicOrder = order;
         }
     }
 }
