@@ -22,6 +22,7 @@ public class TurretController : MonoBehaviour
     #endregion
 
     #region Getters
+    /// <summary>Returns true when enough time has elapsed since the last shot to fire again.</summary>
     public bool CanFire => Time.time >= _lastFireTime + 1f / _fireRate;
     #endregion
 
@@ -33,6 +34,9 @@ public class TurretController : MonoBehaviour
     #endregion
 
     #region Public Methods
+    /// <summary>
+    /// Rotates the turret toward the target position at the configured rotation speed.
+    /// </summary>
     public void RotateTo(Vector2 targetPosition)
     {
         Vector2 direction = targetPosition - (Vector2)_turretTransform.position;
@@ -40,6 +44,9 @@ public class TurretController : MonoBehaviour
         _turretTransform.rotation = Quaternion.RotateTowards(_turretTransform.rotation, Quaternion.Euler(0, 0, targetAngle), _turretRotationSpeed * Time.deltaTime);
     }
 
+    /// <summary>
+    /// Returns true when the angle between the turret forward and the direction to the target is within the tolerance.
+    /// </summary>
     public bool IsAimedAt(Vector2 targetPosition, float toleranceDegrees)
     {
         Vector2 toTarget = (targetPosition - (Vector2)_turretTransform.position).normalized;
@@ -47,6 +54,10 @@ public class TurretController : MonoBehaviour
         return angle <= toleranceDegrees;
     }
 
+    /// <summary>
+    /// Spawns a bullet from the cannon tip and launches it forward. Pass <c>force = true</c> to bypass the fire rate cooldown.
+    /// Returns the spawned <see cref="BulletController"/>, or null if the cooldown has not elapsed.
+    /// </summary>
     public BulletController Fire(bool force = false)
     {
         if (!CanFire && !force) return null;
@@ -54,7 +65,10 @@ public class TurretController : MonoBehaviour
 
         GameObject bulletObject = Instantiate(_bulletPrefab, _cannonTipTransform.position, _cannonTipTransform.rotation, _bulletPool);
         BulletController bulletController = bulletObject.GetComponent<BulletController>();
-        Physics2D.IgnoreCollision(bulletObject.GetComponent<Collider2D>(), GetComponentInChildren<Collider2D>());
+        Collider2D tankCollider = GetComponentInParent<Collider2D>();
+        Collider2D bulletCollider = bulletObject.GetComponent<Collider2D>();
+        if (tankCollider != null && bulletCollider != null)
+            Physics2D.IgnoreCollision(bulletCollider, tankCollider);
 
 
         // TODO : Maybe call initialize with damage, speed , etc. if needed in the future.

@@ -8154,6 +8154,10 @@ PrefabInstance:
       propertyPath: _role
       value: 2
       objectReference: {fileID: 0}
+    - target: {fileID: 5609634953105270565, guid: 47b7d6e16d1164b36b6d441ec28f7b63, type: 3}
+      propertyPath: _showDebugLogs
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6231303744932298063, guid: 47b7d6e16d1164b36b6d441ec28f7b63, type: 3}
       propertyPath: _showDebugLogs
       value: 0
@@ -8172,6 +8176,17 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 47b7d6e16d1164b36b6d441ec28f7b63, type: 3}
+--- !u!114 &286459129 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5609634953105270565, guid: 47b7d6e16d1164b36b6d441ec28f7b63, type: 3}
+  m_PrefabInstance: {fileID: 286459128}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 93e5f11e8e56f4df4a3d4b67e5eb749f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &305643270
 GameObject:
   m_ObjectHideFlags: 0
@@ -8835,7 +8850,58 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _scanInterval: 0.1
   _aimTolerance: 10
-  _showDebugLogs: 1
+  _showDebugLogs: 0
+--- !u!1 &679328437
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 679328439}
+  - component: {fileID: 679328438}
+  m_Layer: 0
+  m_Name: CommanderAI
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &679328438
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 679328437}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5991920cce77a4627a2fb1460f9b99c8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _tanks:
+  - {fileID: 5609634953200415919}
+  - {fileID: 797123548}
+  - {fileID: 286459129}
+  _zone: {fileID: 1781157338}
+  _evaluationInterval: 1
+  _enemyNearZoneRadius: 5
+  _team: 1
+--- !u!4 &679328439
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 679328437}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 16
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &700422529 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 773176152485814613, guid: 8c3bdc1bc81e82f49acf03aaac5e8b65, type: 3}
@@ -8855,7 +8921,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _scanInterval: 0.1
   _aimTolerance: 10
-  _showDebugLogs: 1
+  _showDebugLogs: 0
 --- !u!1001 &797123547
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -8927,6 +8993,10 @@ PrefabInstance:
       propertyPath: _role
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 5609634953105270565, guid: 47b7d6e16d1164b36b6d441ec28f7b63, type: 3}
+      propertyPath: _showDebugLogs
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6231303744932298063, guid: 47b7d6e16d1164b36b6d441ec28f7b63, type: 3}
       propertyPath: _showDebugLogs
       value: 0
@@ -8945,6 +9015,17 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 47b7d6e16d1164b36b6d441ec28f7b63, type: 3}
+--- !u!114 &797123548 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5609634953105270565, guid: 47b7d6e16d1164b36b6d441ec28f7b63, type: 3}
+  m_PrefabInstance: {fileID: 797123547}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 93e5f11e8e56f4df4a3d4b67e5eb749f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &823788594
 GameObject:
   m_ObjectHideFlags: 0
@@ -9652,7 +9733,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _scanInterval: 0.1
   _aimTolerance: 10
-  _showDebugLogs: 1
+  _showDebugLogs: 0
 --- !u!1 &1008525846
 GameObject:
   m_ObjectHideFlags: 0
@@ -12076,6 +12157,10 @@ PrefabInstance:
       propertyPath: _bulletPool
       value: 
       objectReference: {fileID: 591256965}
+    - target: {fileID: 5609634953105270565, guid: 47b7d6e16d1164b36b6d441ec28f7b63, type: 3}
+      propertyPath: _showDebugLogs
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6231303744932298063, guid: 47b7d6e16d1164b36b6d441ec28f7b63, type: 3}
       propertyPath: _showDebugLogs
       value: 0
@@ -12094,3 +12179,14 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 47b7d6e16d1164b36b6d441ec28f7b63, type: 3}
+--- !u!114 &5609634953200415919 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5609634953105270565, guid: 47b7d6e16d1164b36b6d441ec28f7b63, type: 3}
+  m_PrefabInstance: {fileID: 5609634953200415918}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 93e5f11e8e56f4df4a3d4b67e5eb749f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

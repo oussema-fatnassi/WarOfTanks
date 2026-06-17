@@ -25,22 +25,23 @@ UNITY/
     ├── Scripts/
     │   ├── AI/
     │   │   ├── BehaviourTree/ # IBehaviourNode, NodeStatus, Selector, Sequence, Inverter, Repeater, ActionNode, ConditionNode, BehaviourTree
-    │   │   ├── TankAI.cs              # Orchestrator — BT tick, pathfinding, obstacle avoidance (partial class)
-    │   │   ├── TankAI.Actions.cs      # 9 private action methods (MoveToZone, AttackClosestEnemy, etc.)
+    │   │   ├── CommanderAI.cs         # Team-level strategist — aggregates vision, evaluates scenarios, dispatches EStrategicOrder
+    │   │   ├── TankAI.cs              # Orchestrator — BT tick, pathfinding, stall recalc, order reception (partial class)
+    │   │   ├── TankAI.Actions.cs      # Private action methods + ExecuteStrategicOrder + ExecuteFullAggressionOrder
     │   │   ├── TankAI.CaptorTree.cs   # Captor role behaviour tree
     │   │   ├── TankAI.AttackerTree.cs # Attacker role behaviour tree
     │   │   ├── TankAI.DefenderTree.cs # Defender role behaviour tree
     │   │   ├── TankBlackboard.cs      # Shared data snapshot (HP, vision results, zone state)
-    │   │   ├── VisionSystem.cs        # Detection stub — real logic in #19
-    │   │   └── DetectionResult.cs     # Per-target detection data class
+    │   │   ├── VisionSystem.cs        # Detection system — 360° scan, Linecast LoS, _obstacleLayerMask
+    │   │   └── DetectionResult.cs     # Per-target detection data (target, distance, angle, isInLineOfSight)
     │   ├── Commands/          # ICommand implementations (Move, Attack, AttackZone, Stop)
-    │   ├── Enums/             # ETankTeam, ETankRole, EPathfinderType
+    │   ├── Enums/             # ETankTeam, ETankRole, EPathfinderType, EStrategicOrder
     │   ├── GameStates/        # GameStateMachine, PlayingState, PausedState, GameOverState
     │   ├── Inputs/            # PlayerInputHandler (Unity Input System)
-    │   ├── Interfaces/        # ICommand, ICommandReceiver, ISelectable, ITankComponents, IDamageable
+    │   ├── Interfaces/        # ICommand, ICommandReceiver, ISelectable, ITankComponents, IDamageable, IVisionSystem
     │   ├── Managers/          # GameManager (tank registry, debug), SelectionManager, ScoreManager, MatchTimer, TeamManager
     │   ├── Navigation/        # NavigationStrategy, AStarStrategy, FlowFieldStrategy, StraightLineStrategy
-    │   ├── Tanks/             # Tank, TankController, TurretController, SelectionIndicator, TankConstants
+    │   ├── Tanks/             # Tank, TankController, TurretController, PlayerAutoAim, SelectionIndicator, TankConstants
     │   ├── Tools/             # SingletonBehaviour<T>, DebugLogger
     │   └── UI/                # SelectionBox, HealthBarUI, ZoneUIController, GameHUD, GameOverScreen, MainMenuController
     ├── Tests/
@@ -63,15 +64,15 @@ UNITY/
 | Generic State Machine System | [#12](https://github.com/oussema-fatnassi/WarOfTanks/issues/12) | ✅ Done |
 | Navigation - A* Pathfinding | [#13](https://github.com/oussema-fatnassi/WarOfTanks/issues/13) | ✅ Done |
 | Navigation - Dijkstra | [#14](https://github.com/oussema-fatnassi/WarOfTanks/issues/14) | Not started |
-| Navigation - Flow Field | [#15](https://github.com/oussema-fatnassi/WarOfTanks/issues/15) | Not started |
+| Navigation - Flow Field | [#15](https://github.com/oussema-fatnassi/WarOfTanks/issues/15) | ✅ Done |
 | Local Obstacle Avoidance | [#16](https://github.com/oussema-fatnassi/WarOfTanks/issues/16) | ✅ Done |
 | Control Zone - State Machine | [#17](https://github.com/oussema-fatnassi/WarOfTanks/issues/17) | ✅ Done |
 | Gameplay & Win Conditions | [#18](https://github.com/oussema-fatnassi/WarOfTanks/issues/18) | ✅ Done |
-| Detection System - Field of View | [#19](https://github.com/oussema-fatnassi/WarOfTanks/issues/19) | Not started |
+| Detection System - Field of View | [#19](https://github.com/oussema-fatnassi/WarOfTanks/issues/19) | ✅ Done |
 | Fog of War (WebGL-Compatible) | [#20](https://github.com/oussema-fatnassi/WarOfTanks/issues/20) | Not started |
 | AI - Generic Behaviour Tree System | [#21](https://github.com/oussema-fatnassi/WarOfTanks/issues/21) | ✅ Done |
 | AI - Tank Behaviour Trees (Specializations) | [#22](https://github.com/oussema-fatnassi/WarOfTanks/issues/22) | ✅ Done |
-| Commander AI | [#23](https://github.com/oussema-fatnassi/WarOfTanks/issues/23) | Not started |
+| Commander AI | [#23](https://github.com/oussema-fatnassi/WarOfTanks/issues/23) | ✅ Done |
 | WebGL Build (GitHub Actions) | [#7](https://github.com/oussema-fatnassi/WarOfTanks/issues/7) | Not started |
 
 ## Architecture Notes
@@ -83,6 +84,8 @@ UNITY/
 - Navigation uses a custom Physics2D LayerMask-based grid (not Unity NavMesh) — Grid, PathNode, and INavigable are modular and algorithm-agnostic
 - BT framework (`Assets/Scripts/AI/BehaviourTree/`) is pure C# with no MonoBehaviour dependencies — `TankAI` is the only Unity integration point
 - `TankAI` uses `partial class` split across 5 files — role-specific trees and action methods stay private without exposing TankAI internals
-- `VisionSystem` is currently a stub (returns empty results) — Oroitz fills in real raycast detection in [#19](https://github.com/oussema-fatnassi/WarOfTanks/issues/19) without touching any BT code
+- `VisionSystem` implements 360° enemy detection via `Physics2D.Linecast` per-target line-of-sight; `IVisionSystem` interface decouples it from `TankBlackboard` and `PlayerAutoAim` consumers ([#19](https://github.com/oussema-fatnassi/WarOfTanks/issues/19) ✅)
+- `CommanderAI` is a scene-level MonoBehaviour (not attached to a tank) that aggregates each tank's `EnemyResults` into a unified battlefield picture and dispatches `EStrategicOrder` directives every configurable interval (default 1s); `TankAI.ReceiveOrder()` + a root-level override `Selector` interleave commander orders on top of the role tree, with auto-clear on action success ([#23](https://github.com/oussema-fatnassi/WarOfTanks/issues/23) ✅)
+- `TankAI` path recovery now uses position-based stall detection backed by `Tank.GetBlockedCells()` with a static-only fallback — same primitive as the player's `MoveCommand`, eliminates spawn-queue deadlocks
 - The AI + tank system must remain a self-contained modular prefab (championship requirement)
 - Naming conventions: see `docs/naming-conventions.md` in the root repo

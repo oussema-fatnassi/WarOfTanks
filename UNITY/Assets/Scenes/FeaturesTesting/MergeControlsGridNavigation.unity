@@ -11549,6 +11549,18 @@ PrefabInstance:
       propertyPath: m_Name
       value: ENEMY1
       objectReference: {fileID: 0}
+    - target: {fileID: 1991546480952036511, guid: 8c3bdc1bc81e82f49acf03aaac5e8b65, type: 3}
+      propertyPath: _detectionRadius
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 1991546480952036511, guid: 8c3bdc1bc81e82f49acf03aaac5e8b65, type: 3}
+      propertyPath: _fieldOfViewAngle
+      value: 360
+      objectReference: {fileID: 0}
+    - target: {fileID: 1991546480952036511, guid: 8c3bdc1bc81e82f49acf03aaac5e8b65, type: 3}
+      propertyPath: _obstacleLayerMask.m_Bits
+      value: 1536
+      objectReference: {fileID: 0}
     - target: {fileID: 8066777654821941431, guid: 8c3bdc1bc81e82f49acf03aaac5e8b65, type: 3}
       propertyPath: _teamId
       value: 1

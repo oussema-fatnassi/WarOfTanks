@@ -74,7 +74,10 @@ namespace WarOfTanks.AI
             Vector2 currentPosition = transform.position;
 
             if (Vector2.Distance(currentPosition, enemyPosition) <= _tank.FiringRange)
+            {
+                ClearPath();
                 return NodeStatus.Success;
+            }
 
             Vector2Int targetGrid = _grid.WorldToGridPosition(enemy.transform.position);
 
@@ -232,13 +235,128 @@ namespace WarOfTanks.AI
         }
 
         /// <summary>
+        /// Patrols back and forth between own spawn and the nearest enemy spawn.
+        /// Toggles direction each time the tank reaches the current waypoint.
+        /// Falls back to patrol when the attacker loses line of sight on all enemies.
+        /// </summary>
+        private NodeStatus PatrolBetweenSpawns()
+        {
+            if (_blackboard == null || _grid == null || _tank == null || GameManager.Instance == null)
+                return NodeStatus.Failure;
+
+            List<Tank> allTanks = GameManager.Instance.GetAllTanks();
+
+            Tank enemyTank = null;
+            foreach (Tank tank in allTanks)
+            {
+                if (tank != null && tank.TeamId == _blackboard.enemyTeamId)
+                {
+                    enemyTank = tank;
+                    break;
+                }
+            }
+
+            if (enemyTank == null) return NodeStatus.Failure;
+
+            Vector3 enemySpawn = enemyTank.SpawnPosition;
+            Vector3 ownSpawn = _tank.SpawnPosition;
+            Vector3 currentWaypoint = _patrolTowardEnemy ? enemySpawn : ownSpawn;
+
+            if (Vector2.Distance(transform.position, currentWaypoint) < 1f)
+            {
+                _patrolTowardEnemy = !_patrolTowardEnemy;
+                currentWaypoint = _patrolTowardEnemy ? enemySpawn : ownSpawn;
+            }
+
+            Vector2Int targetGrid = _grid.WorldToGridPosition(currentWaypoint);
+
+            if (IsAlreadyMovingTo(targetGrid)) return NodeStatus.Running;
+
+            SetDestination(targetGrid);
+            return NodeStatus.Running;
+        }
+
+        /// <summary>
+        /// Executes the full aggression order by attacking a visible enemy or patrolling between spawn points.
+        /// </summary>
+        /// <returns>
+        /// <see cref="NodeStatus.Success"/> when the attack action completes,
+        /// <see cref="NodeStatus.Running"/> while moving, or
+        /// <see cref="NodeStatus.Failure"/> when no valid aggressive action is available.
+        /// </returns>
+        private NodeStatus ExecuteFullAggressionOrder()
+        {
+            bool hasVisibleEnemy =
+                _blackboard != null &&
+                _blackboard.closestEnemy != null &&
+                _blackboard.closestEnemy.target != null &&
+                _blackboard.closestEnemy.isInLineOfSight;
+
+            if (!hasVisibleEnemy)
+            {
+                return PatrolBetweenSpawns();
+            }
+
+            NodeStatus moveResult = MoveToFiringRange();
+
+            if (moveResult != NodeStatus.Success)
+            {
+                return moveResult;
+            }
+
+            return AttackClosestEnemy();
+        }
+
+        /// <summary>
         /// Placeholder action for future commander signalling when an enemy is visible.
-        /// Returns running so the captor keeps the signal branch active until the
+        /// Returns success so the captor keeps the signal branch active until the
         /// commander AI is implemented.
         /// </summary>
         private NodeStatus SignalEnemyVisible()
         {
-            return NodeStatus.Running;
+            return NodeStatus.Success;
+        }
+
+        /// <summary>
+        /// Executes the current commander order and clears it once the ordered action succeeds.
+        /// </summary>
+        /// <returns>
+        /// The status returned by the action mapped to the current strategic order,
+        /// or <see cref="NodeStatus.Failure"/> when there is no active order.
+        /// </returns>
+        private NodeStatus ExecuteStrategicOrder()
+        {
+            NodeStatus result;
+
+            switch (_strategicOrder)
+            {
+                case EStrategicOrder.CAPTUREZONE:
+                    result = MoveToZone();
+                    break;
+
+                case EStrategicOrder.DEFENDZONE:
+                    result = MoveToZonePerimeter();
+                    break;
+
+                case EStrategicOrder.FALLBACK:
+                    result = MoveToSpawn();
+                    break;
+
+                case EStrategicOrder.FULLAGGRESSION:
+                    result = ExecuteFullAggressionOrder();
+                    break;
+
+                case EStrategicOrder.NONE:
+                default:
+                    return NodeStatus.Failure;
+            }
+
+            if (result == NodeStatus.Success)
+            {
+                _strategicOrder = EStrategicOrder.NONE;
+            }
+
+            return result;
         }
     }
 }

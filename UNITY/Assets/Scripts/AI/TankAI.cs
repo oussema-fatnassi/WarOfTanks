@@ -2,11 +2,11 @@ using UnityEngine;
 using WarOfTanks.Navigation;
 using WarOfTanks.Enums;
 using System.Collections.Generic;
-using System.Collections;
 using ActionNode = WarOfTanks.AI.BehaviourTree.ActionNode;
 using BehaviourTreeController = WarOfTanks.AI.BehaviourTree.BehaviourTree;
 using NodeStatus = WarOfTanks.AI.BehaviourTree.NodeStatus;
 using ZoneController = WarOfTanks.Zone.Zone;
+using WarOfTanks.AI.BehaviourTree;
 
 namespace WarOfTanks.AI
 {
@@ -33,25 +33,22 @@ namespace WarOfTanks.AI
         private Vector2Int _targetGridPosition;
         [SerializeField] private float _detectionRange = 1.5f;
         [SerializeField] private float _tankRadius = 0.4f;
-        [SerializeField] private LayerMask _tankLayerMask;
-        [SerializeField] private float _blockTimeout = 0.2f;
-        [SerializeField] private int _maxRecalculations = 3;
-        [SerializeField] private float _recalcWindowDuration = 2f;
 
         [Header("Pathfinding")]
         [SerializeField] private EPathfinderType _pathfinderType = EPathfinderType.ASTAR;
 
         [Header("Debug")]
         [SerializeField] private bool _showDebugLogs = false;
-        private int _recalcCount;
-        private float _recalcTimer;
-        private bool _isWaiting;
-        private bool _isHandlingBlock;
-        private Vector2 _lastBlockerPosition;
+        [SerializeField] private float _minimumWaypointProgress = 0.1f;
+        private float _lastProgressTime;
+        private Vector2 _lastCheckedPosition;
+        private float _lastWaypointDistance;
+        private bool _patrolTowardEnemy = true;
         private INavigable _navigator;
         private NavigationGrid _grid;
         private TankController _tankController;
         private Tank _tank;
+        private HealthSystem _healthSystem;
 
         [Header("Behaviour Tree")]
         [SerializeField] private ETankRole _role;
@@ -63,12 +60,33 @@ namespace WarOfTanks.AI
         private VisionSystem _visionSystem;
         private ZoneController _zone;
         private Vector2Int _currentTargetGridPosition;
+        private EStrategicOrder _strategicOrder = EStrategicOrder.NONE;
+        /// <summary>
+        /// Gets the enemies currently detected by this tank, or an empty list when the blackboard is not ready.
+        /// </summary>
+        public List<DetectionResult> EnemyResults => _blackboard?.enemyResults ?? new List<DetectionResult>();
+
+        /// <summary>
+        /// Gets the tactical role assigned to this tank.
+        /// </summary>
+        public ETankRole Role => _role;
+
+        /// <summary>
+        /// Gets the current health percentage used by commander and behaviour tree decisions.
+        /// </summary>
+        public float HealthRatio => _healthSystem != null ? _healthSystem.HealthPercentage : 1f;
+
+        /// <summary>
+        /// Gets whether this tank should prioritize returning to spawn for healing.
+        /// </summary>
+        public bool NeedsHealing => HealthRatio < 0.3f;
         
         private void Awake()
         {
             _grid = FindObjectOfType<NavigationGrid>();
             _tankController = GetComponent<TankController>();
             _tank = GetComponent<Tank>();
+            _healthSystem = GetComponent<HealthSystem>();
             _visionSystem = GetComponent<VisionSystem>();
 
             if (_grid == null)
@@ -99,11 +117,6 @@ namespace WarOfTanks.AI
                 return;
             }
 
-            if (_tankLayerMask == 0)
-            {
-                DebugLogger.LogWarning($"{nameof(TankAI)}: _tankLayerMask is not set. Block detection will not work.", this);
-            }
-
             _navigator = PathfinderFactory.Create(_pathfinderType, _grid);
 
             if (_navigator is FlowFieldPathfinder flowField)
@@ -127,7 +140,7 @@ namespace WarOfTanks.AI
         {
             TickBehaviourTree();
 
-            if (_currentPath == null || _currentPath.Count == 0 || _isWaiting)
+            if (_currentPath == null || _currentPath.Count == 0)
                 return;
 
             if (_currentPathIndex >= _currentPath.Count)
@@ -136,19 +149,17 @@ namespace WarOfTanks.AI
                 return;
             }
 
+            CheckForStall();
+
+            if (_currentPath == null || _currentPath.Count == 0 || _currentPathIndex >= _currentPath.Count)
+                return;
+
             PathNode targetNode = _currentPath[_currentPathIndex];
             Vector3 targetWorldPos = _grid.GridToWorldPosition(targetNode.GridPosition);
             Vector2 direction = ((Vector2)(targetWorldPos - transform.position)).normalized;
 
             _tankController.Move(direction);
             _tankController.RotateToward(direction);
-
-            if (!_isHandlingBlock && CheckForBlockingTank())
-            {
-                _isHandlingBlock = true;
-                _tankController.Stop();
-                StartCoroutine(HandleBlock());
-            }
 
             if (Vector2.Distance(transform.position, targetWorldPos) < 0.1f)
             {
@@ -157,16 +168,6 @@ namespace WarOfTanks.AI
                 if (_currentPathIndex >= _currentPath.Count)
                 {
                    ClearPath();
-                }
-            }
-
-            if (_recalcCount > 0)
-            {
-                _recalcTimer += Time.deltaTime;
-                if (_recalcTimer > _recalcWindowDuration)
-                {
-                    _recalcCount = 0;
-                    _recalcTimer = 0f;
                 }
             }
         }
@@ -202,131 +203,98 @@ namespace WarOfTanks.AI
             _targetGridPosition = targetGrid;
             _currentPathIndex = 0;
 
+            _currentPath = FindPathToTarget(_targetGridPosition, true);
+
+            if (_currentPath == null || _currentPath.Count == 0)
+                _currentPath = FindPathToTarget(_targetGridPosition, false);
+
+            ResetStallTracking();
+        }
+
+        /// <summary>
+        /// Computes a path to the target, optionally treating nearby tanks and tank-layer blockers as dynamic obstacles.
+        /// </summary>
+        private List<PathNode> FindPathToTarget(Vector2Int targetGrid, bool useDynamicBlocks)
+        {
             Vector2Int currentGrid = _grid.WorldToGridPosition(transform.position);
-            _currentPath = _navigator.FindPath(currentGrid, _targetGridPosition);
+            HashSet<Vector2Int> blockedPositions = useDynamicBlocks && _tank != null
+                ? _tank.GetBlockedCells(transform.position)
+                : null;
+
+            return _navigator.FindPath(currentGrid, targetGrid, blockedPositions);
         }
 
         /// <summary>
-        /// Returns true if another tank is detected ahead via CircleCastAll. Stores the blocker's world position in _lastBlockerPosition.
-        /// The method checks the next target node in the current path and casts a circle in that direction to detect any tanks within the detection range.
-        /// It ignores the tank's own colliders and only considers hits on objects tagged as "Tank". 
-        /// If a blocking tank is detected, it stores the blocker's position for use in dynamic path recalculation. 
-        /// The method returns true if a blocking tank is detected, and false otherwise.
+        /// Recomputes the active path when the tank has not made enough progress.
         /// </summary>
-        private bool CheckForBlockingTank()
+        private void RecalculateCurrentPath()
         {
-            if (_currentPath == null || _currentPathIndex >= _currentPath.Count)
-                return false;
+            if (_grid == null || _navigator == null)
+                return;
 
-            Vector3 targetWorldPos = _grid.GridToWorldPosition(_currentPath[_currentPathIndex].GridPosition);
-            Vector2 direction = ((Vector2)(targetWorldPos - transform.position)).normalized;
-
-            RaycastHit2D[] hits = Physics2D.CircleCastAll(transform.position, _tankRadius, direction, _detectionRange, _tankLayerMask);
-            foreach (RaycastHit2D hit in hits)
+            List<PathNode> newPath = FindPathToTarget(_targetGridPosition, true);
+            if (newPath == null || newPath.Count == 0)
             {
-                if (hit.transform.root == transform)
-                    continue;
-
-                Tank blockingTank = hit.transform.GetComponentInParent<Tank>();
-                if (blockingTank != null && blockingTank != _tank)
-                {
-                    _lastBlockerPosition = blockingTank.transform.position;
-                    return true;
-                }
+                newPath = FindPathToTarget(_targetGridPosition, false);
             }
-            return false;
-        }
-
-        /// <summary>
-        /// Waits _blockTimeout seconds, then triggers recalculation or ForceWait depending on the rolling recalc count.
-        /// This coroutine is started when a blocking tank is detected. It waits for a short duration to see if the block clears on its own.
-        /// After the wait, it checks if the block is still present by calling CheckForBlockingTank again. 
-        /// If the block persists, it increments the recalc count and decides whether to request a new path or to force a wait based on the number of recent recalculations.
-        /// </summary>
-        private IEnumerator HandleBlock()
-        {
-            yield return new WaitForSeconds(_blockTimeout);
-            if (CheckForBlockingTank())
-            {
-                _recalcCount++;
-                DebugLogger.Log(_showDebugLogs, $"[TankAI] Block detected on {name} — recalc #{_recalcCount}/{_maxRecalculations}");
-                if (_recalcCount >= _maxRecalculations)
-                    yield return ForceWait();
-                else
-                    yield return RequestRecalculation();
-            }
-            _isHandlingBlock = false;
-        }
-
-        /// <summary>
-        /// Requests a new path that avoids the blocker's 3×3 grid zone. Replaces the current path on success; triggers ForceWait if no alternate route exists.
-        /// The method first builds a set of blocked grid positions around the last known blocker position, excluding the tank's current cell and the target cell. 
-        /// It then requests a new path from the navigator, passing the blocked positions to ensure they are avoided in the new path calculation. 
-        /// If a valid new path is found, it replaces the current path and resets the path index. If no valid path can be found, it triggers the ForceWait
-        /// </summary>
-        private IEnumerator RequestRecalculation()
-        {
-            HashSet<Vector2Int> blockedPositions = GetDynamicBlockedPositions();
-            Vector2Int currentGridPosition = _grid.WorldToGridPosition(transform.position);
-            List<PathNode> newPath = _navigator.FindPath(currentGridPosition, _targetGridPosition, blockedPositions);
 
             if (newPath == null || newPath.Count == 0)
             {
-                DebugLogger.Log(_showDebugLogs, $"[TankAI] No alternate path found on {name} — forcing wait");
-                yield return ForceWait();
+                DebugLogger.Log(_showDebugLogs, $"[TankAI] No path found on {name} during stall recovery.");
+                ClearPath();
+                return;
             }
-            else
-            {
-                DebugLogger.Log(_showDebugLogs, $"[TankAI] New path found on {name} — {newPath.Count} nodes");
-                _currentPath = newPath;
-                _currentPathIndex = 0;
-            }
+
+            DebugLogger.Log(_showDebugLogs, $"[TankAI] Stall recovery path found on {name} — {newPath.Count} nodes");
+            _currentPath = newPath;
+            _currentPathIndex = 0;
+            ResetStallTracking();
         }
 
         /// <summary>
-        /// Builds a set of grid positions to avoid during recalculation: the 3×3 zone around the blocker, excluding the tank's own cell and the destination.
-        /// The method calculates the grid coordinates of the last known blocker position and creates a set of positions that form a 3×3 area around it. 
-        /// It ensures that the tank's current grid cell and the target grid cell are not included in the blocked positions, 
-        /// as the tank needs to be able to move out of its current cell and reach the target cell. 
-        /// The resulting set of blocked positions is returned for use in the pathfinding recal
+        /// Detects whether the tank has stopped making progress and refreshes the path from its live position.
         /// </summary>
-        private HashSet<Vector2Int> GetDynamicBlockedPositions()
+        private void CheckForStall()
         {
-            var blockedPositions = new HashSet<Vector2Int>();
-            Vector2Int blockerGridPos = _grid.WorldToGridPosition(_lastBlockerPosition);
-            Vector2Int tankGridPos = _grid.WorldToGridPosition(transform.position);
+            if (Time.time - _lastProgressTime < TankConstants.STALL_CHECK_INTERVAL)
+                return;
 
-            for (int dx = -1; dx <= 1; dx++)
+            Vector2 currentPosition = transform.position;
+            float currentWaypointDistance = GetCurrentWaypointDistance();
+            bool hasMovedEnough = Vector2.Distance(currentPosition, _lastCheckedPosition) >= TankConstants.STALL_DISTANCE_THRESHOLD;
+            bool hasProgressedTowardWaypoint = currentWaypointDistance < _lastWaypointDistance - _minimumWaypointProgress;
+
+            if (!hasMovedEnough || !hasProgressedTowardWaypoint)
             {
-                for (int dy = -1; dy <= 1; dy++)
-                {
-                    Vector2Int checkPos = new Vector2Int(blockerGridPos.x + dx, blockerGridPos.y + dy);
-                    if (checkPos == tankGridPos || checkPos == _targetGridPosition)
-                        continue;
-
-                    if (_grid.IsValidPosition(checkPos.x, checkPos.y))
-                        blockedPositions.Add(checkPos);
-                }
+                RecalculateCurrentPath();
+                return;
             }
 
-            return blockedPositions;
+            _lastCheckedPosition = currentPosition;
+            _lastWaypointDistance = currentWaypointDistance;
+            _lastProgressTime = Time.time;
         }
 
         /// <summary>
-        /// Stops the tank for 1 second and resets the recalc counter. Triggered when recalculations exceed _maxRecalculations within the rolling window.
-        /// This coroutine is started when the number of recalculations exceeds the defined threshold. 
-        /// It logs a message indicating that a forced wait has been triggered, stops the tank's movement, and sets the _isWaiting flag to true.
-        /// It then waits for a fixed duration (1 second) before allowing the tank to move again. After the wait, it resets the recalc count and timer to allow for fresh recalcul
+        /// Resets progress tracking after a new path is assigned.
         /// </summary>
-        private IEnumerator ForceWait()
+        private void ResetStallTracking()
         {
-            DebugLogger.Log(_showDebugLogs, $"[TankAI] Force wait triggered on {name} — anti-oscillation lock");
-            _tankController.Stop();
-            _isWaiting = true;
-            yield return new WaitForSeconds(1.0f);
-            _isWaiting = false;
-            _recalcCount = 0;
-            _recalcTimer = 0f;
+            _lastCheckedPosition = transform.position;
+            _lastWaypointDistance = GetCurrentWaypointDistance();
+            _lastProgressTime = Time.time;
+        }
+
+        /// <summary>
+        /// Returns the distance to the active waypoint used to detect whether movement is useful progress.
+        /// </summary>
+        private float GetCurrentWaypointDistance()
+        {
+            if (_grid == null || _currentPath == null || _currentPathIndex >= _currentPath.Count)
+                return float.PositiveInfinity;
+
+            Vector3 targetWorldPos = _grid.GridToWorldPosition(_currentPath[_currentPathIndex].GridPosition);
+            return Vector2.Distance(transform.position, targetWorldPos);
         }
 
         /// <summary>Clears the active path and stops the tank.</summary>
@@ -397,20 +365,50 @@ namespace WarOfTanks.AI
         }
 
         /// <summary>
-        /// Creates the behaviour tree that matches the configured tank role.
+        /// Creates the behaviour tree for this tank, prioritizing healing and commander orders before role behaviour.
         /// </summary>
+        /// <returns>The behaviour tree controller used to tick this tank's decisions.</returns>
         private BehaviourTreeController BuildBehaviourTree()
+        {
+            Selector root = new Selector(new List<IBehaviourNode>
+            {
+                new Sequence(new List<IBehaviourNode>
+                {
+                    new ConditionNode(() => NeedsHealing),
+                    new ActionNode(MoveToSpawn)
+                }),
+
+                new Sequence(new List<IBehaviourNode>
+                {
+                    new ConditionNode(() => _strategicOrder != EStrategicOrder.NONE),
+                    new ActionNode(ExecuteStrategicOrder)
+                }),
+
+                BuildRoleTreeRoot()
+            });
+
+            return new BehaviourTreeController(root);
+        }
+
+        /// <summary>
+        /// Builds the role-specific subtree used when no higher-priority healing or commander order is active.
+        /// </summary>
+        /// <returns>The root node for the configured tank role, or a no-op node for unknown roles.</returns>
+        private IBehaviourNode BuildRoleTreeRoot()
         {
             switch (_role)
             {
                 case ETankRole.ATTACKER:
-                    return BuildAttackerTree();
+                    return BuildAttackerTreeRoot();
+
                 case ETankRole.DEFENDER:
-                    return BuildDefenderTree();
+                    return BuildDefenderTreeRoot();
+
                 case ETankRole.CAPTOR:
-                    return BuildCaptorTree();
+                    return BuildCaptorTreeRoot();
+
                 default:
-                    return BuildIdleTree();
+                    return new ActionNode(() => NodeStatus.Success);
             }
         }
 
@@ -420,6 +418,18 @@ namespace WarOfTanks.AI
         private BehaviourTreeController BuildIdleTree()
         {
             return new BehaviourTreeController(new ActionNode(() => NodeStatus.Success));
+        }
+
+        /// <summary>
+        /// Receives a strategic order from the commander, unless healing should keep priority over that order.
+        /// </summary>
+        /// <param name="order">The strategic order to store for the next behaviour tree tick.</param>
+        public void ReceiveOrder(EStrategicOrder order)
+        {
+            if (NeedsHealing && order != EStrategicOrder.FALLBACK)
+                return;
+
+            _strategicOrder = order;
         }
     }
 }

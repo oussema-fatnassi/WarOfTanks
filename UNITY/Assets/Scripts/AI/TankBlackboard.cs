@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-
+using UnityEditor;
 using WarOfTanks.Enums;
 using ZoneController = WarOfTanks.Zone.Zone;
 
@@ -36,7 +36,7 @@ namespace WarOfTanks.AI
         /// <summary>
         /// Refreshes the blackboard values before the behaviour tree is ticked.
         /// </summary>
-        public void Update(VisionSystem vision, List<Tank> allTanks)
+        public void Update(IVisionSystem vision, List<Tank> allTanks)
         {
             if (self == null)
             {
