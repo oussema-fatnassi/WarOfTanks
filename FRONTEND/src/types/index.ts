@@ -1,25 +1,32 @@
+interface PlayerStats {
+  wins: number
+  losses: number
+  totalMatches: number
+  totalScore: number
+}
+
 interface Player {
   id: string
   username: string
   email: string
-  totalMatches: number
-  wins: number
-  losses: number
-  totalScore: number
+  stats: PlayerStats
+  createdAt?: string
+  updatedAt?: string
 }
 
 interface Match {
   id: string
   playerId: string
-  teamAScore: number
-  teamBScore: number
-  playerWon: boolean
-  durationSecs: number
-  playedAt: string
+  playerSnapshot: { username: string }
+  winnerTeam: number
+  playerScore: number
+  aiScore: number
+  duration: number
+  createdAt: string
 }
 
 interface AuthTokens {
   accessToken: string
 }
 
-export type { Player, Match, AuthTokens }
+export type { Player, PlayerStats, Match, AuthTokens }
