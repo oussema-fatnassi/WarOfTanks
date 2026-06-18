@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+using WarOfTanks.Fog;
 using WarOfTanks.Navigation;
 
 /// <summary>

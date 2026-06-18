@@ -1,6 +1,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+namespace WarOfTanks.Fog
+{
 /// <summary>
 /// Darkens the map outside friendly vision using a runtime texture overlay.
 /// This is WebGL-safe and does not rely on post-processing or compute shaders.
@@ -201,4 +203,5 @@ public class FogOfWarOverlay : MonoBehaviour
             Mathf.Max(1f, sceneBounds.size.y + _autoFitPadding.y * 2f)
         );
     }
+}
 }

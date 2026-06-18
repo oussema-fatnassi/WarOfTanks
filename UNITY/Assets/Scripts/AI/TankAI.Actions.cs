@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using WarOfTanks.AI.BehaviourTree;
 using WarOfTanks.Enums;
+using WarOfTanks.Fog;
 
 namespace WarOfTanks.AI
 {
@@ -222,7 +223,7 @@ namespace WarOfTanks.AI
                 return NodeStatus.Failure;
 
             Tank enemy = _blackboard.closestEnemy.target;
-            if (_tank.TeamId == ETankTeam.PLAYER && !global::FogOfWarManager.CanTarget(enemy))
+            if (_tank.TeamId == ETankTeam.PLAYER && !FogOfWarManager.CanTarget(enemy))
                 return NodeStatus.Failure;
 
             Vector2 targetPosition = enemy.transform.position;

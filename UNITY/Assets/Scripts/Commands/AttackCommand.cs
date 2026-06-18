@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using WarOfTanks.Fog;
 
 /// <summary>
 /// Command that drives a tank to pursue and fire at a specific enemy target. The tank navigates

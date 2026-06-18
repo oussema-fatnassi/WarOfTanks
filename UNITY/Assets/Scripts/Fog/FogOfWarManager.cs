@@ -3,13 +3,15 @@ using UnityEngine;
 using WarOfTanks.AI;
 using WarOfTanks.Enums;
 
+namespace WarOfTanks.Fog
+{
 /// <summary>
-/// Coordinates player-facing tank visibility from the existing detection results.
-/// This only changes visual alpha; gameplay logic continues to run normally.
+/// Coordinates player-facing fog visibility from detection results and blocks
+/// player targeting against enemies that remain hidden by fog.
 /// </summary>
 public class FogOfWarManager : MonoBehaviour
 {
-    private const string AutoManagerName = "Fog Of War Manager";
+    private const string AUTO_MANAGER_NAME = "Fog Of War Manager";
 
     public static FogOfWarManager Instance { get; private set; }
 
@@ -53,7 +55,7 @@ public class FogOfWarManager : MonoBehaviour
         if (FindObjectOfType<FogOfWarManager>() != null)
             return;
 
-        new GameObject(AutoManagerName).AddComponent<FogOfWarManager>();
+        new GameObject(AUTO_MANAGER_NAME).AddComponent<FogOfWarManager>();
     }
 
     private void Start()
@@ -248,4 +250,5 @@ public class FogOfWarManager : MonoBehaviour
     {
         return _mapOverlay == null || _mapOverlay.IsWorldPointVisible(tank.transform.position, _friendlyTanks);
     }
+}
 }

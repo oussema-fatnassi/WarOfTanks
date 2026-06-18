@@ -1,6 +1,8 @@
 using UnityEngine;
 using UnityEngine.UI;
 
+namespace WarOfTanks.Fog
+{
 /// <summary>
 /// Fades a tank's visible presentation without changing gameplay state.
 /// Colliders, rigidbodies, commands, and AI remain active while visuals fade.
@@ -141,4 +143,5 @@ public class FogVisibility : MonoBehaviour
             _graphics[i].color = color;
         }
     }
+}
 }

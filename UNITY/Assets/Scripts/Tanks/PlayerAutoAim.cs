@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using WarOfTanks.AI;
+using WarOfTanks.Fog;
 
 /// <summary>
 /// Automatically aims and fires the turret at the nearest visible enemy.
