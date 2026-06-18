@@ -1,8 +1,10 @@
 import { setAccessToken as storeSetAccessToken } from '../auth/tokenStore'
-import { useState, type ReactNode } from 'react'
+import { useEffect, useState, type ReactNode } from 'react'
 import { AuthContext } from './AuthContext'
 import { client } from '../api/client'
 import type { Player } from '../types'
+
+const PLAYER_CACHE_KEY = 'wot_player'
 
 interface LoginResponsePlayer {
   id: string
@@ -25,6 +27,11 @@ interface LoginResponse {
   player: LoginResponsePlayer
 }
 
+interface RefreshResponse {
+  accessToken: string
+  player?: LoginResponsePlayer
+}
+
 const normalizePlayer = (player: LoginResponsePlayer): Player => ({
   id: player.id,
   username: player.username,
@@ -37,14 +44,59 @@ const normalizePlayer = (player: LoginResponsePlayer): Player => ({
   },
 })
 
+const readCachedPlayer = (): Player | null => {
+  try {
+    const raw = localStorage.getItem(PLAYER_CACHE_KEY)
+    return raw ? (JSON.parse(raw) as Player) : null
+  } catch {
+    return null
+  }
+}
+
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [player, setPlayer] = useState<Player | null>(null)
   const [accessToken, setAccessToken] = useState<string | null>(null)
+  const [initializing, setInitializing] = useState(true)
 
   const handleSetAccessToken = (token: string | null) => {
     storeSetAccessToken(token)
     setAccessToken(token)
   }
+
+  const persistPlayer = (next: Player | null) => {
+    setPlayer(next)
+    if (next) localStorage.setItem(PLAYER_CACHE_KEY, JSON.stringify(next))
+    else localStorage.removeItem(PLAYER_CACHE_KEY)
+  }
+
+  // Restore the session on boot using the refresh-token cookie.
+  useEffect(() => {
+    let active = true
+    const restore = async () => {
+      try {
+        const { data } = await client.post<RefreshResponse>('/api/v1/auth/refresh')
+        if (!active) return
+        handleSetAccessToken(data.accessToken)
+
+        const fromRefresh = data.player ? normalizePlayer(data.player) : null
+        const fromMe =
+          fromRefresh ??
+          (await client
+            .get<LoginResponsePlayer>('/api/v1/players/me')
+            .then(res => normalizePlayer(res.data))
+            .catch(() => null))
+        if (active) persistPlayer(fromMe ?? readCachedPlayer())
+      } catch {
+        // No valid refresh session — remain logged out.
+      } finally {
+        if (active) setInitializing(false)
+      }
+    }
+    restore()
+    return () => {
+      active = false
+    }
+  }, [])
 
   const login = async (username: string, password: string) => {
     const response = await client.post<LoginResponse>('/api/v1/auth/login', {
@@ -52,7 +104,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       password,
     })
 
-    setPlayer(normalizePlayer(response.data.player))
+    persistPlayer(normalizePlayer(response.data.player))
     handleSetAccessToken(response.data.accessToken)
   }
 
@@ -60,14 +112,14 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     try {
       await client.post('/api/v1/auth/logout')
     } finally {
-      setPlayer(null)
+      persistPlayer(null)
       handleSetAccessToken(null)
     }
   }
 
   const setTokenOnly = (token: string | null) => {
     if (!token) {
-      setPlayer(null)
+      persistPlayer(null)
     }
     handleSetAccessToken(token)
   }
@@ -77,6 +129,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       value={{
         player,
         accessToken,
+        initializing,
         setAccessToken: setTokenOnly,
         login,
         logout,
