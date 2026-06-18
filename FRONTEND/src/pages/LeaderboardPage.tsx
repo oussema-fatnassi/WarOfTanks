@@ -1,13 +1,29 @@
 import { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { client } from '../api/client'
 import { useAuth } from '../hooks/useAuth'
 import type { Player } from '../types'
-import ErrorBanner from '../components/ui/ErrorBanner'
+import PageContainer from '../components/ui/PageContainer'
 import PageHeader from '../components/ui/PageHeader'
+import Panel from '../components/ui/Panel'
+import Button from '../components/ui/Button'
+import Avatar from '../components/ui/Avatar'
+import Badge from '../components/ui/Badge'
+import RankBadge from '../components/ui/RankBadge'
+import ProgressBar from '../components/ui/ProgressBar'
+import DataTable, { type Column } from '../components/ui/DataTable'
 import SkeletonRows from '../components/ui/SkeletonRows'
+import EmptyState from '../components/ui/EmptyState'
+import ErrorBanner from '../components/ui/ErrorBanner'
+
+const winRateOf = (p: Player) =>
+  p.stats.totalMatches > 0
+    ? Math.round((p.stats.wins / p.stats.totalMatches) * 100)
+    : 0
 
 const LeaderboardPage = () => {
   const { player: me } = useAuth()
+  const navigate = useNavigate()
   const [players, setPlayers] = useState<Player[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
@@ -17,7 +33,7 @@ const LeaderboardPage = () => {
     setError(null)
     try {
       const { data } = await client.get<Player[]>('/api/v1/players')
-      setPlayers(data)
+      setPlayers(data ?? [])
     } catch {
       setError('Could not load leaderboard. Please try again.')
     } finally {
@@ -29,92 +45,116 @@ const LeaderboardPage = () => {
     fetchPlayers()
   }, [])
 
+  const columns: Column<Player>[] = [
+    {
+      key: 'rank',
+      header: '#',
+      headerClassName: 'w-16',
+      render: (_p, i) => <RankBadge rank={i + 1} />,
+    },
+    {
+      key: 'player',
+      header: 'Player',
+      render: p => {
+        const isMe = p.id === me?.id
+        return (
+          <div className="flex items-center gap-3">
+            <Avatar name={p.username} size="sm" />
+            <span className="text-sm text-fg">{p.username}</span>
+            {isMe && <Badge tone="win">You</Badge>}
+          </div>
+        )
+      },
+    },
+    {
+      key: 'score',
+      header: 'Score',
+      align: 'right',
+      render: p => (
+        <span className="font-mono text-sm font-bold text-fg">{p.stats.totalScore}</span>
+      ),
+    },
+    {
+      key: 'wins',
+      header: 'Wins',
+      align: 'right',
+      render: p => <span className="font-mono text-sm text-win">{p.stats.wins}</span>,
+    },
+    {
+      key: 'losses',
+      header: 'Losses',
+      align: 'right',
+      render: p => <span className="font-mono text-sm text-loss">{p.stats.losses}</span>,
+    },
+    {
+      key: 'matches',
+      header: 'Matches',
+      align: 'right',
+      render: p => (
+        <span className="font-mono text-sm text-muted">{p.stats.totalMatches}</span>
+      ),
+    },
+    {
+      key: 'winrate',
+      header: 'Win rate',
+      align: 'right',
+      render: p => {
+        const rate = winRateOf(p)
+        return (
+          <div className="flex items-center justify-end gap-3">
+            <ProgressBar value={rate} className="w-24" />
+            <span className="w-9 text-right font-mono text-sm text-muted">{rate}%</span>
+          </div>
+        )
+      },
+    },
+  ]
+
   return (
-    <div className="mx-auto max-w-5xl px-6 py-10">
+    <PageContainer>
       <PageHeader
-        section="Rankings"
+        eyebrow="/LEADERBOARD"
         title="Leaderboard"
+        subtitle="Top players ranked by total score. You are highlighted in green."
         action={
-          <button
-            onClick={fetchPlayers}
-            disabled={loading}
-            className="font-mono text-[11px] tracking-[1.1px] uppercase text-[#98a1ad] transition-colors hover:text-[#5dcbd1] disabled:opacity-40"
-          >
-            {loading ? 'Loading…' : 'Refresh'}
-          </button>
+          <>
+            <Button variant="ghost" onClick={fetchPlayers} disabled={loading}>
+              {loading ? 'Loading…' : 'Refresh'}
+            </Button>
+            <Button variant="primary" onClick={() => navigate('/play')}>
+              Start game
+            </Button>
+          </>
         }
       />
 
       {error && <ErrorBanner message={error} />}
 
-      {loading ? (
-        <SkeletonRows count={6} />
-      ) : players.length === 0 ? (
-        <p className="py-16 text-center font-mono text-sm text-[#98a1ad]">
-          No players yet.
-        </p>
-      ) : (
-        <div className="overflow-x-auto">
-        <table className="w-full min-w-[500px] border-collapse">
-          <thead>
-            <tr className="border-b border-[#2a313b]">
-              {['#', 'Player', 'Score', 'W', 'L', 'Win %'].map((h, i) => (
-                <th
-                  key={h}
-                  className={`pb-3 font-mono text-[10.5px] tracking-[1.05px] uppercase text-[#98a1ad] ${
-                    i === 0 ? 'w-12 text-left' : i === 1 ? 'text-left' : 'text-right'
-                  }`}
-                >
-                  {h}
-                </th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {players.map((p, i) => {
-              const isMe = p.id === me?.id
-              const winRate =
-                p.stats.totalMatches > 0
-                  ? Math.round((p.stats.wins / p.stats.totalMatches) * 100)
-                  : 0
-              return (
-                <tr
-                  key={p.id}
-                  className={`border-b border-[#2a313b]/60 transition-colors ${
-                    isMe ? 'bg-[#5dcbd1]/[0.06]' : 'hover:bg-[#11161d]'
-                  }`}
-                >
-                  <td className="py-4 font-mono text-xs text-[#98a1ad]">
-                    {String(i + 1).padStart(2, '0')}
-                  </td>
-                  <td className="py-4 text-sm text-[#e7ecef]">
-                    {p.username}
-                    {isMe && (
-                      <span className="ml-2 font-mono text-[10px] tracking-[0.5px] text-[#5dcbd1]">
-                        you
-                      </span>
-                    )}
-                  </td>
-                  <td className="py-4 text-right font-mono text-sm text-[#e7ecef]">
-                    {p.stats.totalScore}
-                  </td>
-                  <td className="py-4 text-right font-mono text-sm text-[#5ebc7b]">
-                    {p.stats.wins}
-                  </td>
-                  <td className="py-4 text-right font-mono text-sm text-[#ee6951]">
-                    {p.stats.losses}
-                  </td>
-                  <td className="py-4 text-right font-mono text-sm text-[#98a1ad]">
-                    {winRate}%
-                  </td>
-                </tr>
-              )
-            })}
-          </tbody>
-        </table>
-        </div>
-      )}
-    </div>
+      <Panel
+        header="Global ranking"
+        meta={loading ? '—' : `${players.length} players`}
+      >
+        {loading ? (
+          <div className="p-4">
+            <SkeletonRows count={8} />
+          </div>
+        ) : players.length === 0 ? (
+          <EmptyState message="No players yet." />
+        ) : (
+          <DataTable
+            columns={columns}
+            rows={players}
+            rowKey={p => p.id}
+            rowClassName={p =>
+              p.id === me?.id
+                ? 'bg-win/[0.06] [&>td:first-child]:border-l-2 [&>td:first-child]:border-win'
+                : 'hover:bg-raised/40'
+            }
+            minWidth="min-w-[720px]"
+          />
+        )}
+      </Panel>
+    </PageContainer>
   )
 }
 
