@@ -11,7 +11,8 @@ public class MatchTimer
     private bool _running = false;
 
     public bool IsTimeUp => _elapsed >= _duration;
-    // Clamped to 0 — never returns a negative value.
+    public float ElapsedTime => _elapsed;
+
     public float RemainingTime => Math.Max(_duration - _elapsed,0);
     
     public MatchTimer(float duration)

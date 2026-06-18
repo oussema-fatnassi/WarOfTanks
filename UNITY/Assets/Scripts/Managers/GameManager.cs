@@ -141,6 +141,7 @@ public class GameManager : SingletonBehaviour<GameManager>
     public int GetWinner() { return _scoreManager.GetLeadingTeam(); }
     public int GetScore(int teamId) { return _scoreManager.GetScore(teamId); }
     public float GetRemainingTime() { return _matchTimer.RemainingTime; }
+    public float GetElapsedTime() { return _matchTimer.ElapsedTime; }
     public void SetPauseUI(bool active) { _pausePanel.SetActive(active); }
     public void ShowGameOver() { _gameOverScreen.Show(GetWinner(), GetScore(0), GetScore(1)); }
     public void SetInputEnabled(bool enabled) { _playerInputHandler.enabled = enabled; }
