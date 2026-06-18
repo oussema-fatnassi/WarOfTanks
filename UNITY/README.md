@@ -36,6 +36,7 @@ UNITY/
     │   │   └── DetectionResult.cs     # Per-target detection data (target, distance, angle, isInLineOfSight)
     │   ├── Commands/          # ICommand implementations (Move, Attack, AttackZone, Stop)
     │   ├── Enums/             # ETankTeam, ETankRole, EPathfinderType, EStrategicOrder
+    │   ├── Fog/               # WarOfTanks.Fog — FogOfWarManager, FogVisibility, FogOfWarOverlay (WebGL-safe enemy concealment)
     │   ├── GameStates/        # GameStateMachine, PlayingState, PausedState, GameOverState
     │   ├── Inputs/            # PlayerInputHandler (Unity Input System)
     │   ├── Interfaces/        # ICommand, ICommandReceiver, ISelectable, ITankComponents, IDamageable, IVisionSystem
@@ -69,7 +70,7 @@ UNITY/
 | Control Zone - State Machine | [#17](https://github.com/oussema-fatnassi/WarOfTanks/issues/17) | ✅ Done |
 | Gameplay & Win Conditions | [#18](https://github.com/oussema-fatnassi/WarOfTanks/issues/18) | ✅ Done |
 | Detection System - Field of View | [#19](https://github.com/oussema-fatnassi/WarOfTanks/issues/19) | ✅ Done |
-| Fog of War (WebGL-Compatible) | [#20](https://github.com/oussema-fatnassi/WarOfTanks/issues/20) | Not started |
+| Fog of War (WebGL-Compatible) | [#20](https://github.com/oussema-fatnassi/WarOfTanks/issues/20) | ✅ Done (merged to dev — PR #77) |
 | AI - Generic Behaviour Tree System | [#21](https://github.com/oussema-fatnassi/WarOfTanks/issues/21) | ✅ Done |
 | AI - Tank Behaviour Trees (Specializations) | [#22](https://github.com/oussema-fatnassi/WarOfTanks/issues/22) | ✅ Done |
 | Commander AI | [#23](https://github.com/oussema-fatnassi/WarOfTanks/issues/23) | ✅ Done |
@@ -87,5 +88,6 @@ UNITY/
 - `VisionSystem` implements 360° enemy detection via `Physics2D.Linecast` per-target line-of-sight; `IVisionSystem` interface decouples it from `TankBlackboard` and `PlayerAutoAim` consumers ([#19](https://github.com/oussema-fatnassi/WarOfTanks/issues/19) ✅)
 - `CommanderAI` is a scene-level MonoBehaviour (not attached to a tank) that aggregates each tank's `EnemyResults` into a unified battlefield picture and dispatches `EStrategicOrder` directives every configurable interval (default 1s); `TankAI.ReceiveOrder()` + a root-level override `Selector` interleave commander orders on top of the role tree, with auto-clear on action success ([#23](https://github.com/oussema-fatnassi/WarOfTanks/issues/23) ✅)
 - `TankAI` path recovery now uses position-based stall detection backed by `Tank.GetBlockedCells()` with a static-only fallback — same primitive as the player's `MoveCommand`, eliminates spawn-queue deadlocks
+- Fog of War (`Assets/Scripts/Fog/`, `WarOfTanks.Fog` namespace) is WebGL-safe — no Post-Processing Stack, no compute shaders. `FogOfWarManager` polls friendly detection (cached `TankAI.EnemyResults` for AI tanks, direct `VisionSystem.Scan` for player tanks) every ~0.1s and reveals an enemy only when `target != null && target.IsAlive && isInLineOfSight`, with a hysteresis grace period to avoid edge flicker. `FogVisibility` fades a tank's world `SpriteRenderer`s **and** UI (`CanvasGroup`/`Graphic`) so health bars hide with the tank; `FogOfWarOverlay` draws a runtime `Texture2D` to darken out-of-vision terrain. Fog also gates targeting (`FogOfWarManager.CanTarget`) so fogged enemies can't be auto-aimed or fired at ([#20](https://github.com/oussema-fatnassi/WarOfTanks/issues/20) ✅ — pending WebGL build verification)
 - The AI + tank system must remain a self-contained modular prefab (championship requirement)
 - Naming conventions: see `docs/naming-conventions.md` in the root repo

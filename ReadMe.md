@@ -98,6 +98,7 @@ npm run dev
 - ✅ [#28](https://github.com/oussema-fatnassi/WarOfTanks/issues/28) Backend Unit Tests & CI Integration — comprehensive handler tests (auth, player, match) against real MongoDB; CI updated to MongoDB replica set for transaction support; `go test -race -coverprofile`; `TestSaveMatch` covers win/loss stats update atomically
 - ✅ [#19](https://github.com/oussema-fatnassi/WarOfTanks/issues/19) Detection System - Field of View — VisionSystem with configurable range + angle, target layer filtering, line-of-sight raycasts, Gizmo debug arcs
 - ✅ [#23](https://github.com/oussema-fatnassi/WarOfTanks/issues/23) Commander AI — strategic AI commander that coordinates AI tanks, assigns roles, and adapts tactics based on game state
+- ✅ [#20](https://github.com/oussema-fatnassi/WarOfTanks/issues/20) Fog of War (WebGL-Compatible) — `WarOfTanks.Fog` namespace; `FogOfWarManager` polls friendly vision every ~0.1s and reveals enemies only on `isInLineOfSight` with a hysteresis grace period; `FogVisibility` fades sprite + UI (CanvasGroup) so health bars hide too; `FogOfWarOverlay` runtime `Texture2D` darkens out-of-vision terrain; fog gates targeting via `CanTarget`. No post-processing, no compute shaders (merged to dev via PR #77 — WebGL build verification pending)
 - ✅ [#31](https://github.com/oussema-fatnassi/WarOfTanks/issues/31) Leaderboard, Stats & Match History Pages — Leaderboard table (ranked by totalScore, current player highlighted), personal stats cards with win/loss bar, match history with pagination, responsive mobile layout with hamburger menu, loading skeletons and error handling
 - ✅ [#19](https://github.com/oussema-fatnassi/WarOfTanks/issues/19) Detection System - Field of View — `VisionSystem` MonoBehaviour with `Scan()` (360° radius, `Physics2D.Linecast` per-target line-of-sight, Cover + Obstacle layer blocking) and `GetClosestTarget()`; `DetectionResult` data class; `TankBlackboard` enemy filtering and health ratio; `IVisionSystem` interface; `PlayerAutoAim` component reusing vision for player turret; `TurretController` `RotateTo`/`IsAimedAt`/`Fire` finalised
 
@@ -116,7 +117,7 @@ npm run dev
 | --------------------------------------------------------------- | ------------------------------------------- | ------- | -------- | ----------- |
 | [#15](https://github.com/oussema-fatnassi/WarOfTanks/issues/15) | Navigation - Flow Field                     | Kamelia | Medium   | ✅ Done  |
 | [#19](https://github.com/oussema-fatnassi/WarOfTanks/issues/19) | Detection System - Field of View            | Oroitz  | High     | ✅ Done  |
-| [#20](https://github.com/oussema-fatnassi/WarOfTanks/issues/20) | Fog of War (WebGL-Compatible)               | Oroitz  | High     | Not started |
+| [#20](https://github.com/oussema-fatnassi/WarOfTanks/issues/20) | Fog of War (WebGL-Compatible)               | Oussema | High     | ✅ Done  |
 | [#22](https://github.com/oussema-fatnassi/WarOfTanks/issues/22) | AI - Tank Behaviour Trees (Specializations) | Oroitz  | Critical | Not started |
 | [#27](https://github.com/oussema-fatnassi/WarOfTanks/issues/27) | Player & Match Routes                       | Kamelia | High     | ✅ Done  |
 | [#28](https://github.com/oussema-fatnassi/WarOfTanks/issues/28) | Backend Unit Tests & CI Integration         | Kamelia | High     | ✅ Done  |
@@ -126,7 +127,7 @@ npm run dev
 | #                                                               | Title                                                    | Owner   | Priority | Status      |
 | --------------------------------------------------------------- | -------------------------------------------------------- | ------- | -------- | ----------- |
 | [#7](https://github.com/oussema-fatnassi/WarOfTanks/issues/7)   | GitHub Actions - WebGL Build                             | Oussema | Medium   | Not started |
-| [#20](https://github.com/oussema-fatnassi/WarOfTanks/issues/20) | Fog of War (WebGL-Compatible)                            | Oroitz  | High     | Not started |
+| [#20](https://github.com/oussema-fatnassi/WarOfTanks/issues/20) | Fog of War (WebGL-Compatible)                            | Oussema | High     | ✅ Done      |
 | [#23](https://github.com/oussema-fatnassi/WarOfTanks/issues/23) | Commander AI                                             | Oussema | High     | ✅ Done      |
 | [#31](https://github.com/oussema-fatnassi/WarOfTanks/issues/31) | Leaderboard, Stats & Match History Pages                 | Oussema | High     | Not started |
 | [#32](https://github.com/oussema-fatnassi/WarOfTanks/issues/32) | WebGL Game Embed                                         | Oussema | High     | Not started |
