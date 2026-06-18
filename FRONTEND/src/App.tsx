@@ -8,8 +8,17 @@ import GamePage from './pages/GamePage'
 import { useAuth } from './hooks/useAuth'
 import Navbar from './components/Navbar'
 
+const AppLoader = () => (
+  <div className="grid min-h-svh place-items-center bg-bg">
+    <span className="font-mono text-[11px] tracking-[2px] text-dim uppercase">
+      Loading…
+    </span>
+  </div>
+)
+
 const RootRedirect = () => {
-  const { accessToken } = useAuth()
+  const { accessToken, initializing } = useAuth()
+  if (initializing) return <AppLoader />
   return accessToken ? (
     <Navigate to="/leaderboard" replace />
   ) : (
@@ -18,12 +27,13 @@ const RootRedirect = () => {
 }
 
 const ProtectedLayout = () => {
-  const { accessToken } = useAuth()
+  const { accessToken, initializing } = useAuth()
+  if (initializing) return <AppLoader />
   if (!accessToken) return <Navigate to="/login" replace />
   return (
-    <div className="min-h-screen bg-[#0e1116] text-[#e7ecef] text-left">
+    <div className="min-h-screen bg-bg text-left text-fg">
       <Navbar />
-      <main className="py-6">
+      <main>
         <Outlet />
       </main>
     </div>
