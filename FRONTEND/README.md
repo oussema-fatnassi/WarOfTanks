@@ -42,7 +42,7 @@ FRONTEND/
 │   ├── api/          # Axios client with JWT interceptors
 │   ├── assets/       # Images and SVGs
 │   ├── auth/         # tokenStore — module-level token ref for interceptor
-│   ├── components/   # Reusable UI components (ProtectedRoute)
+│   ├── components/   # Reusable UI components (Navbar, ProtectedRoute, StatCard, WinLossBar, ErrorBanner, PageHeader, SkeletonRows)
 │   ├── context/      # AuthContext + AuthProvider
 │   ├── hooks/        # Custom React hooks (useAuth)
 │   ├── pages/        # One file per route
@@ -73,7 +73,7 @@ FRONTEND/
 | [#29](https://github.com/oussema-fatnassi/WarOfTanks/issues/29) | Frontend Project Setup (Vite + React + TypeScript)           | ✅ Done     |
 | [#51](https://github.com/oussema-fatnassi/WarOfTanks/issues/51) | Frontend App Structure — Routing, Axios Client, Types, Pages | ✅ Done     |
 | [#30](https://github.com/oussema-fatnassi/WarOfTanks/issues/30) | Auth Pages (Register + Login)                                | ✅ Done     |
-| [#31](https://github.com/oussema-fatnassi/WarOfTanks/issues/31) | Leaderboard, Stats & Match History Pages                     | Not started |
+| [#31](https://github.com/oussema-fatnassi/WarOfTanks/issues/31) | Leaderboard, Stats & Match History Pages                     | ✅ Done     |
 | [#32](https://github.com/oussema-fatnassi/WarOfTanks/issues/32) | WebGL Game Embed                                             | Not started |
 | [#6](https://github.com/oussema-fatnassi/WarOfTanks/issues/6)   | GitHub Actions - Code Quality (ESLint + Prettier)            | ✅ Done     |
 

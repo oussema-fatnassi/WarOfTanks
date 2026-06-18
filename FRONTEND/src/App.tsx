@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
+import { BrowserRouter, Routes, Route, Navigate, Outlet } from 'react-router-dom'
 import LoginPage from './pages/LoginPage'
 import RegisterPage from './pages/RegisterPage'
 import LeaderboardPage from './pages/LeaderboardPage'
@@ -6,7 +6,7 @@ import StatsPage from './pages/StatsPage'
 import HistoryPage from './pages/HistoryPage'
 import GamePage from './pages/GamePage'
 import { useAuth } from './hooks/useAuth'
-import ProtectedRoute from './components/ProtectedRoute'
+import Navbar from './components/Navbar'
 
 const RootRedirect = () => {
   const { accessToken } = useAuth()
@@ -17,6 +17,19 @@ const RootRedirect = () => {
   )
 }
 
+const ProtectedLayout = () => {
+  const { accessToken } = useAuth()
+  if (!accessToken) return <Navigate to="/login" replace />
+  return (
+    <div className="min-h-screen bg-[#0e1116] text-[#e7ecef] text-left">
+      <Navbar />
+      <main className="py-6">
+        <Outlet />
+      </main>
+    </div>
+  )
+}
+
 const App = () => {
   return (
     <BrowserRouter>
@@ -24,7 +37,7 @@ const App = () => {
         <Route path="/" element={<RootRedirect />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
-        <Route element={<ProtectedRoute />}>
+        <Route element={<ProtectedLayout />}>
           <Route path="/leaderboard" element={<LeaderboardPage />} />
           <Route path="/stats" element={<StatsPage />} />
           <Route path="/history" element={<HistoryPage />} />

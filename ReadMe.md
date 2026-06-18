@@ -96,18 +96,22 @@ npm run dev
 - ✅ [#22](https://github.com/oussema-fatnassi/WarOfTanks/issues/22) AI - Tank Behaviour Trees (Specializations) — 3 AI roles (Captor, Attacker, Defender) each with a priority-ordered BT; TankBlackboard data snapshot; VisionSystem stub; GameManager tank registry; partial class TankAI split across 5 files; Enemy.prefab updated
 - ✅ [#30](https://github.com/oussema-fatnassi/WarOfTanks/issues/30) Auth Pages (Register + Login) — two-column auth layout, login/register pages with form validation, AuthContext + AuthProvider + useAuth hook, Axios refresh interceptor guard, CORS middleware, email required at registration
 - ✅ [#28](https://github.com/oussema-fatnassi/WarOfTanks/issues/28) Backend Unit Tests & CI Integration — comprehensive handler tests (auth, player, match) against real MongoDB; CI updated to MongoDB replica set for transaction support; `go test -race -coverprofile`; `TestSaveMatch` covers win/loss stats update atomically
+- ✅ [#19](https://github.com/oussema-fatnassi/WarOfTanks/issues/19) Detection System - Field of View — VisionSystem with configurable range + angle, target layer filtering, line-of-sight raycasts, Gizmo debug arcs
+- ✅ [#23](https://github.com/oussema-fatnassi/WarOfTanks/issues/23) Commander AI — strategic AI commander that coordinates AI tanks, assigns roles, and adapts tactics based on game state
+- ✅ [#31](https://github.com/oussema-fatnassi/WarOfTanks/issues/31) Leaderboard, Stats & Match History Pages — Leaderboard table (ranked by totalScore, current player highlighted), personal stats cards with win/loss bar, match history with pagination, responsive mobile layout with hamburger menu, loading skeletons and error handling
 - ✅ [#19](https://github.com/oussema-fatnassi/WarOfTanks/issues/19) Detection System - Field of View — `VisionSystem` MonoBehaviour with `Scan()` (360° radius, `Physics2D.Linecast` per-target line-of-sight, Cover + Obstacle layer blocking) and `GetClosestTarget()`; `DetectionResult` data class; `TankBlackboard` enemy filtering and health ratio; `IVisionSystem` interface; `PlayerAutoAim` component reusing vision for player turret; `TurretController` `RotateTo`/`IsAimedAt`/`Fire` finalised
+
+### Sprint 5 — Integration & Delivery
+
+- ✅ [#23](https://github.com/oussema-fatnassi/WarOfTanks/issues/23) Commander AI — scene-level `CommanderAI` MonoBehaviour aggregating per-tank vision into a unified battlefield picture, evaluation tick every 1s, 7-scenario decision cascade (outnumbered fallback, contested zone, neutral, winning lead, losing-urgent, losing-general, default) dispatching `EStrategicOrder` (NONE / CAPTUREZONE / DEFENDZONE / FULLAGGRESSION / FALLBACK); `TankAI.ReceiveOrder()` + root-level override `Selector` so role trees are temporarily overridden with auto-clear on success; bundled AI-pathfinding fix replacing the coroutine block handler with position-based stall detection + `Tank.GetBlockedCells()` + static-only fallback (same primitive as `MoveCommand`), fixes deadlocks at spawn
 
 ## In Progress / Remaining
 
-### Sprint 3 — Navigation & Backend Foundation (Apr 20 – Apr 26)
+### Sprint 3 — Navigation & Backend Foundation
 
-| #                                                               | Title                                                 | Owner   | Priority | Status      |
-| --------------------------------------------------------------- | ----------------------------------------------------- | ------- | -------- | ----------- |
-| [#14](https://github.com/oussema-fatnassi/WarOfTanks/issues/14) | Navigation - Dijkstra | Oroitz | Medium | Not started |
-
-### Sprint 4 — AI Systems & Backend Routes (May 18 – May 24)
-
+| #                                                               | Title                 | Owner  | Priority | Status      |
+| --------------------------------------------------------------- | --------------------- | ------ | -------- | ----------- |
+| [#14](https://github.com/oussema-fatnassi/WarOfTanks/issues/14) | Navigation - Dijkstra | Oroitz | Medium   | Not started |
 | #                                                               | Title                                       | Owner   | Priority | Status      |
 | --------------------------------------------------------------- | ------------------------------------------- | ------- | -------- | ----------- |
 | [#15](https://github.com/oussema-fatnassi/WarOfTanks/issues/15) | Navigation - Flow Field                     | Kamelia | Medium   | ✅ Done  |
@@ -117,18 +121,22 @@ npm run dev
 | [#27](https://github.com/oussema-fatnassi/WarOfTanks/issues/27) | Player & Match Routes                       | Kamelia | High     | ✅ Done  |
 | [#28](https://github.com/oussema-fatnassi/WarOfTanks/issues/28) | Backend Unit Tests & CI Integration         | Kamelia | High     | ✅ Done  |
 
-### Sprint 5 — Integration & Delivery (May 25 – May 31)
+### Sprint 5 — Integration & Delivery
 
 | #                                                               | Title                                                    | Owner   | Priority | Status      |
 | --------------------------------------------------------------- | -------------------------------------------------------- | ------- | -------- | ----------- |
 | [#7](https://github.com/oussema-fatnassi/WarOfTanks/issues/7)   | GitHub Actions - WebGL Build                             | Oussema | Medium   | Not started |
-| [#23](https://github.com/oussema-fatnassi/WarOfTanks/issues/23) | Commander AI                                             | Oussema | High     | Not started |
+| [#20](https://github.com/oussema-fatnassi/WarOfTanks/issues/20) | Fog of War (WebGL-Compatible)                            | Oroitz  | High     | Not started |
+| [#23](https://github.com/oussema-fatnassi/WarOfTanks/issues/23) | Commander AI                                             | Oussema | High     | ✅ Done      |
 | [#31](https://github.com/oussema-fatnassi/WarOfTanks/issues/31) | Leaderboard, Stats & Match History Pages                 | Oussema | High     | Not started |
 | [#32](https://github.com/oussema-fatnassi/WarOfTanks/issues/32) | WebGL Game Embed                                         | Oussema | High     | Not started |
 | [#33](https://github.com/oussema-fatnassi/WarOfTanks/issues/33) | Docker Compose - Full Stack                              | Kamelia | High     | Not started |
 | [#34](https://github.com/oussema-fatnassi/WarOfTanks/issues/34) | Deploy Backend to Render                                 | Kamelia | Medium   | Not started |
 | [#36](https://github.com/oussema-fatnassi/WarOfTanks/issues/36) | Presentation Slides                                      | All     | High     | Not started |
 | [#47](https://github.com/oussema-fatnassi/WarOfTanks/issues/47) | UI Mockups - Figma (Zoning, Wireframe, Hi-fi, Prototype) | Oussema | High     | Not started |
+| [#66](https://github.com/oussema-fatnassi/WarOfTanks/issues/66) | Refactor: GameManager SOLID improvements                 | Oussema | Low      | Not started |
+| [#73](https://github.com/oussema-fatnassi/WarOfTanks/issues/73) | Unity — Post Match Result to Backend on Game Over        | Oroitz  | High     | Not started |
+| [#73](https://github.com/oussema-fatnassi/WarOfTanks/issues/73) | Unity — Post Match Result to Backend on Game Over        | Oussema | High     | In progress |
 
 ## Known Bugs & Issues
 

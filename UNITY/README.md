@@ -25,8 +25,9 @@ UNITY/
     ├── Scripts/
     │   ├── AI/
     │   │   ├── BehaviourTree/ # IBehaviourNode, NodeStatus, Selector, Sequence, Inverter, Repeater, ActionNode, ConditionNode, BehaviourTree
-    │   │   ├── TankAI.cs              # Orchestrator — BT tick, pathfinding, obstacle avoidance (partial class)
-    │   │   ├── TankAI.Actions.cs      # 9 private action methods (MoveToZone, AttackClosestEnemy, etc.)
+    │   │   ├── CommanderAI.cs         # Team-level strategist — aggregates vision, evaluates scenarios, dispatches EStrategicOrder
+    │   │   ├── TankAI.cs              # Orchestrator — BT tick, pathfinding, stall recalc, order reception (partial class)
+    │   │   ├── TankAI.Actions.cs      # Private action methods + ExecuteStrategicOrder + ExecuteFullAggressionOrder
     │   │   ├── TankAI.CaptorTree.cs   # Captor role behaviour tree
     │   │   ├── TankAI.AttackerTree.cs # Attacker role behaviour tree
     │   │   ├── TankAI.DefenderTree.cs # Defender role behaviour tree
@@ -34,7 +35,7 @@ UNITY/
     │   │   ├── VisionSystem.cs        # Detection system — 360° scan, Linecast LoS, _obstacleLayerMask
     │   │   └── DetectionResult.cs     # Per-target detection data (target, distance, angle, isInLineOfSight)
     │   ├── Commands/          # ICommand implementations (Move, Attack, AttackZone, Stop)
-    │   ├── Enums/             # ETankTeam, ETankRole, EPathfinderType
+    │   ├── Enums/             # ETankTeam, ETankRole, EPathfinderType, EStrategicOrder
     │   ├── GameStates/        # GameStateMachine, PlayingState, PausedState, GameOverState
     │   ├── Inputs/            # PlayerInputHandler (Unity Input System)
     │   ├── Interfaces/        # ICommand, ICommandReceiver, ISelectable, ITankComponents, IDamageable, IVisionSystem
@@ -71,7 +72,7 @@ UNITY/
 | Fog of War (WebGL-Compatible) | [#20](https://github.com/oussema-fatnassi/WarOfTanks/issues/20) | Not started |
 | AI - Generic Behaviour Tree System | [#21](https://github.com/oussema-fatnassi/WarOfTanks/issues/21) | ✅ Done |
 | AI - Tank Behaviour Trees (Specializations) | [#22](https://github.com/oussema-fatnassi/WarOfTanks/issues/22) | ✅ Done |
-| Commander AI | [#23](https://github.com/oussema-fatnassi/WarOfTanks/issues/23) | Not started |
+| Commander AI | [#23](https://github.com/oussema-fatnassi/WarOfTanks/issues/23) | ✅ Done |
 | WebGL Build (GitHub Actions) | [#7](https://github.com/oussema-fatnassi/WarOfTanks/issues/7) | Not started |
 
 ## Architecture Notes
@@ -84,5 +85,7 @@ UNITY/
 - BT framework (`Assets/Scripts/AI/BehaviourTree/`) is pure C# with no MonoBehaviour dependencies — `TankAI` is the only Unity integration point
 - `TankAI` uses `partial class` split across 5 files — role-specific trees and action methods stay private without exposing TankAI internals
 - `VisionSystem` implements 360° enemy detection via `Physics2D.Linecast` per-target line-of-sight; `IVisionSystem` interface decouples it from `TankBlackboard` and `PlayerAutoAim` consumers ([#19](https://github.com/oussema-fatnassi/WarOfTanks/issues/19) ✅)
+- `CommanderAI` is a scene-level MonoBehaviour (not attached to a tank) that aggregates each tank's `EnemyResults` into a unified battlefield picture and dispatches `EStrategicOrder` directives every configurable interval (default 1s); `TankAI.ReceiveOrder()` + a root-level override `Selector` interleave commander orders on top of the role tree, with auto-clear on action success ([#23](https://github.com/oussema-fatnassi/WarOfTanks/issues/23) ✅)
+- `TankAI` path recovery now uses position-based stall detection backed by `Tank.GetBlockedCells()` with a static-only fallback — same primitive as the player's `MoveCommand`, eliminates spawn-queue deadlocks
 - The AI + tank system must remain a self-contained modular prefab (championship requirement)
 - Naming conventions: see `docs/naming-conventions.md` in the root repo

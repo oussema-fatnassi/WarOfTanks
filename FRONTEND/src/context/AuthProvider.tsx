@@ -29,10 +29,12 @@ const normalizePlayer = (player: LoginResponsePlayer): Player => ({
   id: player.id,
   username: player.username,
   email: player.email ?? '',
-  totalMatches: player.stats?.totalMatches ?? player.totalMatches ?? 0,
-  wins: player.stats?.wins ?? player.wins ?? 0,
-  losses: player.stats?.losses ?? player.losses ?? 0,
-  totalScore: player.stats?.totalScore ?? player.totalScore ?? 0,
+  stats: {
+    totalMatches: player.stats?.totalMatches ?? player.totalMatches ?? 0,
+    wins: player.stats?.wins ?? player.wins ?? 0,
+    losses: player.stats?.losses ?? player.losses ?? 0,
+    totalScore: player.stats?.totalScore ?? player.totalScore ?? 0,
+  },
 })
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
