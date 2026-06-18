@@ -64,6 +64,7 @@ npm run dev
 - ✅ [#4](https://github.com/oussema-fatnassi/WarOfTanks/issues/4) Unity Project Base Setup — scenes, input system, packages configured
 - ✅ [#5](https://github.com/oussema-fatnassi/WarOfTanks/issues/5) GitHub Actions - Backend CI — Go tests, race detector, coverage report, MongoDB service container
 - ✅ [#6](https://github.com/oussema-fatnassi/WarOfTanks/issues/6) GitHub Actions - Code Quality — ESLint + Prettier for frontend, golangci-lint for backend
+- ✅ [#7](https://github.com/oussema-fatnassi/WarOfTanks/issues/7) GitHub Actions - WebGL Build — `game-ci/unity-builder` workflow (`projectPath: UNITY`, Unity 2020.3.49f1, WebGL target), Library caching, artifact-shape verification, uploads `waroftanks-webgl-build` artifact; triggers on push to `main`, PRs touching `UNITY/**`, and manual dispatch; WebGL compression set to Disabled to match the working embed (merged to dev via PR #79)
 - ✅ [#24](https://github.com/oussema-fatnassi/WarOfTanks/issues/24) Backend Project Setup — Go + Gin + MongoDB + Docker running
 - ✅ [#54](https://github.com/oussema-fatnassi/WarOfTanks/issues/54) MongoDB Database Initialization — collections created, indexes applied, AI configs seeded (idempotent)
 
@@ -126,7 +127,7 @@ npm run dev
 
 | #                                                               | Title                                                    | Owner   | Priority | Status      |
 | --------------------------------------------------------------- | -------------------------------------------------------- | ------- | -------- | ----------- |
-| [#7](https://github.com/oussema-fatnassi/WarOfTanks/issues/7)   | GitHub Actions - WebGL Build                             | Oussema | Medium   | Not started |
+| [#7](https://github.com/oussema-fatnassi/WarOfTanks/issues/7)   | GitHub Actions - WebGL Build                             | Oussema | Medium   | ✅ Done      |
 | [#20](https://github.com/oussema-fatnassi/WarOfTanks/issues/20) | Fog of War (WebGL-Compatible)                            | Oussema | High     | ✅ Done      |
 | [#23](https://github.com/oussema-fatnassi/WarOfTanks/issues/23) | Commander AI                                             | Oussema | High     | ✅ Done      |
 | [#31](https://github.com/oussema-fatnassi/WarOfTanks/issues/31) | Leaderboard, Stats & Match History Pages                 | Oussema | High     | Not started |
