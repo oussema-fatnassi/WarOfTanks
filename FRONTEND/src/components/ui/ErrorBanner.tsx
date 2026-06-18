@@ -3,7 +3,7 @@ interface ErrorBannerProps {
 }
 
 const ErrorBanner = ({ message }: ErrorBannerProps) => (
-  <div className="mb-6 border border-[#ee6951]/40 bg-[#ee6951]/10 px-4 py-3 text-sm text-[#ee6951]">
+  <div className="mb-6 rounded-card border border-loss/40 bg-loss/10 px-4 py-3 text-sm text-loss">
     {message}
   </div>
 )
