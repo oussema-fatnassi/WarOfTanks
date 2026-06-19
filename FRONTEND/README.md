@@ -9,6 +9,17 @@ Web interface built with React + TypeScript (Vite). Handles player auth, leaderb
 
 ## How to Run
 
+### With Docker Compose (recommended)
+
+```bash
+# From the project root
+docker-compose up --build
+```
+
+The app will be available at `http://localhost:3000` (served by nginx).
+
+### Dev mode
+
 ```bash
 cd FRONTEND
 npm install
@@ -76,6 +87,7 @@ FRONTEND/
 | [#31](https://github.com/oussema-fatnassi/WarOfTanks/issues/31) | Leaderboard, Stats & Match History Pages                     | ✅ Done     |
 | [#32](https://github.com/oussema-fatnassi/WarOfTanks/issues/32) | WebGL Game Embed                                             | Not started |
 | [#6](https://github.com/oussema-fatnassi/WarOfTanks/issues/6)   | GitHub Actions - Code Quality (ESLint + Prettier)            | ✅ Done     |
+| [#33](https://github.com/oussema-fatnassi/WarOfTanks/issues/33) | Docker Compose - Full Stack                                  | ✅ Done     |
 
 ## Architecture Notes
 

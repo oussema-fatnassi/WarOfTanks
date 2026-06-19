@@ -39,14 +39,17 @@ WarOfTanks/
 
 See [UNITY/README.md](UNITY/README.md)
 
-### Backend
+### Full Stack (Docker)
 
 ```bash
-cd BACKEND
+cp BACKEND/.env.example BACKEND/.env   # then edit secrets
 docker-compose up --build
 ```
 
-### Frontend
+- Frontend: http://localhost:3000
+- Backend: http://localhost:8080
+
+### Frontend (dev mode)
 
 ```bash
 cd FRONTEND
@@ -105,6 +108,7 @@ npm run dev
 
 ### Sprint 5 — Integration & Delivery
 
+- ✅ [#33](https://github.com/oussema-fatnassi/WarOfTanks/issues/33) Docker Compose - Full Stack — `docker-compose.yml` with 3 services (MongoDB with healthcheck, Go backend with healthcheck, React frontend via nginx), multi-stage Dockerfiles, persistent volume, SPA routing via nginx
 - ✅ [#23](https://github.com/oussema-fatnassi/WarOfTanks/issues/23) Commander AI — scene-level `CommanderAI` MonoBehaviour aggregating per-tank vision into a unified battlefield picture, evaluation tick every 1s, 7-scenario decision cascade (outnumbered fallback, contested zone, neutral, winning lead, losing-urgent, losing-general, default) dispatching `EStrategicOrder` (NONE / CAPTUREZONE / DEFENDZONE / FULLAGGRESSION / FALLBACK); `TankAI.ReceiveOrder()` + root-level override `Selector` so role trees are temporarily overridden with auto-clear on success; bundled AI-pathfinding fix replacing the coroutine block handler with position-based stall detection + `Tank.GetBlockedCells()` + static-only fallback (same primitive as `MoveCommand`), fixes deadlocks at spawn
 
 ## In Progress / Remaining
@@ -132,7 +136,7 @@ npm run dev
 | [#23](https://github.com/oussema-fatnassi/WarOfTanks/issues/23) | Commander AI                                             | Oussema | High     | ✅ Done      |
 | [#31](https://github.com/oussema-fatnassi/WarOfTanks/issues/31) | Leaderboard, Stats & Match History Pages                 | Oussema | High     | Not started |
 | [#32](https://github.com/oussema-fatnassi/WarOfTanks/issues/32) | WebGL Game Embed                                         | Oussema | High     | Not started |
-| [#33](https://github.com/oussema-fatnassi/WarOfTanks/issues/33) | Docker Compose - Full Stack                              | Kamelia | High     | Not started |
+| [#33](https://github.com/oussema-fatnassi/WarOfTanks/issues/33) | Docker Compose - Full Stack                              | Kamelia | High     | ✅ Done     |
 | [#34](https://github.com/oussema-fatnassi/WarOfTanks/issues/34) | Deploy Backend to Render                                 | Kamelia | Medium   | Not started |
 | [#36](https://github.com/oussema-fatnassi/WarOfTanks/issues/36) | Presentation Slides                                      | All     | High     | Not started |
 | [#47](https://github.com/oussema-fatnassi/WarOfTanks/issues/47) | UI Mockups - Figma (Zoning, Wireframe, Hi-fi, Prototype) | Oussema | High     | Not started |

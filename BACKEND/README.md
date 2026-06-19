@@ -8,21 +8,33 @@ REST API built with Go + Gin, backed by MongoDB, containerized with Docker.
 
 ## How to Run
 
+### With Docker Compose (recommended)
+
+```bash
+# From the project root
+cp BACKEND/.env.example BACKEND/.env   # then edit secrets
+docker-compose up --build
+```
+
+### Standalone
+
 ```bash
 cd BACKEND
-docker-compose up --build
+go run ./cmd/main.go
 ```
 
 The API will be available at `http://localhost:8080`.
 
 ## Environment Variables
 
-| Variable     | Description                       |
-| ------------ | --------------------------------- |
-| `MONGO_URI`  | MongoDB connection string         |
-| `JWT_SECRET` | Secret key for signing JWT tokens |
-| `PORT`       | Server port (default: 8080)       |
-| `FRONTEND_ORIGIN` | Frontend URL allowed by CORS, defaults to `http://localhost:5173` |
+| Variable             | Description                                          |
+| -------------------- | ---------------------------------------------------- |
+| `MONGODB_URI`        | MongoDB connection string (`mongodb://mongo:27017` in Docker) |
+| `MONGODB_DB_NAME`    | Database name (default: `waroftanks`)                |
+| `JWT_SECRET`         | Secret key for signing access tokens                 |
+| `JWT_REFRESH_SECRET` | Secret key for signing refresh tokens                |
+| `PORT`               | Server port (default: `8080`)                        |
+| `FRONTEND_ORIGIN`    | Frontend URL allowed by CORS (`http://localhost:3000` in Docker) |
 
 Create a `.env` file in `BACKEND/` with these values before running.
 
@@ -75,6 +87,7 @@ The CI pipeline starts MongoDB 7 with a single-node replica set before running `
 | [#27](https://github.com/oussema-fatnassi/WarOfTanks/issues/27) | Player & Match Routes                                              | ✅ Done     |
 | [#28](https://github.com/oussema-fatnassi/WarOfTanks/issues/28) | Backend Unit Tests & CI Integration                                | ✅ Done     |
 | [#5](https://github.com/oussema-fatnassi/WarOfTanks/issues/5)   | GitHub Actions - Backend CI                                        | ✅ Done     |
+| [#33](https://github.com/oussema-fatnassi/WarOfTanks/issues/33) | Docker Compose - Full Stack                                        | ✅ Done     |
 
 ## Architecture Notes
 
