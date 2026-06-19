@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using WarOfTanks.AI;
 using WarOfTanks.Enums;
 
@@ -49,7 +50,28 @@ public class FogOfWarManager : MonoBehaviour
         }
     }
 
-    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
+    /// <summary>
+    /// Registers the scene-load bootstrap once per Play Mode session. A runtime initializer only
+    /// runs for the initial scene, so relying on AfterSceneLoad alone leaves reloaded matches
+    /// without a fog manager after the original scene object is destroyed.
+    /// </summary>
+    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+    private static void RegisterSceneLoadBootstrap()
+    {
+        Instance = null;
+        SceneManager.sceneLoaded -= OnSceneLoaded;
+        SceneManager.sceneLoaded += OnSceneLoaded;
+    }
+
+    private static void OnSceneLoaded(Scene scene, LoadSceneMode loadMode)
+    {
+        // Do not create fog infrastructure in non-gameplay scenes such as MainMenu.
+        if (FindObjectOfType<GameManager>() == null)
+            return;
+
+        EnsureSceneManagerExists();
+    }
+
     private static void EnsureSceneManagerExists()
     {
         if (FindObjectOfType<FogOfWarManager>() != null)
