@@ -1,0 +1,259 @@
+fileFormatVersion: 2
+guid: 10905e2527c694495acd9cf5aacb2e3b
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 8717303707198913350
+    second: Terrain_Unwalkable_0
+  - first:
+      213: 3552916564398196685
+    second: Terrain_Unwalkable_1
+  - first:
+      213: -1764239855146285115
+    second: Terrain_Unwalkable_2
+  - first:
+      213: -5895293901610249271
+    second: Terrain_Unwalkable_3
+  - first:
+      213: 6566202194931757725
+    second: Terrain_Unwalkable_4
+  - first:
+      213: 2338690701259130562
+    second: Terrain_Unwalkable_5
+  - first:
+      213: 8894461764169727881
+    second: Terrain_Unwalkable_6
+  - first:
+      213: -7408408096001079554
+    second: Terrain_Unwalkable_7
+  - first:
+      213: -5125331136911212995
+    second: Terrain_Unwalkable_8
+  - first:
+      213: 549794449842320660
+    second: Terrain_Unwalkable_9
+  - first:
+      213: -7342184483995915297
+    second: Terrain_Unwalkable_10
+  - first:
+      213: -1230907947348307033
+    second: Terrain_Unwalkable_11
+  - first:
+      213: -5683491804118187574
+    second: Terrain_Unwalkable_12
+  - first:
+      213: -8476469883765479515
+    second: Terrain_Unwalkable_13
+  - first:
+      213: -3483297503857578972
+    second: Terrain_Unwalkable_14
+  - first:
+      213: -5922941748346427075
+    second: Terrain_Unwalkable_15
+  - first:
+      213: -868024367439132577
+    second: Terrain_Unwalkable_16
+  - first:
+      213: 126159022789886630
+    second: Terrain_Unwalkable_17
+  - first:
+      213: 5406701445690240980
+    second: Terrain_Unwalkable_18
+  - first:
+      213: -6110257976734222358
+    second: Terrain_Unwalkable_19
+  - first:
+      213: -1170669041655519642
+    second: Terrain_Unwalkable_20
+  - first:
+      213: -6758246171058789005
+    second: Terrain_Unwalkable_21
+  - first:
+      213: 237204809306218314
+    second: Terrain_Unwalkable_22
+  - first:
+      213: -4721803682957956744
+    second: Terrain_Unwalkable_23
+  - first:
+      213: 4072077819651285461
+    second: Terrain_Unwalkable_24
+  externalObjects: {}
+  serializedVersion: 12
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 200
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 3
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Terrain_Unwalkable_0
+      rect:
+        serializedVersion: 2
+        x: 46
+        y: 1014
+        width: 175
+        height: 176
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 64b79c219851af870800000000000000
+      internalID: 8717303707198913350
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Terrain_Unwalkable_13
+      rect:
+        serializedVersion: 2
+        x: 753
+        y: 561
+        width: 166
+        height: 161
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5a7acdc0d878d5a80800000000000000
+      internalID: -8476469883765479515
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Terrain_Unwalkable_22
+      rect:
+        serializedVersion: 2
+        x: 496
+        y: 78
+        width: 200
+        height: 179
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a4f16bd6488ba4300800000000000000
+      internalID: 237204809306218314
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    physicsShape: []
+    bones: []
+    spriteID: 5e97eb03825dee720800000000000000
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+  spritePackingTag: 
+  pSDRemoveMatte: 0
+  pSDShowRemoveMatteOption: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
