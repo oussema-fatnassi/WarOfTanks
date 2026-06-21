@@ -23,6 +23,10 @@ public class GameManager : SingletonBehaviour<GameManager>
     [SerializeField] private GameObject _pausePanel;
     [SerializeField] private GameOverScreen _gameOverScreen;
     [SerializeField] private PlayerInputHandler _playerInputHandler;
+    [SerializeField] private MatchResultSender _matchResultSender;
+
+    [Header("Backend")]
+    [SerializeField] private string _apiBaseUrl = "http://localhost:8080";
 
     private TeamManager _teamManager;
     private ScoreManager _scoreManager;
@@ -147,7 +151,26 @@ public class GameManager : SingletonBehaviour<GameManager>
     public int GetScore(int teamId) { return _scoreManager.GetScore(teamId); }
     public float GetRemainingTime() { return _matchTimer.RemainingTime; }
     public void SetPauseUI(bool active) { _pausePanel.SetActive(active); }
-    public void ShowGameOver() { _gameOverScreen.Show(GetWinner(), GetScore(0), GetScore(1)); }
+    public void ShowGameOver()
+    {
+        _gameOverScreen.Show(GetWinner(), GetScore(0), GetScore(1));
+        SendMatchResult();
+    }
     public void SetInputEnabled(bool enabled) { _playerInputHandler.enabled = enabled; }
+
+    private void SendMatchResult()
+    {
+        if (_matchResultSender == null) return;
+
+        var payload = new MatchResultPayload
+        {
+            winnerTeam = GetWinner() == 0 ? 1 : 2,
+            playerScore = GetScore(0),
+            aiScore = GetScore(1),
+            duration = _matchTimer.Elapsed
+        };
+
+        _matchResultSender.Send(payload, _apiBaseUrl);
+    }
     #endregion
 }
