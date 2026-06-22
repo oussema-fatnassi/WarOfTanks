@@ -116,6 +116,7 @@ npm run dev
 - ✅ [#73](https://github.com/oussema-fatnassi/WarOfTanks/issues/73) Unity — Post Match Result to Backend on Game Over — `MatchResultPayload` data class, `MatchResultSender` MonoBehaviour (fire-and-forget coroutine via `UnityWebRequest`), `AuthToken` static token store, `GameManager.SendMatchResult()` wired into `ShowGameOver()`; Bearer token header, 201/401/error handling; Docker Compose updated to MongoDB replica set (`--replSet rs0` + auto-init healthcheck) for transaction support
 - ✅ [#34](https://github.com/oussema-fatnassi/WarOfTanks/issues/34) Deploy Backend to Render — `render.yaml` Blueprint (Docker web service, `healthCheckPath /health`, auto-deploy from `main` on `checksPass`, secrets via `sync: false` / `generateValue: true`); root `GET /health` endpoint; CORS generalized to a comma-separated `ALLOWED_ORIGINS` allow-list with `FRONTEND_ORIGIN`/local fallbacks; `JWT_REFRESH_SECRET` now required and `PORT` defaulted; frontend `vercel.json` (SPA rewrites) + `DEPLOYMENT.md` guide (merged to dev via PR #88 — Render/Atlas dashboard setup pending)
 - ✅ [#47](https://github.com/oussema-fatnassi/WarOfTanks/issues/47) UI Mockups - Figma (Zoning, Wireframe, Hi-fi, Prototype) — Figma design deliverables completed
+- ✅ [#32](https://github.com/oussema-fatnassi/WarOfTanks/issues/32) WebGL Game Embed — Unity build embedded on the `/play` route (auth-protected); Vercel `prebuild` pulls the latest `waroftanks-webgl-build` release artifact into `public/UnityBuild/` (build stays git-ignored); React passes the production API URL + JWT into the iframe via a same-origin `postMessage` bridge so the game authenticates and posts match results against the deployed backend
 
 ## In Progress / Remaining
 
@@ -129,7 +130,6 @@ npm run dev
 
 | #                                                               | Title                                    | Owner   | Priority | Status      |
 | --------------------------------------------------------------- | ---------------------------------------- | ------- | -------- | ----------- |
-| [#32](https://github.com/oussema-fatnassi/WarOfTanks/issues/32) | WebGL Game Embed                         | Oussema | High     | In progress |
 | [#36](https://github.com/oussema-fatnassi/WarOfTanks/issues/36) | Presentation Slides                      | All     | High     | Not started |
 | [#66](https://github.com/oussema-fatnassi/WarOfTanks/issues/66) | Refactor: GameManager SOLID improvements | Oussema | Low      | Not started |
 

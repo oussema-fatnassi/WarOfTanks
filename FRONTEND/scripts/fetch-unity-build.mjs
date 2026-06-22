@@ -76,6 +76,21 @@ async function installWebClientBridge(indexPath) {
   )
 
   const bridgeScript = `
+    <style>
+      html, body {
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        overflow: hidden;
+        background: #0b0e13;
+      }
+
+      #unity-canvas {
+        display: block;
+        width: 100% !important;
+        height: 100% !important;
+      }
+    </style>
     <script>
       window.addEventListener('message', function (event) {
         if (
