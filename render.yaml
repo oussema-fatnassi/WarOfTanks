@@ -8,9 +8,9 @@ services:
     name: waroftanks-backend
     runtime: docker
     rootDir: BACKEND
-    # Render resolves these paths from the repository root, not rootDir.
-    dockerfilePath: ./BACKEND/Dockerfile
-    dockerContext: ./BACKEND
+    # In this Blueprint, Docker paths are resolved relative to rootDir.
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
     plan: free
     region: frankfurt
     # Production deploys from main after dev is promoted through a PR.
