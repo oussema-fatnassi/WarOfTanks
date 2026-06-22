@@ -1,4 +1,4 @@
-import { mkdir, mkdtemp, rm, stat, writeFile } from 'node:fs/promises'
+import { mkdir, mkdtemp, readFile, rm, stat, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { spawnSync } from 'node:child_process'
@@ -7,9 +7,10 @@ import { fileURLToPath } from 'node:url'
 const repository =
   process.env.UNITY_RELEASE_REPOSITORY ?? 'oussema-fatnassi/WarOfTanks'
 const assetName = 'waroftanks-webgl-build.tar.gz'
-const releaseApiUrl =
-  process.env.UNITY_RELEASE_API_URL ??
-  `https://api.github.com/repos/${repository}/releases/latest`
+const bridgeMarker = 'wot:web-client-config'
+const assetDownloadUrl =
+  process.env.UNITY_RELEASE_ASSET_URL ??
+  `https://github.com/${repository}/releases/latest/download/${assetName}`
 const outputPath =
   process.env.UNITY_BUILD_OUTPUT_PATH ??
   fileURLToPath(new URL('../public/UnityBuild/', import.meta.url))
@@ -21,38 +22,17 @@ if (process.env.VERCEL !== '1' && process.env.FETCH_UNITY_BUILD !== '1') {
   process.exit(0)
 }
 
-const releaseResponse = await fetch(releaseApiUrl, {
-  headers: {
-    Accept: 'application/vnd.github+json',
-    'User-Agent': 'WarOfTanks-Vercel-Build',
-    'X-GitHub-Api-Version': '2022-11-28',
-  },
-})
-
-if (!releaseResponse.ok) {
+const archiveResponse = await fetch(assetDownloadUrl)
+if (!archiveResponse.ok) {
   if (process.env.VERCEL_ENV === 'preview') {
     console.warn(
-      `Unity release is not available yet (${releaseResponse.status}); continuing with the frontend preview only.`,
+      `Unity release is not available yet (${archiveResponse.status}); continuing with the frontend preview only.`,
     )
     process.exit(0)
   }
 
   throw new Error(
-    `Unable to find the latest Unity release (${releaseResponse.status}). Run the WebGL Build workflow on main first.`,
-  )
-}
-
-const release = await releaseResponse.json()
-const asset = release.assets?.find((candidate) => candidate.name === assetName)
-
-if (!asset?.browser_download_url) {
-  throw new Error(`Latest GitHub Release does not contain ${assetName}.`)
-}
-
-const archiveResponse = await fetch(asset.browser_download_url)
-if (!archiveResponse.ok) {
-  throw new Error(
-    `Unable to download ${assetName} (${archiveResponse.status}).`,
+    `Unable to download the latest Unity release (${archiveResponse.status}). Run the WebGL Build workflow on main first.`,
   )
 }
 
@@ -74,8 +54,58 @@ try {
     )
   }
 
-  await stat(join(outputPath, 'index.html'))
-  console.log(`Installed Unity ${release.tag_name} into public/UnityBuild.`)
+  const indexPath = join(outputPath, 'index.html')
+  await stat(indexPath)
+  await installWebClientBridge(indexPath)
+  console.log('Installed the latest Unity release into public/UnityBuild.')
 } finally {
   await rm(temporaryDirectory, { recursive: true, force: true })
+}
+
+async function installWebClientBridge(indexPath) {
+  let html = await readFile(indexPath, 'utf8')
+  if (html.includes(bridgeMarker)) return
+
+  if (!html.includes('createUnityInstance(') || !html.includes('</body>')) {
+    throw new Error('Unity index.html has an unsupported template shape.')
+  }
+
+  html = html.replace(
+    'createUnityInstance(',
+    'window.warOfTanksUnityInstancePromise = createUnityInstance(',
+  )
+
+  const bridgeScript = `
+    <script>
+      window.addEventListener('message', function (event) {
+        if (
+          event.origin !== window.location.origin ||
+          event.source !== window.parent ||
+          !event.data ||
+          event.data.type !== '${bridgeMarker}'
+        ) return;
+
+        window.warOfTanksUnityInstancePromise.then(function (unityInstance) {
+          unityInstance.SendMessage(
+            'GameManager',
+            'ConfigureWebClient',
+            JSON.stringify({
+              apiBaseUrl: event.data.apiBaseUrl || '',
+              accessToken: event.data.accessToken || ''
+            })
+          );
+        });
+      });
+
+      window.warOfTanksUnityInstancePromise.then(function () {
+        window.parent.postMessage(
+          { type: 'wot:unity-ready' },
+          window.location.origin
+        );
+      });
+    </script>
+  `
+
+  html = html.replace('</body>', `${bridgeScript}\n  </body>`)
+  await writeFile(indexPath, html)
 }

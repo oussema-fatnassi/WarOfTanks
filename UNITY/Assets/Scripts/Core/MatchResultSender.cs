@@ -20,6 +20,7 @@ public class MatchResultSender : MonoBehaviour
         using var request = new UnityWebRequest(url, UnityWebRequest.kHttpVerbPOST);
         request.uploadHandler = new UploadHandlerRaw(Encoding.UTF8.GetBytes(json));
         request.downloadHandler = new DownloadHandlerBuffer();
+        request.timeout = 10;
         request.SetRequestHeader("Content-Type", "application/json");
 
         if (!string.IsNullOrEmpty(AuthToken.AccessToken))

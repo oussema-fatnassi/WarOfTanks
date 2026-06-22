@@ -96,5 +96,6 @@ FRONTEND/
   On Vercel, `npm run prebuild` downloads and extracts the latest
   `waroftanks-webgl-build.tar.gz` GitHub Release asset into
   `public/UnityBuild/`; generated build files remain ignored by Git.
-- JWT is passed from React into the Unity runtime via the Unity JSLib bridge for authenticated API calls.
+- React passes the production API URL and current JWT to the Unity iframe through
+  a same-origin `postMessage` bridge injected into the downloaded WebGL page.
 - Naming conventions: see `docs/naming-conventions.md` in the root repo.

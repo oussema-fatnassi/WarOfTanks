@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using WarOfTanks.StateMachine;
@@ -10,6 +11,13 @@ using WarOfTanks.Zone;
 /// </summary>
 public class GameManager : SingletonBehaviour<GameManager>
 {
+    [Serializable]
+    private class WebClientConfig
+    {
+        public string apiBaseUrl = string.Empty;
+        public string accessToken = string.Empty;
+    }
+
     [Header("Debug")]
     [SerializeField] private bool _enableLogs = false;
     [SerializeField] private List<Tank> _allTanks = new List<Tank>();
@@ -41,6 +49,11 @@ public class GameManager : SingletonBehaviour<GameManager>
     protected override void Awake()
     {
         base.Awake();
+#if UNITY_WEBGL && !UNITY_EDITOR
+        // The deployed frontend supplies its Render API URL after the WebGL
+        // runtime loads. Never fall back to a visitor's localhost in production.
+        _apiBaseUrl = string.Empty;
+#endif
         ApplyDebugSettings();
         // Apply player-configured match specs (defaults match the Inspector, so unchanged unless edited).
         _matchDuration = MatchSettings.MatchDuration;
@@ -158,9 +171,28 @@ public class GameManager : SingletonBehaviour<GameManager>
     }
     public void SetInputEnabled(bool enabled) { _playerInputHandler.enabled = enabled; }
 
+    /// <summary>
+    /// Receives the production API URL and current JWT from the parent React app.
+    /// Called by the injected WebGL page bridge after Unity finishes loading.
+    /// </summary>
+    public void ConfigureWebClient(string json)
+    {
+        WebClientConfig config = JsonUtility.FromJson<WebClientConfig>(json);
+        if (config == null) return;
+
+        _apiBaseUrl = config.apiBaseUrl?.TrimEnd('/');
+        AuthToken.AccessToken = config.accessToken;
+        Debug.Log("[GameManager] Web client configuration received");
+    }
+
     private void SendMatchResult()
     {
         if (_matchResultSender == null) return;
+        if (string.IsNullOrWhiteSpace(_apiBaseUrl))
+        {
+            Debug.LogWarning("[GameManager] Match result not sent: API URL is not configured");
+            return;
+        }
 
         var payload = new MatchResultPayload
         {

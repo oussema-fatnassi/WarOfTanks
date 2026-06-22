@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { client } from '../api/client'
 import { useAuth } from '../hooks/useAuth'
@@ -13,19 +13,53 @@ import ResultBadge from '../components/ui/ResultBadge'
 const UNITY_BUILD_URL = '/UnityBuild/index.html'
 
 /** Hosts the Unity WebGL build inside the tactical viewport. */
-const GameViewport = () => (
-  <div className="rounded-card border-line relative min-h-[460px] overflow-hidden border bg-[#0b0e13] lg:min-h-[640px]">
-    <iframe
-      title="War of Tanks"
-      src={UNITY_BUILD_URL}
-      className="absolute inset-0 h-full w-full border-0"
-      allow="fullscreen; autoplay; gamepad"
-    />
-  </div>
-)
+const GameViewport = ({ accessToken }: { accessToken: string | null }) => {
+  const iframeRef = useRef<HTMLIFrameElement>(null)
+
+  useEffect(() => {
+    const sendConfiguration = () => {
+      iframeRef.current?.contentWindow?.postMessage(
+        {
+          type: 'wot:web-client-config',
+          apiBaseUrl: import.meta.env.VITE_API_URL ?? '',
+          accessToken: accessToken ?? '',
+        },
+        window.location.origin,
+      )
+    }
+
+    const handleMessage = (event: MessageEvent) => {
+      if (
+        event.origin !== window.location.origin ||
+        event.source !== iframeRef.current?.contentWindow ||
+        event.data?.type !== 'wot:unity-ready'
+      ) {
+        return
+      }
+
+      sendConfiguration()
+    }
+
+    window.addEventListener('message', handleMessage)
+    sendConfiguration()
+    return () => window.removeEventListener('message', handleMessage)
+  }, [accessToken])
+
+  return (
+    <div className="rounded-card border-line relative min-h-[460px] overflow-hidden border bg-[#0b0e13] lg:min-h-[640px]">
+      <iframe
+        ref={iframeRef}
+        title="War of Tanks"
+        src={UNITY_BUILD_URL}
+        className="absolute inset-0 h-full w-full border-0"
+        allow="fullscreen; autoplay; gamepad"
+      />
+    </div>
+  )
+}
 
 const GamePage = () => {
-  const { player } = useAuth()
+  const { player, accessToken } = useAuth()
   const navigate = useNavigate()
   const [lastMatch, setLastMatch] = useState<Match | null>(null)
 
@@ -41,7 +75,7 @@ const GamePage = () => {
   return (
     <PageContainer>
       <div className="grid gap-6 lg:grid-cols-[1fr_340px]">
-        <GameViewport />
+        <GameViewport accessToken={accessToken} />
 
         <aside className="flex flex-col gap-4">
           <Panel header="Pilot">
