@@ -97,12 +97,6 @@ async function installWebClientBridge(indexPath) {
         });
       });
 
-      window.warOfTanksUnityInstancePromise.then(function () {
-        window.parent.postMessage(
-          { type: 'wot:unity-ready' },
-          window.location.origin
-        );
-      });
     </script>
   `
 

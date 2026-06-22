@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 using UnityEngine;
 using WarOfTanks.StateMachine;
 using WarOfTanks.Zone;
@@ -11,6 +12,11 @@ using WarOfTanks.Zone;
 /// </summary>
 public class GameManager : SingletonBehaviour<GameManager>
 {
+#if UNITY_WEBGL && !UNITY_EDITOR
+    [DllImport("__Internal")]
+    private static extern void WOT_RequestWebClientConfig();
+#endif
+
     [Serializable]
     private class WebClientConfig
     {
@@ -78,6 +84,12 @@ public class GameManager : SingletonBehaviour<GameManager>
         _stateMachine = new GameStateMachine(this);
         _gameOverScreen.Hide();
         _pausePanel.SetActive(false);
+
+#if UNITY_WEBGL && !UNITY_EDITOR
+        // The build starts in MainMenu, before this GameManager exists. Request
+        // the parent configuration now that the Game scene can receive it.
+        WOT_RequestWebClientConfig();
+#endif
     }
     private void Update()
     {
