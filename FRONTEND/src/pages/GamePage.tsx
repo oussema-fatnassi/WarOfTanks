@@ -87,7 +87,7 @@ const GameViewport = ({ accessToken }: { accessToken: string | null }) => {
       <button
         type="button"
         onClick={toggleFullscreen}
-        className="border-line bg-panel/90 text-muted hover:border-win hover:text-fg absolute top-3 right-3 z-10 flex items-center gap-2 rounded border px-3 py-2 font-mono text-[11px] uppercase tracking-[0.08em] backdrop-blur transition-colors"
+        className="border-line bg-panel/90 text-muted hover:border-win hover:text-fg absolute top-3 right-3 z-10 flex items-center gap-2 rounded border px-3 py-2 font-mono text-[11px] tracking-[0.08em] uppercase backdrop-blur transition-colors"
         aria-label={isFullscreen ? 'Exit fullscreen' : 'Enter fullscreen'}
       >
         {isFullscreen ? (
@@ -183,7 +183,7 @@ const GamePage = () => {
                 <span className="text-win">5</span> captures wins the round.
               </p>
               <div className="border-line border-t px-[18px] py-4">
-                <h3 className="text-dim mb-3 font-mono text-[10px] uppercase tracking-[0.16em]">
+                <h3 className="text-dim mb-3 font-mono text-[10px] tracking-[0.16em] uppercase">
                   Controls
                 </h3>
                 <dl className="flex flex-col gap-2.5">
