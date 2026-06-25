@@ -48,6 +48,10 @@ func (h *MatchHandler) SaveMatch(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "winnerTeam is required"})
 		return
 	}
+	if errMsg := validateSaveMatchRequest(req); errMsg != "" {
+		c.JSON(http.StatusBadRequest, gin.H{"error": errMsg})
+		return
+	}
 
 	playerIDStr := c.GetString(middleware.PlayerIDKey)
 	playerID, err := bson.ObjectIDFromHex(playerIDStr)
@@ -118,6 +122,22 @@ func (h *MatchHandler) SaveMatch(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusCreated, match)
+}
+
+func validateSaveMatchRequest(req SaveMatchRequest) string {
+	if req.WinnerTeam != 1 && req.WinnerTeam != 2 {
+		return "winnerTeam must be 1 or 2"
+	}
+	if req.PlayerScore < 0 {
+		return "playerScore must be greater than or equal to 0"
+	}
+	if req.AIScore < 0 {
+		return "aiScore must be greater than or equal to 0"
+	}
+	if req.Duration < 0 {
+		return "duration must be greater than or equal to 0"
+	}
+	return ""
 }
 
 // GetMatches godoc

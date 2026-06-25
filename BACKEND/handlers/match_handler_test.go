@@ -100,6 +100,65 @@ func TestSaveMatch_BadRequest_MissingWinnerTeam(t *testing.T) {
 	}
 }
 
+func TestSaveMatch_BadRequest_InvalidPayloadValues(t *testing.T) {
+	db, client := setupTestDBWithClient(t)
+	r, jwtSvc := setupMatchRouter(db, client)
+
+	token, _ := jwtSvc.GenerateAccessToken(bson.NewObjectID().Hex(), "player1")
+
+	tests := []struct {
+		name string
+		body map[string]interface{}
+	}{
+		{
+			name: "invalid winner team",
+			body: map[string]interface{}{
+				"winnerTeam":  3,
+				"playerScore": 10,
+				"aiScore":     5,
+				"duration":    90,
+			},
+		},
+		{
+			name: "negative player score",
+			body: map[string]interface{}{
+				"winnerTeam":  1,
+				"playerScore": -1,
+				"aiScore":     5,
+				"duration":    90,
+			},
+		},
+		{
+			name: "negative ai score",
+			body: map[string]interface{}{
+				"winnerTeam":  1,
+				"playerScore": 10,
+				"aiScore":     -1,
+				"duration":    90,
+			},
+		},
+		{
+			name: "negative duration",
+			body: map[string]interface{}{
+				"winnerTeam":  1,
+				"playerScore": 10,
+				"aiScore":     5,
+				"duration":    -0.1,
+			},
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			w := authPost(r, "/api/v1/matches", tt.body, token)
+
+			if w.Code != http.StatusBadRequest {
+				t.Fatalf("expected 400, got %d: %s", w.Code, w.Body.String())
+			}
+		})
+	}
+}
+
 func TestSaveMatch_RequiresAuth(t *testing.T) {
 	db, client := setupTestDBWithClient(t)
 	r, _ := setupMatchRouter(db, client)

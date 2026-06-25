@@ -83,6 +83,73 @@ test.describe('match API contract', () => {
     expect(player.stats.totalScore).toBe(0)
   })
 
+  test('rejects invalid match result values without changing stats', async ({
+    request,
+  }) => {
+    const user = createE2EUser()
+    await registerWithApi(request, user)
+    const accessToken = await loginWithApi(request, user)
+
+    const invalidPayloads = [
+      {
+        name: 'invalid winner team',
+        data: {
+          winnerTeam: 3,
+          playerScore: 10,
+          aiScore: 5,
+          duration: 90,
+        },
+      },
+      {
+        name: 'negative player score',
+        data: {
+          winnerTeam: 1,
+          playerScore: -1,
+          aiScore: 5,
+          duration: 90,
+        },
+      },
+      {
+        name: 'negative AI score',
+        data: {
+          winnerTeam: 1,
+          playerScore: 10,
+          aiScore: -1,
+          duration: 90,
+        },
+      },
+      {
+        name: 'negative duration',
+        data: {
+          winnerTeam: 1,
+          playerScore: 10,
+          aiScore: 5,
+          duration: -0.1,
+        },
+      },
+    ]
+
+    for (const payload of invalidPayloads) {
+      const response = await request.post(`${apiURL}/api/v1/matches`, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+        data: payload.data,
+      })
+
+      expect(
+        response.status(),
+        `${payload.name}: ${await response.text()}`,
+      ).toBe(400)
+    }
+
+    const player = await getCurrentPlayer(request, accessToken)
+    expect(player.stats.wins).toBe(0)
+    expect(player.stats.losses).toBe(0)
+    expect(player.stats.totalMatches).toBe(0)
+    expect(player.stats.totalScore).toBe(0)
+  })
+
   test('returns only the authenticated player match history', async ({
     request,
   }) => {
