@@ -6,6 +6,13 @@ export interface E2EUser {
   password: string
 }
 
+export interface MatchResult {
+  winnerTeam: 1 | 2
+  playerScore: number
+  aiScore: number
+  duration: number
+}
+
 export const apiURL = process.env.E2E_API_URL ?? 'http://localhost:8080'
 
 export const createE2EUser = (): E2EUser => {
@@ -31,6 +38,40 @@ export const registerWithApi = async (
       email: user.email,
       password: user.password,
     },
+  })
+
+  expect(response.status(), await response.text()).toBe(201)
+}
+
+export const loginWithApi = async (
+  request: APIRequestContext,
+  user: E2EUser,
+) => {
+  const response = await request.post(`${apiURL}/api/v1/auth/login`, {
+    data: {
+      username: user.username,
+      password: user.password,
+    },
+  })
+
+  expect(response.status(), await response.text()).toBe(200)
+
+  const body = (await response.json()) as { accessToken: string }
+  expect(body.accessToken).toBeTruthy()
+
+  return body.accessToken
+}
+
+export const saveMatchWithApi = async (
+  request: APIRequestContext,
+  accessToken: string,
+  result: MatchResult,
+) => {
+  const response = await request.post(`${apiURL}/api/v1/matches`, {
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
+    data: result,
   })
 
   expect(response.status(), await response.text()).toBe(201)
