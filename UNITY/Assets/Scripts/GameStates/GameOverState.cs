@@ -16,6 +16,7 @@ public class GameOverState : State<GameManager>
         Time.timeScale = 0f;
         Context.SetInputEnabled(false);
         Context.ShowGameOver();
+        Context.SendMatchResult();
     }
     protected override void Exit() { }
 }

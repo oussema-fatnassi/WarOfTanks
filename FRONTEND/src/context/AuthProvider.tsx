@@ -1,4 +1,4 @@
-import { setAccessToken as storeSetAccessToken } from '../auth/tokenStore'
+import { setAccessToken as storeSetAccessToken, getAccessToken } from '../auth/tokenStore'
 import { useState, type ReactNode } from 'react'
 import { AuthContext } from './AuthContext'
 import { client } from '../api/client'
@@ -39,7 +39,7 @@ const normalizePlayer = (player: LoginResponsePlayer): Player => ({
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [player, setPlayer] = useState<Player | null>(null)
-  const [accessToken, setAccessToken] = useState<string | null>(null)
+  const [accessToken, setAccessToken] = useState<string | null>(getAccessToken)
 
   const handleSetAccessToken = (token: string | null) => {
     storeSetAccessToken(token)

@@ -51,7 +51,7 @@ func main() {
 	// Initialize handlers
 	authHandler := handlers.NewAuthHandler(db, jwtSvc)
 	playerHandler := handlers.NewPlayerHandler(db)
-	matchHandler := handlers.NewMatchHandler(db, client)
+	matchHandler := handlers.NewMatchHandler(db)
 
 	// Initialize Gin router
 	r := gin.Default()

@@ -1,7 +1,6 @@
 package handlers
 
 import (
-	"context"
 	"net/http"
 	"strconv"
 	"time"
@@ -18,14 +17,12 @@ import (
 type MatchHandler struct {
 	matches *mongo.Collection
 	players *mongo.Collection
-	client  *mongo.Client
 }
 
-func NewMatchHandler(db *mongo.Database, client *mongo.Client) *MatchHandler {
+func NewMatchHandler(db *mongo.Database) *MatchHandler {
 	return &MatchHandler{
 		matches: db.Collection("matches"),
 		players: db.Collection("players"),
-		client:  client,
 	}
 }
 
@@ -79,41 +76,22 @@ func (h *MatchHandler) SaveMatch(c *gin.Context) {
 
 	ctx := c.Request.Context()
 
-	session, err := h.client.StartSession()
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "could not start session"})
+	if _, err := h.matches.InsertOne(ctx, match); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "could not save match"})
 		return
 	}
-	defer session.EndSession(ctx)
 
-	err = mongo.WithSession(ctx, session, func(sc context.Context) error {
-		if err := session.StartTransaction(); err != nil {
-			return err
-		}
+	statsUpdate := bson.D{{Key: "$inc", Value: bson.D{
+		{Key: "stats.wins", Value: winsInc},
+		{Key: "stats.losses", Value: lossesInc},
+		{Key: "stats.totalMatches", Value: 1},
+		{Key: "stats.totalScore", Value: float64(req.PlayerScore)},
+	}}, {Key: "$set", Value: bson.D{
+		{Key: "updatedAt", Value: time.Now().UTC()},
+	}}}
 
-		if _, err := h.matches.InsertOne(sc, match); err != nil {
-			_ = session.AbortTransaction(sc)
-			return err
-		}
-
-		statsUpdate := bson.D{{Key: "$inc", Value: bson.D{
-			{Key: "stats.wins", Value: winsInc},
-			{Key: "stats.losses", Value: lossesInc},
-			{Key: "stats.totalMatches", Value: 1},
-			{Key: "stats.totalScore", Value: float64(req.PlayerScore)},
-		}}, {Key: "$set", Value: bson.D{
-			{Key: "updatedAt", Value: time.Now().UTC()},
-		}}}
-
-		if _, err := h.players.UpdateOne(sc, bson.D{{Key: "_id", Value: playerID}}, statsUpdate); err != nil {
-			_ = session.AbortTransaction(sc)
-			return err
-		}
-
-		return session.CommitTransaction(sc)
-	})
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "could not save match"})
+	if _, err := h.players.UpdateOne(ctx, bson.D{{Key: "_id", Value: playerID}}, statsUpdate); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "could not update player stats"})
 		return
 	}
 

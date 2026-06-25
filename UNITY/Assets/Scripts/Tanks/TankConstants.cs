@@ -4,6 +4,8 @@
 /// </summary>
 public static class TankConstants
 {
+    public const string BACKEND_BASE_URL = "http://localhost:8080";
+
     /// <summary>
     /// World-unit radius within which a tank considers itself to have reached a waypoint.
     /// Used by MoveCommand, AttackCommand, and AttackZoneCommand to advance the waypoint index.

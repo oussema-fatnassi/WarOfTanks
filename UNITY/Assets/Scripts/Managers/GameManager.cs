@@ -145,5 +145,22 @@ public class GameManager : SingletonBehaviour<GameManager>
     public void SetPauseUI(bool active) { _pausePanel.SetActive(active); }
     public void ShowGameOver() { _gameOverScreen.Show(GetWinner(), GetScore(0), GetScore(1)); }
     public void SetInputEnabled(bool enabled) { _playerInputHandler.enabled = enabled; }
+
+    public void SendMatchResult()
+    {
+        int winner = GetWinner();
+        MatchResultPayload payload = new MatchResultPayload
+        {
+            winnerTeam  = winner == 0 ? 1 : 2,
+            playerScore = GetScore(0),
+            aiScore     = GetScore(1),
+            duration    = GetElapsedTime()
+        };
+        StartCoroutine(ApiClient.PostMatchResult(payload, success =>
+        {
+            if (!success)
+                Debug.LogError("[Match] Could not persist match result.");
+        }));
+    }
     #endregion
 }
