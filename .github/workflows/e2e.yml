@@ -1,0 +1,105 @@
+name: E2E Tests
+
+on:
+  workflow_dispatch:
+  pull_request:
+    branches: [dev, main]
+    paths:
+      - '.github/workflows/e2e.yml'
+      - 'BACKEND/**'
+      - 'FRONTEND/**'
+      - 'docker-compose.yml'
+  push:
+    branches: [dev, main]
+    paths:
+      - '.github/workflows/e2e.yml'
+      - 'BACKEND/**'
+      - 'FRONTEND/**'
+      - 'docker-compose.yml'
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
+jobs:
+  playwright:
+    name: Playwright E2E
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: FRONTEND/package-lock.json
+
+      - name: Install frontend dependencies
+        run: npm ci
+        working-directory: FRONTEND
+
+      - name: Install Playwright browser
+        run: npx playwright install --with-deps chromium
+        working-directory: FRONTEND
+
+      - name: Create backend CI environment
+        run: |
+          JWT_SECRET="$(openssl rand -hex 32)"
+          JWT_REFRESH_SECRET="$(openssl rand -hex 32)"
+          cat > BACKEND/.env <<EOF
+          MONGODB_URI=mongodb://mongo:27017/?replicaSet=rs0
+          MONGODB_DB_NAME=waroftanks_e2e
+          JWT_SECRET=${JWT_SECRET}
+          JWT_REFRESH_SECRET=${JWT_REFRESH_SECRET}
+          PORT=8080
+          FRONTEND_ORIGIN=http://localhost:5173
+          ALLOWED_ORIGINS=http://localhost:5173
+          EOF
+
+      - name: Start backend stack
+        run: docker compose up -d --build mongo backend
+
+      - name: Wait for backend health
+        run: |
+          for attempt in {1..30}; do
+            if curl --fail --silent --show-error http://localhost:8080/api/v1/health; then
+              exit 0
+            fi
+            echo "Backend is not healthy yet (attempt ${attempt}/30)."
+            docker compose ps
+            sleep 2
+          done
+          docker compose logs backend
+          exit 1
+
+      - name: Run Playwright E2E tests
+        run: npm run test:e2e
+        working-directory: FRONTEND
+        env:
+          E2E_API_URL: http://localhost:8080
+          E2E_BASE_URL: http://localhost:5173
+
+      - name: Upload Playwright report
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: FRONTEND/playwright-report
+          if-no-files-found: ignore
+          retention-days: 7
+
+      - name: Upload Playwright test results
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-test-results
+          path: FRONTEND/test-results
+          if-no-files-found: ignore
+          retention-days: 7
+
+      - name: Stop backend stack
+        if: always()
+        run: docker compose down --volumes --remove-orphans
