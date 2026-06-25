@@ -13,19 +13,22 @@ test.describe('match results', () => {
     request,
   }) => {
     const user = createE2EUser()
+    const winningScore = Date.now()
+    const losingScore = 120_000
+    const totalScore = winningScore + losingScore
 
     await registerWithApi(request, user)
     const accessToken = await loginWithApi(request, user)
 
     await saveMatchWithApi(request, accessToken, {
       winnerTeam: 1,
-      playerScore: 42,
+      playerScore: winningScore,
       aiScore: 17,
       duration: 210,
     })
     await saveMatchWithApi(request, accessToken, {
       winnerTeam: 2,
-      playerScore: 12,
+      playerScore: losingScore,
       aiScore: 24,
       duration: 95,
     })
@@ -38,37 +41,49 @@ test.describe('match results', () => {
     ).toBeVisible()
     await expect(page.getByText('2 matches')).toBeVisible()
     await expect(
-      page.getByRole('row', { name: /42.*17.*Victory.*03:30/ }),
+      page.getByRole('row', {
+        name: new RegExp(`${winningScore}.*17.*Victory.*03:30`),
+      }),
     ).toBeVisible()
     await expect(
-      page.getByRole('row', { name: /12.*24.*Defeat.*01:35/ }),
+      page.getByRole('row', {
+        name: new RegExp(`${losingScore}.*24.*Defeat.*01:35`),
+      }),
     ).toBeVisible()
 
     await page.getByRole('button', { name: 'Victories' }).click()
     await expect(page.getByText('1 matches')).toBeVisible()
     await expect(
-      page.getByRole('row', { name: /42.*17.*Victory.*03:30/ }),
+      page.getByRole('row', {
+        name: new RegExp(`${winningScore}.*17.*Victory.*03:30`),
+      }),
     ).toBeVisible()
     await expect(
-      page.getByRole('row', { name: /12.*24.*Defeat.*01:35/ }),
+      page.getByRole('row', {
+        name: new RegExp(`${losingScore}.*24.*Defeat.*01:35`),
+      }),
     ).toBeHidden()
 
     await page.getByRole('button', { name: 'Defeats' }).click()
     await expect(page.getByText('1 matches')).toBeVisible()
     await expect(
-      page.getByRole('row', { name: /12.*24.*Defeat.*01:35/ }),
+      page.getByRole('row', {
+        name: new RegExp(`${losingScore}.*24.*Defeat.*01:35`),
+      }),
     ).toBeVisible()
 
     await page.goto('/stats')
     await expect(
       page.getByRole('heading', { name: 'Your stats' }),
     ).toBeVisible()
-    await expect(statCard(page, 'Total Score')).toContainText('54')
+    await expect(statCard(page, 'Total Score')).toContainText(
+      String(totalScore),
+    )
     await expect(statCard(page, 'Matches Played')).toContainText('2')
     await expect(statCard(page, 'Wins · Losses')).toContainText('1 · 1')
     await expect(statCard(page, 'Win Rate')).toContainText('50%')
     await expect(page.getByText('Last match')).toBeVisible()
-    await expect(page.getByText('12:24')).toBeVisible()
+    await expect(page.getByText(`${losingScore}:24`)).toBeVisible()
     await expect(page.getByText('01:35')).toBeVisible()
     await expect(page.getByText('Defeat')).toBeVisible()
 
@@ -78,7 +93,7 @@ test.describe('match results', () => {
     ).toBeVisible()
     await expect(
       page.getByRole('row', {
-        name: new RegExp(`${user.username}.*54.*1.*1.*2.*50%`),
+        name: new RegExp(`${user.username}.*${totalScore}.*1.*1.*2.*50%`),
       }),
     ).toBeVisible()
   })
