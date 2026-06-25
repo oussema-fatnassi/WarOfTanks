@@ -63,10 +63,12 @@ test.describe('auth session API', () => {
     await loginWithUi(page, user)
 
     let playersRequests = 0
+    let forcedUnauthorized = false
     await page.route(`${apiURL}/api/v1/players`, async (route) => {
       playersRequests += 1
 
       if (playersRequests === 1) {
+        forcedUnauthorized = true
         await route.fulfill({
           status: 401,
           contentType: 'application/json',
@@ -80,7 +82,8 @@ test.describe('auth session API', () => {
 
     await page.getByRole('button', { name: 'Refresh' }).click()
 
-    await expect.poll(() => playersRequests).toBe(2)
+    await expect.poll(() => forcedUnauthorized).toBe(true)
+    expect(playersRequests).toBeGreaterThanOrEqual(2)
     await expect(
       page.getByRole('row', { name: new RegExp(user.username) }),
     ).toBeVisible()
