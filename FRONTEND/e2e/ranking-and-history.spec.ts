@@ -55,22 +55,23 @@ test.describe('ranking and history depth', () => {
     const highScorePlayer = createE2EUser()
     const currentPlayer = createE2EUser()
     const lowerScorePlayer = createE2EUser()
+    const baseScore = Date.now() + 1_000_000
 
     await createScoredPlayer(request, highScorePlayer, {
       winnerTeam: 1,
-      playerScore: 900_000_000,
+      playerScore: baseScore + 2,
       aiScore: 1,
       duration: 60,
     })
     await createScoredPlayer(request, currentPlayer, {
       winnerTeam: 1,
-      playerScore: 800_000_000,
+      playerScore: baseScore + 1,
       aiScore: 2,
       duration: 60,
     })
     await createScoredPlayer(request, lowerScorePlayer, {
       winnerTeam: 1,
-      playerScore: 700_000_000,
+      playerScore: baseScore,
       aiScore: 3,
       duration: 60,
     })

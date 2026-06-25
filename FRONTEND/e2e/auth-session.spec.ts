@@ -3,7 +3,9 @@ import {
   apiURL,
   createE2EUser,
   loginWithApi,
+  loginWithUi,
   registerWithApi,
+  saveMatchWithApi,
 } from './support/auth'
 
 test.describe('auth session API', () => {
@@ -42,5 +44,45 @@ test.describe('auth session API', () => {
     expect(refreshAfterLogout.status(), await refreshAfterLogout.text()).toBe(
       401,
     )
+  })
+
+  test('refreshes and retries a protected browser request after a 401', async ({
+    page,
+    request,
+  }) => {
+    const user = createE2EUser()
+    await registerWithApi(request, user)
+    const accessToken = await loginWithApi(request, user)
+    await saveMatchWithApi(request, accessToken, {
+      winnerTeam: 1,
+      playerScore: Date.now(),
+      aiScore: 1,
+      duration: 60,
+    })
+
+    await loginWithUi(page, user)
+
+    let playersRequests = 0
+    await page.route(`${apiURL}/api/v1/players`, async (route) => {
+      playersRequests += 1
+
+      if (playersRequests === 1) {
+        await route.fulfill({
+          status: 401,
+          contentType: 'application/json',
+          body: JSON.stringify({ error: 'invalid or expired token' }),
+        })
+        return
+      }
+
+      await route.continue()
+    })
+
+    await page.getByRole('button', { name: 'Refresh' }).click()
+
+    await expect.poll(() => playersRequests).toBe(2)
+    await expect(
+      page.getByRole('row', { name: new RegExp(user.username) }),
+    ).toBeVisible()
   })
 })
