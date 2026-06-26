@@ -1,0 +1,450 @@
+basePath: /api/v1
+definitions:
+  handlers.ErrorResponse:
+    properties:
+      error:
+        example: invalid request
+        type: string
+    type: object
+  handlers.HealthResponse:
+    properties:
+      status:
+        example: ok
+        type: string
+    type: object
+  handlers.LoginRequest:
+    properties:
+      password:
+        example: strong-password
+        type: string
+      username:
+        example: tank_commander
+        type: string
+    required:
+    - password
+    - username
+    type: object
+  handlers.LoginResponse:
+    properties:
+      accessToken:
+        example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+        type: string
+      player:
+        $ref: '#/definitions/models.Player'
+    type: object
+  handlers.MessageResponse:
+    properties:
+      message:
+        example: logged out
+        type: string
+    type: object
+  handlers.RefreshResponse:
+    properties:
+      accessToken:
+        example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+        type: string
+    type: object
+  handlers.RegisterRequest:
+    properties:
+      email:
+        example: tank@example.com
+        type: string
+      password:
+        example: strong-password
+        type: string
+      username:
+        example: tank_commander
+        type: string
+    required:
+    - email
+    - password
+    - username
+    type: object
+  handlers.RegisterResponse:
+    properties:
+      email:
+        example: tank@example.com
+        type: string
+      id:
+        example: 665f1a9fbad63deb45c6e001
+        type: string
+      username:
+        example: tank_commander
+        type: string
+    type: object
+  handlers.SaveMatchRequest:
+    properties:
+      aiConfigId:
+        example: 665f1a9fbad63deb45c6e010
+        type: string
+      aiScore:
+        example: 850
+        type: integer
+      duration:
+        example: 185.5
+        type: number
+      playerScore:
+        example: 1200
+        type: integer
+      winnerTeam:
+        example: 1
+        type: integer
+    required:
+    - winnerTeam
+    type: object
+  models.Match:
+    properties:
+      aiConfigId:
+        example: 665f1a9fbad63deb45c6e010
+        type: string
+      aiScore:
+        example: 850
+        type: integer
+      createdAt:
+        example: "2026-06-26T10:00:00Z"
+        type: string
+      duration:
+        example: 185.5
+        type: number
+      id:
+        example: 665f1a9fbad63deb45c6e020
+        type: string
+      playerId:
+        example: 665f1a9fbad63deb45c6e001
+        type: string
+      playerScore:
+        example: 1200
+        type: integer
+      playerSnapshot:
+        $ref: '#/definitions/models.PlayerSnapshot'
+      winnerTeam:
+        description: 1 = player team, 2 = AI team
+        example: 1
+        type: integer
+    type: object
+  models.Player:
+    properties:
+      createdAt:
+        example: "2026-06-26T10:00:00Z"
+        type: string
+      email:
+        example: tank@example.com
+        type: string
+      id:
+        example: 665f1a9fbad63deb45c6e001
+        type: string
+      stats:
+        $ref: '#/definitions/models.PlayerStats'
+      updatedAt:
+        example: "2026-06-26T10:05:00Z"
+        type: string
+      username:
+        example: tank_commander
+        type: string
+    type: object
+  models.PlayerSnapshot:
+    properties:
+      username:
+        example: tank_commander
+        type: string
+    type: object
+  models.PlayerStats:
+    properties:
+      losses:
+        example: 3
+        type: integer
+      totalMatches:
+        example: 10
+        type: integer
+      totalScore:
+        example: 12450
+        type: number
+      wins:
+        example: 7
+        type: integer
+    type: object
+info:
+  contact: {}
+  description: |-
+    REST API for War of Tanks authentication, leaderboard, player stats, and match history.
+    The access token is sent as `Authorization: Bearer <token>`. The refresh token is stored in an HttpOnly cookie and is never returned in JSON.
+  title: War of Tanks API
+  version: "1.0"
+paths:
+  /auth/login:
+    post:
+      consumes:
+      - application/json
+      description: Authenticates a player, returns a one-hour access token, and sets
+        the seven-day refresh token as an HttpOnly cookie.
+      parameters:
+      - description: Login payload
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/handlers.LoginRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handlers.LoginResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+      summary: Login
+      tags:
+      - auth
+  /auth/logout:
+    post:
+      description: Clears the refresh token cookie for the authenticated browser session.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handlers.MessageResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Logout
+      tags:
+      - auth
+  /auth/refresh:
+    post:
+      description: Reads the HttpOnly refresh_token cookie and returns a new one-hour
+        access token. No refresh token is returned in JSON.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handlers.RefreshResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+      summary: Refresh access token
+      tags:
+      - auth
+  /auth/register:
+    post:
+      consumes:
+      - application/json
+      description: Creates a new player account. The password is hashed before storage
+        and is never returned.
+      parameters:
+      - description: Registration payload
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/handlers.RegisterRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/handlers.RegisterResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "409":
+          description: Conflict
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+      summary: Register a player
+      tags:
+      - auth
+  /health:
+    get:
+      description: Returns the API health status. The same handler is also mounted
+        at `/health` for Render health checks.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handlers.HealthResponse'
+      summary: Health check
+      tags:
+      - health
+  /matches:
+    get:
+      description: Returns the authenticated player's match history sorted by creation
+        date descending. Supports pagination with limit and offset.
+      parameters:
+      - default: 10
+        description: Maximum number of matches to return
+        in: query
+        maximum: 100
+        minimum: 1
+        name: limit
+        type: integer
+      - default: 0
+        description: Number of matches to skip
+        in: query
+        minimum: 0
+        name: offset
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Match'
+            type: array
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Get match history
+      tags:
+      - matches
+    post:
+      consumes:
+      - application/json
+      description: 'Saves a match result and updates the authenticated player''s stats
+        atomically via a MongoDB transaction. `winnerTeam`: 1 = player team, 2 = AI
+        team.'
+      parameters:
+      - description: Match result payload
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/handlers.SaveMatchRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/models.Match'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Save match result
+      tags:
+      - matches
+  /players:
+    get:
+      description: Returns players sorted by total score descending. Supports pagination
+        with limit and offset.
+      parameters:
+      - default: 20
+        description: Maximum number of players to return
+        in: query
+        maximum: 100
+        minimum: 1
+        name: limit
+        type: integer
+      - default: 0
+        description: Number of players to skip
+        in: query
+        minimum: 0
+        name: offset
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Player'
+            type: array
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Get leaderboard
+      tags:
+      - players
+  /players/me:
+    get:
+      description: Returns the authenticated player's profile using the player ID
+        from the JWT claims.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Player'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Get current player
+      tags:
+      - players
+securityDefinitions:
+  BearerAuth:
+    description: Type "Bearer " followed by a valid JWT access token.
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"

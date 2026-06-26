@@ -3,6 +3,7 @@ package config
 import (
 	"log"
 	"os"
+	"strings"
 
 	"github.com/joho/godotenv"
 )
@@ -16,6 +17,8 @@ type Config struct {
 	Port             string
 	FrontendOrigin   string
 	AllowedOrigins   string
+	AppEnv           string
+	EnableSwagger    bool
 }
 
 // Load reads environment variables from .env file and returns a Config.
@@ -29,6 +32,7 @@ func Load() *Config {
 		JWTRefreshSecret: os.Getenv("JWT_REFRESH_SECRET"),
 		Port:             os.Getenv("PORT"),
 		FrontendOrigin:   os.Getenv("FRONTEND_ORIGIN"),
+		AppEnv:           os.Getenv("APP_ENV"),
 	}
 
 	if cfg.MongoURI == "" || cfg.MongoDBName == "" || cfg.JWTSecret == "" || cfg.JWTRefreshSecret == "" {
@@ -51,6 +55,11 @@ func Load() *Config {
 	}
 	if cfg.FrontendOrigin == "" {
 		cfg.FrontendOrigin = "http://localhost:5173"
+	}
+
+	cfg.EnableSwagger = cfg.AppEnv != "production"
+	if raw := os.Getenv("ENABLE_SWAGGER"); raw != "" {
+		cfg.EnableSwagger = raw == "1" || strings.EqualFold(raw, "true")
 	}
 
 	return cfg
