@@ -44,6 +44,25 @@ npm run format        # Prettier — auto-format all files
 
 Both lint and format checks run automatically on every PR to `dev` via GitHub Actions.
 
+## Tests
+
+```bash
+npm run test:unit           # Vitest + React Testing Library, single run
+npm run test:unit:watch     # Vitest watch mode during development
+npm run test:unit:coverage  # Unit tests with HTML/LCOV coverage in coverage/
+npm run test:e2e            # Playwright end-to-end suite
+```
+
+Unit tests cover React form validation, protected-route behavior, match history
+filtering, stats and leaderboard rendering, formatters, token storage, and the
+Axios JWT refresh interceptor. The frontend CI job runs the unit suite with
+coverage and uploads `FRONTEND/coverage` as an artifact on PRs to `dev`.
+
+End-to-end tests still validate the complete browser/API behavior against the
+running stack. Use unit tests for fast component and helper feedback, then E2E
+tests for full authentication, persistence, protected routes, and Unity page
+integration.
+
 ## Project Structure
 
 ```
@@ -57,6 +76,7 @@ FRONTEND/
 │   ├── context/      # AuthContext + AuthProvider
 │   ├── hooks/        # Custom React hooks (useAuth)
 │   ├── pages/        # One file per route
+│   ├── test/         # Unit test setup and render helpers
 │   ├── types/        # Shared TypeScript interfaces (Player, Match, AuthTokens)
 │   ├── App.tsx       # Root component and routing
 │   └── main.tsx      # Entry point
@@ -79,15 +99,15 @@ FRONTEND/
 
 ## Key Issues
 
-| #                                                               | Title                                                        | Status      |
-| --------------------------------------------------------------- | ------------------------------------------------------------ | ----------- |
-| [#29](https://github.com/oussema-fatnassi/WarOfTanks/issues/29) | Frontend Project Setup (Vite + React + TypeScript)           | ✅ Done     |
-| [#51](https://github.com/oussema-fatnassi/WarOfTanks/issues/51) | Frontend App Structure — Routing, Axios Client, Types, Pages | ✅ Done     |
-| [#30](https://github.com/oussema-fatnassi/WarOfTanks/issues/30) | Auth Pages (Register + Login)                                | ✅ Done     |
-| [#31](https://github.com/oussema-fatnassi/WarOfTanks/issues/31) | Leaderboard, Stats & Match History Pages                     | ✅ Done     |
-| [#32](https://github.com/oussema-fatnassi/WarOfTanks/issues/32) | WebGL Game Embed                                             | ✅ Done     |
-| [#6](https://github.com/oussema-fatnassi/WarOfTanks/issues/6)   | GitHub Actions - Code Quality (ESLint + Prettier)            | ✅ Done     |
-| [#33](https://github.com/oussema-fatnassi/WarOfTanks/issues/33) | Docker Compose - Full Stack                                  | ✅ Done     |
+| #                                                               | Title                                                        | Status  |
+| --------------------------------------------------------------- | ------------------------------------------------------------ | ------- |
+| [#29](https://github.com/oussema-fatnassi/WarOfTanks/issues/29) | Frontend Project Setup (Vite + React + TypeScript)           | ✅ Done |
+| [#51](https://github.com/oussema-fatnassi/WarOfTanks/issues/51) | Frontend App Structure — Routing, Axios Client, Types, Pages | ✅ Done |
+| [#30](https://github.com/oussema-fatnassi/WarOfTanks/issues/30) | Auth Pages (Register + Login)                                | ✅ Done |
+| [#31](https://github.com/oussema-fatnassi/WarOfTanks/issues/31) | Leaderboard, Stats & Match History Pages                     | ✅ Done |
+| [#32](https://github.com/oussema-fatnassi/WarOfTanks/issues/32) | WebGL Game Embed                                             | ✅ Done |
+| [#6](https://github.com/oussema-fatnassi/WarOfTanks/issues/6)   | GitHub Actions - Code Quality (ESLint + Prettier)            | ✅ Done |
+| [#33](https://github.com/oussema-fatnassi/WarOfTanks/issues/33) | Docker Compose - Full Stack                                  | ✅ Done |
 
 ## Architecture Notes
 
