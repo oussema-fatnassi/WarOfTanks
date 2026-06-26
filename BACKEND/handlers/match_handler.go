@@ -31,17 +31,26 @@ func NewMatchHandler(db *mongo.Database, client *mongo.Client) *MatchHandler {
 
 // SaveMatchRequest is the expected body for POST /api/v1/matches.
 type SaveMatchRequest struct {
-	WinnerTeam  int            `json:"winnerTeam" binding:"required"`
-	PlayerScore int            `json:"playerScore"`
-	AIScore     int            `json:"aiScore"`
-	Duration    float64        `json:"duration"`
-	AIConfigID  *bson.ObjectID `json:"aiConfigId,omitempty"`
+	WinnerTeam  int            `json:"winnerTeam" binding:"required" example:"1"`
+	PlayerScore int            `json:"playerScore" example:"1200"`
+	AIScore     int            `json:"aiScore" example:"850"`
+	Duration    float64        `json:"duration" example:"185.5"`
+	AIConfigID  *bson.ObjectID `json:"aiConfigId,omitempty" swaggertype:"string" example:"665f1a9fbad63deb45c6e010"`
 }
 
 // SaveMatch godoc
-// POST /api/v1/matches
-// Saves a match result and updates the player's stats atomically via a MongoDB transaction.
-// WinnerTeam: 1 = player team wins, 2 = AI team wins.
+// @Summary Save match result
+// @Description Saves a match result and updates the authenticated player's stats atomically via a MongoDB transaction. `winnerTeam`: 1 = player team, 2 = AI team.
+// @Tags matches
+// @Accept json
+// @Produce json
+// @Param request body SaveMatchRequest true "Match result payload"
+// @Security BearerAuth
+// @Success 201 {object} models.Match
+// @Failure 400 {object} ErrorResponse
+// @Failure 401 {object} ErrorResponse
+// @Failure 500 {object} ErrorResponse
+// @Router /matches [post]
 func (h *MatchHandler) SaveMatch(c *gin.Context) {
 	var req SaveMatchRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
@@ -141,9 +150,17 @@ func validateSaveMatchRequest(req SaveMatchRequest) string {
 }
 
 // GetMatches godoc
-// GET /api/v1/matches
-// Returns the authenticated player's match history sorted by createdAt descending.
-// Supports optional ?limit=10&offset=0 query params.
+// @Summary Get match history
+// @Description Returns the authenticated player's match history sorted by creation date descending. Supports pagination with limit and offset.
+// @Tags matches
+// @Produce json
+// @Param limit query int false "Maximum number of matches to return" minimum(1) maximum(100) default(10)
+// @Param offset query int false "Number of matches to skip" minimum(0) default(0)
+// @Security BearerAuth
+// @Success 200 {array} models.Match
+// @Failure 401 {object} ErrorResponse
+// @Failure 500 {object} ErrorResponse
+// @Router /matches [get]
 func (h *MatchHandler) GetMatches(c *gin.Context) {
 	playerIDStr := c.GetString(middleware.PlayerIDKey)
 	playerID, err := bson.ObjectIDFromHex(playerIDStr)
