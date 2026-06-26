@@ -23,9 +23,17 @@ func NewPlayerHandler(db *mongo.Database) *PlayerHandler {
 }
 
 // GetPlayers godoc
-// GET /api/v1/players
-// Returns all players sorted by totalScore descending (leaderboard).
-// Supports optional ?limit=20&offset=0 query params.
+// @Summary Get leaderboard
+// @Description Returns players sorted by total score descending. Supports pagination with limit and offset.
+// @Tags players
+// @Produce json
+// @Param limit query int false "Maximum number of players to return" minimum(1) maximum(100) default(20)
+// @Param offset query int false "Number of players to skip" minimum(0) default(0)
+// @Security BearerAuth
+// @Success 200 {array} models.Player
+// @Failure 401 {object} ErrorResponse
+// @Failure 500 {object} ErrorResponse
+// @Router /players [get]
 func (h *PlayerHandler) GetPlayers(c *gin.Context) {
 	limit, _ := strconv.ParseInt(c.DefaultQuery("limit", "20"), 10, 64)
 	offset, _ := strconv.ParseInt(c.DefaultQuery("offset", "0"), 10, 64)
@@ -61,8 +69,16 @@ func (h *PlayerHandler) GetPlayers(c *gin.Context) {
 }
 
 // GetMe godoc
-// GET /api/v1/players/me
-// Returns the authenticated player's own profile using the playerID from JWT claims.
+// @Summary Get current player
+// @Description Returns the authenticated player's profile using the player ID from the JWT claims.
+// @Tags players
+// @Produce json
+// @Security BearerAuth
+// @Success 200 {object} models.Player
+// @Failure 401 {object} ErrorResponse
+// @Failure 404 {object} ErrorResponse
+// @Failure 500 {object} ErrorResponse
+// @Router /players/me [get]
 func (h *PlayerHandler) GetMe(c *gin.Context) {
 	playerIDStr := c.GetString(middleware.PlayerIDKey)
 	playerID, err := bson.ObjectIDFromHex(playerIDStr)

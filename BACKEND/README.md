@@ -37,10 +37,31 @@ The API will be available at `http://localhost:8080`.
 | `ALLOWED_ORIGINS`    | Comma-separated browser origins allowed by CORS (e.g. `http://localhost:5173,https://war-of-tanks.vercel.app`) |
 | `FRONTEND_ORIGIN`    | Single-origin CORS fallback (`http://localhost:3000` in Docker) |
 | `APP_ENV`            | `development` locally / `production` on Render (Secure + SameSite=None refresh cookie) |
+| `ENABLE_SWAGGER`     | Optional Swagger UI override. Defaults to enabled outside production and disabled when `APP_ENV=production`; set `true` or `1` to force-enable. |
 
 Create a `.env` file in `BACKEND/` with these values before running. On Render, set all secrets in the dashboard (never in code) — see [`DEPLOYMENT.md`](../DEPLOYMENT.md).
 
 ## API Endpoints
+
+Interactive Swagger documentation is available at
+`http://localhost:8080/swagger/index.html` when Swagger is enabled.
+
+Swagger is enabled by default for local/development runs. In production
+(`APP_ENV=production`), it is disabled unless `ENABLE_SWAGGER=true` is set. This
+keeps the deployed API documentation as an explicit operational choice instead
+of exposing it accidentally.
+
+Regenerate the committed Swagger files after changing handlers, DTOs, or route
+annotations:
+
+```bash
+cd BACKEND
+go run github.com/swaggo/swag/cmd/swag@v1.8.12 init -g cmd/main.go -o docs --parseDependency
+```
+
+The generator updates `docs/docs.go`, `docs/swagger.json`, and
+`docs/swagger.yaml`. The Swagger `Authorize` button expects the access token in
+the form `Bearer <access-token>`.
 
 > Routes marked ✅ are live. Others are in progress — see issues below.
 
@@ -92,6 +113,7 @@ The CI pipeline starts MongoDB 7 with a single-node replica set before running `
 | [#5](https://github.com/oussema-fatnassi/WarOfTanks/issues/5)   | GitHub Actions - Backend CI                                        | ✅ Done     |
 | [#33](https://github.com/oussema-fatnassi/WarOfTanks/issues/33) | Docker Compose - Full Stack                                        | ✅ Done     |
 | [#34](https://github.com/oussema-fatnassi/WarOfTanks/issues/34) | Deploy Backend to Render                                           | ✅ Done     |
+| [#101](https://github.com/oussema-fatnassi/WarOfTanks/issues/101) | Backend API documentation with Swagger                            | ✅ Done     |
 
 ## Architecture Notes
 

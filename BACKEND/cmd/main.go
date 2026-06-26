@@ -3,17 +3,30 @@ package main
 import (
 	"context"
 	"log"
+	"net/http"
 	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/oussema-fatnassi/WarOfTanks/backend/config"
+	_ "github.com/oussema-fatnassi/WarOfTanks/backend/docs"
 	"github.com/oussema-fatnassi/WarOfTanks/backend/handlers"
 	"github.com/oussema-fatnassi/WarOfTanks/backend/middleware"
 	"github.com/oussema-fatnassi/WarOfTanks/backend/services"
+	swaggerFiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
 	"go.mongodb.org/mongo-driver/v2/mongo"
 	"go.mongodb.org/mongo-driver/v2/mongo/options"
 )
 
+// @title War of Tanks API
+// @version 1.0
+// @description REST API for War of Tanks authentication, leaderboard, player stats, and match history.
+// @description The access token is sent as `Authorization: Bearer <token>`. The refresh token is stored in an HttpOnly cookie and is never returned in JSON.
+// @BasePath /api/v1
+// @securityDefinitions.apikey BearerAuth
+// @in header
+// @name Authorization
+// @description Type "Bearer " followed by a valid JWT access token.
 func main() {
 	// Load environment variables
 	cfg := config.Load()
@@ -57,17 +70,17 @@ func main() {
 	r := gin.Default()
 	r.Use(middleware.CORS(cfg.AllowedOrigins))
 
+	if cfg.EnableSwagger {
+		r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
+	}
+
 	// Root health check (used by Render's health check and uptime probes).
-	r.GET("/health", func(c *gin.Context) {
-		c.JSON(200, gin.H{"status": "ok"})
-	})
+	r.GET("/health", healthHandler)
 
 	// Route groups
 	api := r.Group("/api/v1")
 	{
-		api.GET("/health", func(c *gin.Context) {
-			c.JSON(200, gin.H{"status": "ok"})
-		})
+		api.GET("/health", healthHandler)
 
 		// Public routes
 		auth := api.Group("/auth")
@@ -95,4 +108,15 @@ func main() {
 	if err := r.Run(":" + cfg.Port); err != nil {
 		log.Fatal("Server failed to start:", err)
 	}
+}
+
+// healthHandler godoc
+// @Summary Health check
+// @Description Returns the API health status. The same handler is also mounted at `/health` for Render health checks.
+// @Tags health
+// @Produce json
+// @Success 200 {object} handlers.HealthResponse
+// @Router /health [get]
+func healthHandler(c *gin.Context) {
+	c.JSON(http.StatusOK, handlers.HealthResponse{Status: "ok"})
 }

@@ -33,19 +33,29 @@ func NewAuthHandler(db *mongo.Database, jwtSvc *services.JWTService) *AuthHandle
 
 // RegisterRequest is the expected body for POST /auth/register.
 type RegisterRequest struct {
-	Username string `json:"username" binding:"required"`
-	Email    string `json:"email" binding:"required"`
-	Password string `json:"password" binding:"required"`
+	Username string `json:"username" binding:"required" example:"tank_commander"`
+	Email    string `json:"email" binding:"required" example:"tank@example.com"`
+	Password string `json:"password" binding:"required" example:"strong-password"`
 }
 
 // LoginRequest is the expected body for POST /auth/login.
 type LoginRequest struct {
-	Username string `json:"username" binding:"required"`
-	Password string `json:"password" binding:"required"`
+	Username string `json:"username" binding:"required" example:"tank_commander"`
+	Password string `json:"password" binding:"required" example:"strong-password"`
 }
 
 // Register godoc
-// POST /api/v1/auth/register
+// @Summary Register a player
+// @Description Creates a new player account. The password is hashed before storage and is never returned.
+// @Tags auth
+// @Accept json
+// @Produce json
+// @Param request body RegisterRequest true "Registration payload"
+// @Success 201 {object} RegisterResponse
+// @Failure 400 {object} ErrorResponse
+// @Failure 409 {object} ErrorResponse
+// @Failure 500 {object} ErrorResponse
+// @Router /auth/register [post]
 func (h *AuthHandler) Register(c *gin.Context) {
 	var req RegisterRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
@@ -116,7 +126,17 @@ func (h *AuthHandler) Register(c *gin.Context) {
 }
 
 // Login godoc
-// POST /api/v1/auth/login
+// @Summary Login
+// @Description Authenticates a player, returns a one-hour access token, and sets the seven-day refresh token as an HttpOnly cookie.
+// @Tags auth
+// @Accept json
+// @Produce json
+// @Param request body LoginRequest true "Login payload"
+// @Success 200 {object} LoginResponse
+// @Failure 400 {object} ErrorResponse
+// @Failure 401 {object} ErrorResponse
+// @Failure 500 {object} ErrorResponse
+// @Router /auth/login [post]
 func (h *AuthHandler) Login(c *gin.Context) {
 	var req LoginRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
@@ -168,7 +188,14 @@ func (h *AuthHandler) Login(c *gin.Context) {
 }
 
 // Refresh godoc
-// POST /api/v1/auth/refresh
+// @Summary Refresh access token
+// @Description Reads the HttpOnly refresh_token cookie and returns a new one-hour access token. No refresh token is returned in JSON.
+// @Tags auth
+// @Produce json
+// @Success 200 {object} RefreshResponse
+// @Failure 401 {object} ErrorResponse
+// @Failure 500 {object} ErrorResponse
+// @Router /auth/refresh [post]
 func (h *AuthHandler) Refresh(c *gin.Context) {
 	tokenStr, err := c.Cookie("refresh_token")
 	if err != nil {
@@ -192,7 +219,14 @@ func (h *AuthHandler) Refresh(c *gin.Context) {
 }
 
 // Logout godoc
-// POST /api/v1/auth/logout
+// @Summary Logout
+// @Description Clears the refresh token cookie for the authenticated browser session.
+// @Tags auth
+// @Produce json
+// @Security BearerAuth
+// @Success 200 {object} MessageResponse
+// @Failure 401 {object} ErrorResponse
+// @Router /auth/logout [post]
 func (h *AuthHandler) Logout(c *gin.Context) {
 	h.setRefreshCookie(c, "", -1)
 	c.JSON(http.StatusOK, gin.H{"message": "logged out"})
