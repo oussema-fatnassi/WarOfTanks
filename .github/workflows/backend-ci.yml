@@ -47,6 +47,12 @@ jobs:
         run: go vet ./...
         working-directory: BACKEND
 
+      - name: Verify Swagger docs are up to date
+        run: |
+          go run github.com/swaggo/swag/cmd/swag@v1.8.12 init -g cmd/main.go -o docs --parseDependency
+          git diff --exit-code -- docs
+        working-directory: BACKEND
+
       - name: Run tests
         run: go test ./... -v -race -coverprofile=coverage.out
         working-directory: BACKEND
